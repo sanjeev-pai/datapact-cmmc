@@ -1,12 +1,33 @@
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/hooks/useAuth'
 
-const NAV_ITEMS = [
+interface NavItem {
+  to: string
+  label: string
+  icon: string
+  roles?: string[]
+}
+
+const NAV_ITEMS: NavItem[] = [
   { to: '/dashboard', label: 'Dashboard', icon: '◉' },
   { to: '/cmmc', label: 'CMMC Library', icon: '◎' },
   { to: '/assessments', label: 'Assessments', icon: '◈' },
+  { to: '/admin', label: 'Admin', icon: '⚙', roles: ['system_admin', 'org_admin'] },
 ]
 
 export default function AppLayout() {
+  const { user, logout, hasRole } = useAuth()
+  const navigate = useNavigate()
+
+  const visibleItems = NAV_ITEMS.filter(
+    (item) => !item.roles || hasRole(...item.roles),
+  )
+
+  function handleLogout() {
+    logout()
+    navigate('/login', { replace: true })
+  }
+
   return (
     <div className="flex h-screen bg-base-200">
       {/* Sidebar */}
@@ -16,7 +37,7 @@ export default function AppLayout() {
           <p className="text-xs text-base-content/50">Compliance Platform</p>
         </div>
         <nav className="flex-1 p-2">
-          {NAV_ITEMS.map((item) => (
+          {visibleItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -33,7 +54,24 @@ export default function AppLayout() {
             </NavLink>
           ))}
         </nav>
-        <div className="p-4 border-t border-base-300 text-xs text-base-content/40">
+        <div className="border-t border-base-300 p-3">
+          {user && (
+            <div className="flex items-center justify-between">
+              <div className="min-w-0">
+                <p className="text-sm font-medium truncate">{user.username}</p>
+                <p className="text-xs text-base-content/50 truncate">{user.email}</p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="btn btn-ghost btn-xs"
+                aria-label="Log out"
+              >
+                ↪
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="px-4 pb-3 text-xs text-base-content/40">
           v0.1.0
         </div>
       </aside>
