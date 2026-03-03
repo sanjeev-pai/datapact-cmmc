@@ -4,7 +4,7 @@ import os
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 
 # Use SQLite for tests
@@ -12,11 +12,32 @@ os.environ["DATABASE_URL"] = "sqlite:///./test.db"
 
 from cmmc.app import app  # noqa: E402
 from cmmc.database import get_db  # noqa: E402
-from cmmc.models.base import Base  # noqa: E402
+from cmmc.models import Base  # noqa: E402
 
 _test_engine = create_engine(
     "sqlite:///./test.db", connect_args={"check_same_thread": False}
 )
+
+# Make PostgreSQL JSON columns work on SQLite by compiling them as TEXT
+from sqlalchemy.dialects.postgresql import JSON as PG_JSON  # noqa: E402
+
+
+@event.listens_for(_test_engine, "connect")
+def _set_sqlite_pragma(dbapi_conn, connection_record):
+    """Enable FK enforcement in SQLite."""
+    cursor = dbapi_conn.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
+
+from sqlalchemy.ext.compiler import compiles  # noqa: E402
+
+
+@compiles(PG_JSON, "sqlite")
+def _compile_json_sqlite(type_, compiler, **kw):
+    return "TEXT"
+
+
 TestSession = sessionmaker(bind=_test_engine, autocommit=False, autoflush=False)
 
 
