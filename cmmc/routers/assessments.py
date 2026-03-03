@@ -34,7 +34,7 @@ def _check_org_access(user: User, org_id: str) -> None:
 # POST /
 # ---------------------------------------------------------------------------
 
-@router.post("/", response_model=AssessmentResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=AssessmentResponse, status_code=status.HTTP_201_CREATED)
 def create_assessment(
     body: AssessmentCreate,
     user: User = Depends(require_role(*_MANAGE_ROLES)),
@@ -56,7 +56,7 @@ def create_assessment(
 # GET /
 # ---------------------------------------------------------------------------
 
-@router.get("/", response_model=AssessmentListResponse)
+@router.get("", response_model=AssessmentListResponse)
 def list_assessments(
     org_id: str | None = Query(None),
     status_filter: str | None = Query(None, alias="status"),
@@ -73,7 +73,7 @@ def list_assessments(
     else:
         effective_org_id = user.org_id  # non-admin always scoped to own org
 
-    if not effective_org_id:
+    if not "system_admin" in user_roles and not effective_org_id:
         return AssessmentListResponse(items=[], total=0)
 
     items, total = assessment_service.list_assessments(

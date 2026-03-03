@@ -3,7 +3,7 @@
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config, pool, text
 
 from cmmc.models import Base  # imports all model modules, registering with metadata
 
@@ -12,6 +12,8 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
+CMMC_SCHEMA = "datapact-cmmc"
 
 
 def run_migrations_offline() -> None:
@@ -33,7 +35,12 @@ def run_migrations_online() -> None:
         poolclass=pool.NullPool,
     )
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        connection.execute(text(f'SET search_path TO "{CMMC_SCHEMA}"'))
+        connection.commit()
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+        )
         with context.begin_transaction():
             context.run_migrations()
 

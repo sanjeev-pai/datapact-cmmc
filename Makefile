@@ -3,8 +3,8 @@ HOST := 127.0.0.1
 PORT := 8081
 FRONTEND_DIR := ui
 
-.PHONY: help install dev dev-backend dev-frontend dev-all test test-backend test-frontend build clean
-.PHONY: db-start db-stop db-migrate db-upgrade db-seed db-reset
+.PHONY: help install dev dev-backend dev-frontend dev-all dev-stop dev-restart test test-backend test-frontend build clean
+.PHONY: db-migrate db-upgrade db-seed db-reset
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -14,13 +14,7 @@ install:  ## Install backend + frontend dependencies
 	uv sync --all-extras
 	cd $(FRONTEND_DIR) && npm install
 
-# ── Database ─────────────────────────────────────────────────────────────────
-db-start:  ## Start PostgreSQL via docker-compose
-	docker-compose up -d db
-
-db-stop:  ## Stop PostgreSQL
-	docker-compose down
-
+# ── Database (local PostgreSQL, schema: datapact-cmmc) ───────────────────────
 db-migrate:  ## Create a new Alembic migration (usage: make db-migrate msg="description")
 	uv run alembic revision --autogenerate -m "$(msg)"
 
@@ -30,11 +24,8 @@ db-upgrade:  ## Run pending Alembic migrations
 db-seed:  ## Seed reference data from YAML
 	uv run python -m cmmc.services.seed_service
 
-db-reset:  ## Drop and recreate database (destructive!)
-	docker-compose down -v
-	docker-compose up -d db
-	@echo "Waiting for PostgreSQL..."
-	@sleep 3
+db-reset:  ## Drop and recreate schema (destructive!)
+	psql -U sanjeevpai -d datapact -c 'DROP SCHEMA IF EXISTS "datapact-cmmc" CASCADE; CREATE SCHEMA "datapact-cmmc";'
 	uv run alembic upgrade head
 	$(MAKE) db-seed
 
@@ -50,6 +41,11 @@ dev-all:  ## Run backend + frontend concurrently
 	$(MAKE) dev-backend &
 	$(MAKE) dev-frontend &
 	wait
+
+dev-stop:  ## Stop running backend + frontend dev servers
+	@./scripts/dev-stop.sh
+
+dev-restart: dev-stop dev-all  ## Restart backend + frontend dev servers
 
 # ── Testing ──────────────────────────────────────────────────────────────────
 test: test-backend test-frontend  ## Run all tests

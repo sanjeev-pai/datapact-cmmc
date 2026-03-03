@@ -30,7 +30,7 @@ def _check_admin_access(caller: User, target: User) -> None:
     raise ForbiddenError("Insufficient permissions")
 
 
-@router.get("/", response_model=list[UserAdminResponse])
+@router.get("", response_model=list[UserAdminResponse])
 def list_users(
     caller: User = Depends(get_current_user),
     db: Session = Depends(get_db),

@@ -6,7 +6,9 @@ from collections.abc import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from cmmc.config import DATABASE_URL
+from sqlalchemy import event as sa_event
+
+from cmmc.config import DATABASE_SCHEMA, DATABASE_URL
 
 _is_pg = DATABASE_URL.startswith("postgresql")
 
@@ -20,6 +22,18 @@ if _is_pg:
         pool_pre_ping=True,
         echo=False,
     )
+
+    @sa_event.listens_for(engine, "connect")
+    def _set_search_path(dbapi_conn, connection_record):
+        cursor = dbapi_conn.cursor()
+        cursor.execute(f'SET search_path TO "{DATABASE_SCHEMA}"')
+        cursor.close()
+
+    @sa_event.listens_for(engine, "checkout")
+    def _reset_search_path(dbapi_conn, connection_record, connection_proxy):
+        cursor = dbapi_conn.cursor()
+        cursor.execute(f'SET search_path TO "{DATABASE_SCHEMA}"')
+        cursor.close()
 else:
     engine = create_engine(
         DATABASE_URL,

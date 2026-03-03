@@ -1,8 +1,8 @@
-"""add all phase2 models
+"""add all models
 
-Revision ID: eb9e54c16bdd
+Revision ID: bf1b27262659
 Revises: 
-Create Date: 2026-03-03 09:04:40.776033
+Create Date: 2026-03-03 14:53:09.412091
 """
 from typing import Sequence, Union
 
@@ -10,7 +10,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-revision: str = 'eb9e54c16bdd'
+revision: str = 'bf1b27262659'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

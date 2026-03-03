@@ -11,8 +11,9 @@ PORT = int(os.environ.get("CMMC_PORT", "8081"))
 # ── Database ─────────────────────────────────────────────────────────────────
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
-    "postgresql+psycopg://cmmc:cmmc@localhost:5433/cmmc",
+    "postgresql+psycopg://sanjeevpai@localhost:5432/datapact",
 )
+DATABASE_SCHEMA = os.environ.get("DATABASE_SCHEMA", "datapact-cmmc")
 
 # ── Auth ─────────────────────────────────────────────────────────────────────
 JWT_SECRET = os.environ.get("JWT_SECRET", "cmmc-dev-secret-change-in-prod")
