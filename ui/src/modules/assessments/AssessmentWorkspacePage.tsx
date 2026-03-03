@@ -13,6 +13,7 @@ import {
 import { getDomains, getPractices } from '@/services/cmmc'
 import WorkspacePracticeList from './WorkspacePracticeList'
 import WorkspacePracticeDetail from './WorkspacePracticeDetail'
+import ScoringPanel from './scoring/ScoringPanel'
 
 const STATUS_BADGE: Record<AssessmentStatus, string> = {
   draft: 'badge-ghost',
@@ -153,21 +154,6 @@ export default function AssessmentWorkspacePage() {
         </span>
         <span className="badge badge-outline badge-sm">Level {assessment.target_level}</span>
 
-        <div className="flex items-center gap-3 text-sm">
-          <div className="text-center">
-            <div className="text-xs text-base-content/50">SPRS</div>
-            <div className="font-bold tabular-nums">
-              {assessment.sprs_score != null ? assessment.sprs_score : '—'}
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-xs text-base-content/50">Compliance</div>
-            <div className="font-bold tabular-nums">
-              {assessment.overall_score != null ? `${assessment.overall_score}%` : '—'}
-            </div>
-          </div>
-        </div>
-
         {/* Action buttons */}
         {status === 'draft' && (
           <button
@@ -197,6 +183,14 @@ export default function AssessmentWorkspacePage() {
           </button>
         )}
       </div>
+
+      {/* Scoring panel */}
+      <ScoringPanel
+        assessment={assessment}
+        domains={domains}
+        practices={practices}
+        evaluations={evaluations}
+      />
 
       {/* Error banner */}
       {error && (
