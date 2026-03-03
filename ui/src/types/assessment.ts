@@ -29,3 +29,24 @@ export interface AssessmentCreate {
   assessment_type: AssessmentType
   lead_assessor_id?: string
 }
+
+export type PracticeStatus = 'not_evaluated' | 'met' | 'not_met' | 'partially_met' | 'not_applicable'
+
+export interface AssessmentPractice {
+  id: string
+  assessment_id: string
+  practice_id: string
+  status: PracticeStatus
+  score: number | null
+  assessor_notes: string | null
+  datapact_sync_status: string | null
+  datapact_sync_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface AssessmentPracticeUpdate {
+  status?: PracticeStatus
+  score?: number
+  assessor_notes?: string
+}

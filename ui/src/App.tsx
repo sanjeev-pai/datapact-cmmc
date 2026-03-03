@@ -4,6 +4,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import { AuthProvider } from '@/contexts/AuthContext'
 import AssessmentCreatePage from '@/modules/assessments/AssessmentCreatePage'
 import AssessmentListPage from '@/modules/assessments/AssessmentListPage'
+import AssessmentWorkspacePage from '@/modules/assessments/AssessmentWorkspacePage'
 import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
 import LoginPage from '@/modules/auth/LoginPage'
 import RegisterPage from '@/modules/auth/RegisterPage'
@@ -32,6 +33,7 @@ function App() {
               <Route path="/cmmc" element={<CMMCLibraryPage />} />
               <Route path="/assessments" element={<AssessmentListPage />} />
               <Route path="/assessments/new" element={<AssessmentCreatePage />} />
+              <Route path="/assessments/:id" element={<AssessmentWorkspacePage />} />
             </Route>
           </Route>
         </Routes>
