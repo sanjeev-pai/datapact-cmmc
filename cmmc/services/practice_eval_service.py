@@ -60,6 +60,17 @@ def evaluate_practice(
         ap.assessor_notes = assessor_notes
 
     db.flush()
+
+    # Auto-recalculate assessment scores after evaluation change
+    from cmmc.services.scoring_service import (
+        calculate_overall_score,
+        calculate_sprs_score,
+    )
+
+    assessment.sprs_score = calculate_sprs_score(db, assessment_id)
+    assessment.overall_score = calculate_overall_score(db, assessment_id)
+
+    db.flush()
     db.commit()
     return ap
 
