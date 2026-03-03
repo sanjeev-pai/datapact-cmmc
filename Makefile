@@ -1,5 +1,6 @@
 APP_MODULE := cmmc.app:app
-PORT := 8001
+HOST := 127.0.0.1
+PORT := 8081
 FRONTEND_DIR := ui
 
 .PHONY: help install dev dev-backend dev-frontend dev-all test test-backend test-frontend build clean
@@ -39,7 +40,7 @@ db-reset:  ## Drop and recreate database (destructive!)
 
 # ── Development ──────────────────────────────────────────────────────────────
 dev-backend:  ## Run backend with hot-reload
-	uv run uvicorn $(APP_MODULE) --reload --port $(PORT)
+	uv run uvicorn $(APP_MODULE) --reload --host $(HOST) --port $(PORT)
 
 dev-frontend:  ## Run frontend dev server
 	cd $(FRONTEND_DIR) && npm run dev

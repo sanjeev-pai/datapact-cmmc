@@ -12,9 +12,12 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5174,
+    host: '0.0.0.0',
+    port: 9091,
+    strictPort: true,
+    allowedHosts: ['mrisan.tplinkdns.com'],
     proxy: {
-      '/api': 'http://localhost:8001',
+      '/api': 'http://localhost:8081',
     },
   },
   test: {

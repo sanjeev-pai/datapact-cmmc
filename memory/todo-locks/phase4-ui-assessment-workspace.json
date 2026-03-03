@@ -1,7 +1,0 @@
-{
-  "session": "opus-workspace-20260303",
-  "branch": "todo/phase4-ui-assessment-workspace",
-  "claimed_at": "2026-03-03T00:00:00Z",
-  "todo": "Assessment workspace page - header, practice list, practice detail, status transitions",
-  "shared_files": ["ui/src/App.tsx", "ui/src/types/assessment.ts", "ui/src/services/assessments.ts"]
-}

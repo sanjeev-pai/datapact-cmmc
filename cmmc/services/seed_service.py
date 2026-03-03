@@ -7,7 +7,8 @@ import yaml
 from sqlalchemy.orm import Session
 
 from cmmc.models import CMMCDomain, CMMCLevel, CMMCPractice
-from cmmc.models.user import Role
+from cmmc.models.user import Role, User, UserRole
+from cmmc.services.auth_service import hash_password
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ def seed_all(db: Session) -> dict[str, int]:
     """Seed all CMMC reference data. Returns counts of upserted records."""
     counts: dict[str, int] = {}
     counts["roles"] = _seed_roles(db)
+    counts["users"] = _seed_users(db)
     counts["domains"] = _seed_domains(db)
     counts["levels"] = _seed_levels(db)
     counts["practices"] = _seed_practices(db)
@@ -42,6 +44,40 @@ def _seed_roles(db: Session) -> int:
         existing = db.query(Role).filter_by(name=role_name).first()
         if not existing:
             db.add(Role(name=role_name))
+        count += 1
+    db.flush()
+    return count
+
+
+SEED_USERS = [
+    {
+        "username": "jwchandna",
+        "email": "jwchandna@datapact.local",
+        "password": "jwchandna_ciso_135$$$",
+        "roles": ["system_admin", "org_admin"],
+    },
+]
+
+
+def _seed_users(db: Session) -> int:
+    count = 0
+    for item in SEED_USERS:
+        existing = db.query(User).filter_by(username=item["username"]).first()
+        if existing:
+            count += 1
+            continue
+        user = User(
+            username=item["username"],
+            email=item["email"],
+            password_hash=hash_password(item["password"]),
+            is_active=True,
+        )
+        db.add(user)
+        db.flush()
+        for role_name in item["roles"]:
+            role = db.query(Role).filter_by(name=role_name).first()
+            if role:
+                db.add(UserRole(user_id=user.id, role_id=role.id))
         count += 1
     db.flush()
     return count

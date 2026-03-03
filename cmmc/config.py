@@ -5,7 +5,8 @@ import os
 # ── Server ───────────────────────────────────────────────────────────────────
 APP_NAME = "CMMC Tracker"
 APP_VERSION = "0.1.0"
-PORT = int(os.environ.get("CMMC_PORT", "8001"))
+HOST = os.environ.get("CMMC_HOST", "127.0.0.1")
+PORT = int(os.environ.get("CMMC_PORT", "8081"))
 
 # ── Database ─────────────────────────────────────────────────────────────────
 DATABASE_URL = os.environ.get(
@@ -21,7 +22,8 @@ JWT_REFRESH_EXPIRY_DAYS = int(os.environ.get("JWT_REFRESH_EXPIRY_DAYS", "7"))
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
 CORS_ALLOW_ORIGINS = os.environ.get(
-    "CORS_ALLOW_ORIGINS", "http://localhost:5174"
+    "CORS_ALLOW_ORIGINS",
+    "http://localhost:9091,http://192.168.1.10:9091,http://mrisan.tplinkdns.com:9091",
 ).split(",")
 
 # ── DataPact Integration ────────────────────────────────────────────────────

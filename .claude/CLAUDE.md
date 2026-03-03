@@ -15,9 +15,9 @@ CMMC 2.0 compliance tracking platform — standalone app integrating with DataPa
 - `make db-seed` — seed CMMC reference data from YAML
 
 ### Development
-- `make dev-all` — backend (port 8001) + frontend (port 5174) concurrently
-- `make dev-backend` — uvicorn with hot-reload on port 8001
-- `make dev-frontend` — Vite dev server on port 5174
+- `make dev-all` — backend (port 8081) + frontend (port 9091) concurrently
+- `make dev-backend` — uvicorn with hot-reload on port 8081
+- `make dev-frontend` — Vite dev server on port 9091 (bound to 0.0.0.0)
 
 ### Testing
 - `make test` — run all tests (backend + frontend)
@@ -91,7 +91,7 @@ Vite + React 19 + TypeScript + TailwindCSS + DaisyUI
 ## Environment Variables
 Key config in `cmmc/config.py`:
 - `DATABASE_URL` — default: `postgresql+psycopg://cmmc:cmmc@localhost:5433/cmmc`
-- `CMMC_PORT` — default: 8001
+- `CMMC_PORT` — default: 8081
 - `CMMC_AUTO_SEED` — default: true
 - `DATAPACT_API_URL` — default: `http://localhost:8000`
 - `JWT_SECRET` — must change in production
