@@ -1,0 +1,120 @@
+# CMMC Level 1 — 17 Basic Safeguarding Practices (FAR 52.204-21)
+practices:
+  - practice_id: AC.L1-3.1.1
+    domain: AC
+    level: 1
+    title: Authorized Access Control
+    description: Limit information system access to authorized users, processes acting on behalf of authorized users, or devices (including other information systems).
+    nist_refs: ["3.1.1"]
+
+  - practice_id: AC.L1-3.1.2
+    domain: AC
+    level: 1
+    title: Transaction & Function Control
+    description: Limit information system access to the types of transactions and functions that authorized users are permitted to execute.
+    nist_refs: ["3.1.2"]
+
+  - practice_id: AC.L1-3.1.20
+    domain: AC
+    level: 1
+    title: External Connections
+    description: Verify and control/limit connections to and use of external information systems.
+    nist_refs: ["3.1.20"]
+
+  - practice_id: AC.L1-3.1.22
+    domain: AC
+    level: 1
+    title: Public Information
+    description: Control information posted or processed on publicly accessible information systems.
+    nist_refs: ["3.1.22"]
+
+  - practice_id: IA.L1-3.5.1
+    domain: IA
+    level: 1
+    title: Identification
+    description: Identify information system users, processes acting on behalf of users, or devices.
+    nist_refs: ["3.5.1"]
+
+  - practice_id: IA.L1-3.5.2
+    domain: IA
+    level: 1
+    title: Authentication
+    description: Authenticate (or verify) the identities of those users, processes, or devices, as a prerequisite to allowing access.
+    nist_refs: ["3.5.2"]
+
+  - practice_id: MP.L1-3.8.3
+    domain: MP
+    level: 1
+    title: Media Disposal
+    description: Sanitize or destroy information system media containing Federal Contract Information before disposal or release for reuse.
+    nist_refs: ["3.8.3"]
+
+  - practice_id: PE.L1-3.10.1
+    domain: PE
+    level: 1
+    title: Limit Physical Access
+    description: Limit physical access to organizational information systems, equipment, and the respective operating environments to authorized individuals.
+    nist_refs: ["3.10.1"]
+
+  - practice_id: PE.L1-3.10.3
+    domain: PE
+    level: 1
+    title: Escort Visitors
+    description: Escort visitors and monitor visitor activity.
+    nist_refs: ["3.10.3"]
+
+  - practice_id: PE.L1-3.10.4
+    domain: PE
+    level: 1
+    title: Physical Access Logs
+    description: Maintain audit logs of physical access.
+    nist_refs: ["3.10.4"]
+
+  - practice_id: PE.L1-3.10.5
+    domain: PE
+    level: 1
+    title: Manage Physical Access
+    description: Control and manage physical access devices.
+    nist_refs: ["3.10.5"]
+
+  - practice_id: SC.L1-3.13.1
+    domain: SC
+    level: 1
+    title: Boundary Protection
+    description: Monitor, control, and protect organizational communications at the external boundaries and key internal boundaries of the information systems.
+    nist_refs: ["3.13.1"]
+
+  - practice_id: SC.L1-3.13.5
+    domain: SC
+    level: 1
+    title: Public-Access System Separation
+    description: Implement subnetworks for publicly accessible system components that are physically or logically separated from internal networks.
+    nist_refs: ["3.13.5"]
+
+  - practice_id: SI.L1-3.14.1
+    domain: SI
+    level: 1
+    title: Flaw Remediation
+    description: Identify, report, and correct information and information system flaws in a timely manner.
+    nist_refs: ["3.14.1"]
+
+  - practice_id: SI.L1-3.14.2
+    domain: SI
+    level: 1
+    title: Malicious Code Protection
+    description: Provide protection from malicious code at appropriate locations within organizational information systems.
+    nist_refs: ["3.14.2"]
+
+  - practice_id: SI.L1-3.14.4
+    domain: SI
+    level: 1
+    title: Update Malicious Code Protection
+    description: Update malicious code protection mechanisms when new releases are available.
+    nist_refs: ["3.14.4"]
+
+  - practice_id: SI.L1-3.14.5
+    domain: SI
+    level: 1
+    title: System & File Scanning
+    description: Perform periodic scans of the information system and real-time scans of files from external sources as files are downloaded, opened, or executed.
+    nist_refs: ["3.14.5"]

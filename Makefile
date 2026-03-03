@@ -1,0 +1,69 @@
+APP_MODULE := cmmc.app:app
+PORT := 8001
+FRONTEND_DIR := ui
+
+.PHONY: help install dev dev-backend dev-frontend dev-all test test-backend test-frontend build clean
+.PHONY: db-start db-stop db-migrate db-upgrade db-seed db-reset
+
+help:  ## Show this help
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+# ── Install ──────────────────────────────────────────────────────────────────
+install:  ## Install backend + frontend dependencies
+	uv sync --all-extras
+	cd $(FRONTEND_DIR) && npm install
+
+# ── Database ─────────────────────────────────────────────────────────────────
+db-start:  ## Start PostgreSQL via docker-compose
+	docker-compose up -d db
+
+db-stop:  ## Stop PostgreSQL
+	docker-compose down
+
+db-migrate:  ## Create a new Alembic migration (usage: make db-migrate msg="description")
+	uv run alembic revision --autogenerate -m "$(msg)"
+
+db-upgrade:  ## Run pending Alembic migrations
+	uv run alembic upgrade head
+
+db-seed:  ## Seed reference data from YAML
+	uv run python -m cmmc.services.seed_service
+
+db-reset:  ## Drop and recreate database (destructive!)
+	docker-compose down -v
+	docker-compose up -d db
+	@echo "Waiting for PostgreSQL..."
+	@sleep 3
+	uv run alembic upgrade head
+	$(MAKE) db-seed
+
+# ── Development ──────────────────────────────────────────────────────────────
+dev-backend:  ## Run backend with hot-reload
+	uv run uvicorn $(APP_MODULE) --reload --port $(PORT)
+
+dev-frontend:  ## Run frontend dev server
+	cd $(FRONTEND_DIR) && npm run dev
+
+dev-all:  ## Run backend + frontend concurrently
+	@echo "Starting backend on port $(PORT) and frontend..."
+	$(MAKE) dev-backend &
+	$(MAKE) dev-frontend &
+	wait
+
+# ── Testing ──────────────────────────────────────────────────────────────────
+test: test-backend test-frontend  ## Run all tests
+
+test-backend:  ## Run backend tests
+	uv run pytest tests/ -v --tb=short
+
+test-frontend:  ## Run frontend tests
+	cd $(FRONTEND_DIR) && npm test
+
+# ── Build ────────────────────────────────────────────────────────────────────
+build:  ## Build backend wheel + frontend
+	uv build
+	cd $(FRONTEND_DIR) && npm run build
+
+clean:  ## Remove build artifacts
+	rm -rf dist/ build/ *.egg-info .pytest_cache __pycache__
+	cd $(FRONTEND_DIR) && rm -rf dist node_modules/.cache

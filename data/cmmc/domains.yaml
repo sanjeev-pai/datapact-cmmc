@@ -1,0 +1,44 @@
+# CMMC 2.0 Domains — 14 security domains
+domains:
+  - id: AC
+    name: Access Control
+    description: Limit information system access to authorized users, processes, or devices.
+  - id: AT
+    name: Awareness and Training
+    description: Ensure personnel are aware of security risks and are trained to carry out duties.
+  - id: AU
+    name: Audit and Accountability
+    description: Create, protect, and retain system audit logs and records.
+  - id: CM
+    name: Configuration Management
+    description: Establish and maintain baseline configurations and inventories.
+  - id: IA
+    name: Identification and Authentication
+    description: Identify and authenticate users, processes, and devices.
+  - id: IR
+    name: Incident Response
+    description: Establish operational incident-handling capabilities.
+  - id: MA
+    name: Maintenance
+    description: Perform maintenance on organizational systems.
+  - id: MP
+    name: Media Protection
+    description: Protect information at rest on digital and non-digital media.
+  - id: PE
+    name: Physical Protection
+    description: Limit physical access to systems, equipment, and operating environments.
+  - id: PS
+    name: Personnel Security
+    description: Screen individuals and protect information during personnel actions.
+  - id: RA
+    name: Risk Assessment
+    description: Periodically assess risk to organizational operations and assets.
+  - id: CA
+    name: Security Assessment
+    description: Periodically assess security controls and monitor connections.
+  - id: SC
+    name: System and Communications Protection
+    description: Monitor, control, and protect communications at system boundaries.
+  - id: SI
+    name: System and Information Integrity
+    description: Identify, report, and correct system flaws in a timely manner.
