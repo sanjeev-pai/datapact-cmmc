@@ -3,6 +3,7 @@ import AppLayout from '@/components/AppLayout'
 import { AuthProvider } from '@/contexts/AuthContext'
 import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
 import LoginPage from '@/modules/auth/LoginPage'
+import RegisterPage from '@/modules/auth/RegisterPage'
 
 // Placeholder pages — will be replaced in subsequent phases
 function DashboardPage() {
@@ -29,6 +30,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
