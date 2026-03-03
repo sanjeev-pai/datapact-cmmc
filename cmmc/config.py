@@ -28,7 +28,7 @@ CORS_ALLOW_ORIGINS = os.environ.get(
 ).split(",")
 
 # ── DataPact Integration ────────────────────────────────────────────────────
-DATAPACT_API_URL = os.environ.get("DATAPACT_API_URL", "http://localhost:8000")
+DATAPACT_API_URL = os.environ.get("DATAPACT_API_URL", "http://localhost:8180")
 DATAPACT_TIMEOUT = int(os.environ.get("DATAPACT_TIMEOUT", "30"))
 
 # ── Uploads ──────────────────────────────────────────────────────────────────
