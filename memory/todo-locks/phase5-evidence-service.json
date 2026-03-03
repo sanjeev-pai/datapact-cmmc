@@ -1,0 +1,10 @@
+{
+  "session": "phase5-evidence-service-20260303",
+  "branch": "todo/phase5-evidence-service",
+  "claimed_at": "2026-03-03T14:00:00Z",
+  "todo": "Evidence business logic: upload_evidence, get_evidence, list_evidence, delete_evidence, review_evidence. File storage to uploads/ dir. Tests in tests/test_evidence_service.py.",
+  "shared_files": [
+    "cmmc/services/evidence_service.py",
+    "cmmc/config.py"
+  ]
+}
