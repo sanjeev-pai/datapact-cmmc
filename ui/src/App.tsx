@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import AppLayout from '@/components/AppLayout'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { AuthProvider } from '@/contexts/AuthContext'
+import AssessmentCreatePage from '@/modules/assessments/AssessmentCreatePage'
 import AssessmentListPage from '@/modules/assessments/AssessmentListPage'
 import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
 import LoginPage from '@/modules/auth/LoginPage'
@@ -30,6 +31,7 @@ function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/cmmc" element={<CMMCLibraryPage />} />
               <Route path="/assessments" element={<AssessmentListPage />} />
+              <Route path="/assessments/new" element={<AssessmentCreatePage />} />
             </Route>
           </Route>
         </Routes>
