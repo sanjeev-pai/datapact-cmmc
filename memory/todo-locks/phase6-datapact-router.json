@@ -1,0 +1,7 @@
+{
+  "session": "opus-2026-03-03e",
+  "branch": "todo/phase6-datapact-router",
+  "claimed_at": "2026-03-03T04:00:00Z",
+  "todo": "DataPact API router: contracts proxy, mappings CRUD, sync endpoints, sync-logs",
+  "shared_files": ["cmmc/app.py"]
+}
