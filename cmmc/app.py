@@ -24,13 +24,23 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 
 def _startup() -> None:
     """Run on application startup."""
-    from cmmc.database import engine
+    from cmmc.database import SessionLocal, engine
     from cmmc.models.base import Base
 
     # Create tables for non-PostgreSQL backends (dev/test convenience)
     db_url = str(engine.url)
     if not db_url.startswith("postgresql"):
         Base.metadata.create_all(bind=engine)
+
+    # Auto-seed reference data
+    if config.AUTO_SEED:
+        from cmmc.services.seed_service import seed_all
+
+        db = SessionLocal()
+        try:
+            seed_all(db)
+        finally:
+            db.close()
 
 
 def _cleanup() -> None:
@@ -45,6 +55,11 @@ app = FastAPI(
     description="CMMC 2.0 compliance tracking and assessment platform",
     lifespan=lifespan,
 )
+
+# ── Routers ─────────────────────────────────────────────────────────────────
+from cmmc.routers.cmmc import router as cmmc_router  # noqa: E402
+
+app.include_router(cmmc_router)
 
 # ── Middleware ───────────────────────────────────────────────────────────────
 app.add_middleware(
