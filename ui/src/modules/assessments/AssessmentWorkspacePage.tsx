@@ -11,6 +11,8 @@ import {
   updatePracticeEvaluation,
 } from '@/services/assessments'
 import { getDomains, getPractices } from '@/services/cmmc'
+import { syncAssessment as syncAssessmentApi } from '@/services/datapact'
+import type { SyncResult } from '@/types/datapact'
 import WorkspacePracticeList from './WorkspacePracticeList'
 import WorkspacePracticeDetail from './WorkspacePracticeDetail'
 import ScoringPanel from './scoring/ScoringPanel'
@@ -43,6 +45,8 @@ export default function AssessmentWorkspacePage() {
   const [error, setError] = useState<string | null>(null)
   const [transitioning, setTransitioning] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [syncingAll, setSyncingAll] = useState(false)
+  const [syncResults, setSyncResults] = useState<SyncResult[] | null>(null)
 
   const loadData = useCallback(async () => {
     if (!id) return
@@ -102,6 +106,34 @@ export default function AssessmentWorkspacePage() {
       setError(err instanceof Error ? err.message : 'Failed to save evaluation')
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleSyncAll() {
+    if (!id) return
+    setSyncingAll(true)
+    setSyncResults(null)
+    try {
+      const res = await syncAssessmentApi(id)
+      setSyncResults(res.results)
+      // Refresh evaluations to get updated sync statuses
+      const evalsData = await getAssessmentPractices(id)
+      setEvaluations(evalsData)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Sync failed')
+    } finally {
+      setSyncingAll(false)
+    }
+  }
+
+  async function handlePracticeSyncComplete() {
+    if (!id) return
+    // Refresh evaluations to get updated sync statuses
+    try {
+      const evalsData = await getAssessmentPractices(id)
+      setEvaluations(evalsData)
+    } catch {
+      // Silently fail
     }
   }
 
@@ -182,6 +214,23 @@ export default function AssessmentWorkspacePage() {
             {transitioning ? 'Completing...' : 'Mark Complete'}
           </button>
         )}
+
+        {/* Sync All button */}
+        <button
+          className="btn btn-outline btn-sm"
+          onClick={handleSyncAll}
+          disabled={syncingAll}
+          aria-label={syncingAll ? 'Syncing all practices...' : 'Sync All'}
+        >
+          {syncingAll ? (
+            <>
+              <span className="loading loading-spinner loading-xs" />
+              Syncing...
+            </>
+          ) : (
+            'Sync All'
+          )}
+        </button>
       </div>
 
       {/* Scoring panel */}
@@ -200,6 +249,18 @@ export default function AssessmentWorkspacePage() {
         </div>
       )}
 
+      {/* Sync results banner */}
+      {syncResults && (
+        <div className="alert alert-info rounded-none text-sm py-2" data-testid="sync-results-banner">
+          <span>
+            Sync complete: {syncResults.filter((r) => r.status === 'success' || r.status === 'synced').length} synced,
+            {' '}{syncResults.filter((r) => r.status === 'error').length} errors,
+            {' '}{syncResults.filter((r) => r.status === 'skipped').length} skipped
+          </span>
+          <button className="btn btn-ghost btn-xs" onClick={() => setSyncResults(null)}>Dismiss</button>
+        </div>
+      )}
+
       {/* Body */}
       <div className="flex flex-1 overflow-hidden">
         <WorkspacePracticeList
@@ -214,9 +275,11 @@ export default function AssessmentWorkspacePage() {
           <WorkspacePracticeDetail
             practice={selectedPractice}
             evaluation={selectedEvaluation}
+            assessmentId={id!}
             assessmentStatus={status}
             saving={saving}
             onSave={handleSavePractice}
+            onSyncComplete={handlePracticeSyncComplete}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center text-base-content/40">
