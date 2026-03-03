@@ -1,15 +1,12 @@
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
 *.egg-info/
 dist/
 build/
 *.egg
 .venv/
 venv/
-.mypy_cache/
-.ruff_cache/
 
 # Testing
 .pytest_cache/
@@ -17,14 +14,9 @@ venv/
 htmlcov/
 test.db
 
-# Node
-node_modules/
-ui/dist/
-*.tgz
-
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
 
@@ -32,14 +24,13 @@ ui/dist/
 .DS_Store
 Thumbs.db
 
+# Node
+node_modules/
+ui/dist/
+
 # Environment
 .env
 .env.local
-
-# Claude Code
-.claude/settings.local.json
-.claude/worktrees/
-.playwright-mcp/
 
 # Database
 *.db
@@ -48,33 +39,6 @@ state/
 # Docker
 pgdata/
 
-# Obsidian (docs vault local settings/cache)
-.obsidian/
-docs/.obsidian/
-docs/.trash/
-
-# Screenshots (testing artifacts)
-*.png
-
-# Images
-*.jpg
-*.jpeg
-*.gif
-*.bmp
-*.svg
-*.ico
-*.webp
-
-# Data files
-*.dat
-*.csv
-*.parquet
-@.sqlite3
-
-# Logs
-error.log
-out.log
-err.log
-
-# Ignore samples
-docs/samples/
+# Claude Code
+.claude/settings.local.json
+.claude/worktrees/
