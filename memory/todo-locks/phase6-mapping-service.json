@@ -1,0 +1,7 @@
+{
+  "session": "opus-2026-03-03c",
+  "branch": "todo/phase6-mapping-service",
+  "claimed_at": "2026-03-03T02:00:00Z",
+  "todo": "Practice-to-contract mapping service: create_mapping, get_mappings, delete_mapping, suggest_mappings",
+  "shared_files": []
+}
