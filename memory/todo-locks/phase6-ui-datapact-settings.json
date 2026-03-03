@@ -1,7 +1,0 @@
-{
-  "session": "opus-2026-03-03f",
-  "branch": "todo/phase6-ui-datapact-settings",
-  "claimed_at": "2026-03-03T05:00:00Z",
-  "todo": "DataPact settings page: org API URL & key config, connection test, contract preview",
-  "shared_files": ["cmmc/schemas/organization.py", "cmmc/routers/organizations.py", "ui/src/App.tsx", "ui/src/components/AppLayout.tsx"]
-}
