@@ -31,5 +31,9 @@ CORS_ALLOW_ORIGINS = os.environ.get(
 DATAPACT_API_URL = os.environ.get("DATAPACT_API_URL", "http://localhost:8000")
 DATAPACT_TIMEOUT = int(os.environ.get("DATAPACT_TIMEOUT", "30"))
 
+# ── Uploads ──────────────────────────────────────────────────────────────────
+UPLOAD_DIR = os.environ.get("CMMC_UPLOAD_DIR", "uploads")
+MAX_UPLOAD_SIZE = int(os.environ.get("CMMC_MAX_UPLOAD_SIZE", str(50 * 1024 * 1024)))  # 50MB
+
 # ── Seed ─────────────────────────────────────────────────────────────────────
 AUTO_SEED = os.environ.get("CMMC_AUTO_SEED", "true").lower() == "true"
