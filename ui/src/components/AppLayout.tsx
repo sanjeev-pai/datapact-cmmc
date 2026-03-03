@@ -13,6 +13,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/cmmc', label: 'CMMC Library', icon: '◎' },
   { to: '/assessments', label: 'Assessments', icon: '◈' },
   { to: '/evidence', label: 'Evidence', icon: '◆' },
+  { to: '/datapact', label: 'DataPact', icon: '⬡' },
   { to: '/admin', label: 'Admin', icon: '⚙', roles: ['system_admin', 'org_admin'] },
 ]
 

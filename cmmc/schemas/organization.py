@@ -17,6 +17,8 @@ class OrganizationUpdate(BaseModel):
     cage_code: str | None = None
     duns_number: str | None = None
     target_level: int | None = Field(None, ge=1, le=3)
+    datapact_api_url: str | None = Field(None, max_length=512)
+    datapact_api_key: str | None = Field(None, max_length=512)
 
 
 class OrganizationResponse(BaseModel):
@@ -25,6 +27,8 @@ class OrganizationResponse(BaseModel):
     cage_code: str | None = None
     duns_number: str | None = None
     target_level: int | None = None
+    datapact_api_url: str | None = None
+    datapact_api_key: str | None = None
     created_at: datetime
     updated_at: datetime
 
