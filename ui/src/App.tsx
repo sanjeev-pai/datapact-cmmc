@@ -6,6 +6,7 @@ import AssessmentCreatePage from '@/modules/assessments/AssessmentCreatePage'
 import AssessmentListPage from '@/modules/assessments/AssessmentListPage'
 import AssessmentWorkspacePage from '@/modules/assessments/AssessmentWorkspacePage'
 import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
+import DataPactSettingsPage from '@/modules/datapact/DataPactSettingsPage'
 import EvidenceListPage from '@/modules/evidence/EvidenceListPage'
 import LoginPage from '@/modules/auth/LoginPage'
 import RegisterPage from '@/modules/auth/RegisterPage'
@@ -36,6 +37,7 @@ function App() {
               <Route path="/assessments/new" element={<AssessmentCreatePage />} />
               <Route path="/assessments/:id" element={<AssessmentWorkspacePage />} />
               <Route path="/evidence" element={<EvidenceListPage />} />
+              <Route path="/datapact" element={<DataPactSettingsPage />} />
             </Route>
           </Route>
         </Routes>

@@ -104,6 +104,10 @@ def update_organization(
         org.duns_number = body.duns_number
     if body.target_level is not None:
         org.target_level = body.target_level
+    if body.datapact_api_url is not None:
+        org.datapact_api_url = body.datapact_api_url
+    if body.datapact_api_key is not None:
+        org.datapact_api_key = body.datapact_api_key
 
     db.commit()
     db.refresh(org)
