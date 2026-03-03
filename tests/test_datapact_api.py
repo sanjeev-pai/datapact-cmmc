@@ -212,6 +212,48 @@ def test_delete_mapping_not_found(client, db, seed_datapact):
 
 
 # ---------------------------------------------------------------------------
+# POST /suggest
+# ---------------------------------------------------------------------------
+
+
+MOCK_CONTRACTS_SUGGEST = {
+    "items": [
+        {"id": "c10", "title": "Access Control Review Contract", "description": "authentication and authorization"},
+        {"id": "c11", "title": "Generic Widget Contract", "description": "widget manufacturing"},
+    ],
+    "total": 2,
+}
+
+
+def test_suggest_mappings(client, db, seed_datapact):
+    with patch("cmmc.routers.datapact._client_for_user") as mock_factory:
+        mock_client = AsyncMock()
+        mock_client.get_contracts.return_value = MOCK_CONTRACTS_SUGGEST
+        mock_factory.return_value = mock_client
+
+        resp = client.post(
+            "/api/datapact/suggest",
+            headers=_auth(seed_datapact["officer"]),
+        )
+    assert resp.status_code == 200
+    data = resp.json()
+    # Should suggest AC practice ↔ c10 (access control keywords match)
+    assert isinstance(data, list)
+    matched_contracts = [s["contract_id"] for s in data]
+    assert "c10" in matched_contracts
+    # c11 ("widget manufacturing") should NOT match any domain
+    assert "c11" not in matched_contracts
+
+
+def test_suggest_mappings_viewer_forbidden(client, db, seed_datapact):
+    resp = client.post(
+        "/api/datapact/suggest",
+        headers=_auth(seed_datapact["viewer"]),
+    )
+    assert resp.status_code == 403
+
+
+# ---------------------------------------------------------------------------
 # POST /sync/{assessment_id}
 # ---------------------------------------------------------------------------
 

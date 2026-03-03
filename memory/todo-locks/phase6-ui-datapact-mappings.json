@@ -1,0 +1,7 @@
+{
+  "session": "opus-session-20260303",
+  "branch": "todo/phase6-ui-datapact-mappings",
+  "claimed_at": "2026-03-03T00:00:00Z",
+  "todo": "Practice-to-contract mapping UI. DataPactMappingsPage with table of practice↔contract mappings, add/remove mappings, auto-suggest button. Integrated into assessment workspace as DataPact tab.",
+  "shared_files": ["ui/src/modules/datapact/", "ui/src/services/datapact.ts", "ui/src/App.tsx"]
+}

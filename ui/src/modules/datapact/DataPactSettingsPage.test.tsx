@@ -75,7 +75,7 @@ describe('DataPactSettingsPage', () => {
       </MemoryRouter>,
     )
     await waitFor(() => {
-      expect(screen.getByText('DataPact Settings')).toBeDefined()
+      expect(screen.getByText('DataPact Integration')).toBeDefined()
     })
   })
 
