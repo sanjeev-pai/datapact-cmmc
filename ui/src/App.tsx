@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import AppLayout from '@/components/AppLayout'
+import { AuthProvider } from '@/contexts/AuthContext'
 import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
+import LoginPage from '@/modules/auth/LoginPage'
 
 // Placeholder pages — will be replaced in subsequent phases
 function DashboardPage() {
@@ -24,14 +26,17 @@ function AssessmentsPage() {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route element={<AppLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/cmmc" element={<CMMCLibraryPage />} />
-          <Route path="/assessments" element={<AssessmentsPage />} />
-        </Route>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/cmmc" element={<CMMCLibraryPage />} />
+            <Route path="/assessments" element={<AssessmentsPage />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
