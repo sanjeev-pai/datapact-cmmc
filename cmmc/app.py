@@ -53,6 +53,7 @@ app = FastAPI(
     version=config.APP_VERSION,
     description="CMMC 2.0 compliance tracking and assessment platform",
     lifespan=lifespan,
+    redirect_slashes=False,
 )
 
 # ── Routers ─────────────────────────────────────────────────────────────────

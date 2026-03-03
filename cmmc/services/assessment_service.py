@@ -68,12 +68,14 @@ def get_assessment(db: Session, assessment_id: str) -> Assessment:
 def list_assessments(
     db: Session,
     *,
-    org_id: str,
+    org_id: str | None = None,
     status: str | None = None,
     target_level: int | None = None,
 ) -> tuple[list[Assessment], int]:
-    """List assessments for an org with optional filters. Returns (items, total)."""
-    query = db.query(Assessment).filter_by(org_id=org_id)
+    """List assessments with optional filters. Returns (items, total)."""
+    query = db.query(Assessment)
+    if org_id:
+        query = query.filter_by(org_id=org_id)
 
     if status:
         query = query.filter_by(status=status)

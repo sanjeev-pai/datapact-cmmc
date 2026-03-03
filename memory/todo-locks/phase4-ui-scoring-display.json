@@ -1,0 +1,9 @@
+{
+  "session": "phase4-ui-scoring-display-20260303",
+  "branch": "todo/phase4-ui-scoring-display",
+  "claimed_at": "2026-03-03T12:00:00Z",
+  "todo": "Scoring widgets for assessment workspace: SPRS score gauge (-203 to 110 scale), overall compliance percentage bar, domain-level compliance breakdown. Used in workspace header and assessment detail view.",
+  "shared_files": [
+    "ui/src/modules/assessments/AssessmentWorkspacePage.tsx"
+  ]
+}

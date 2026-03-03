@@ -7,6 +7,8 @@ import yaml
 from sqlalchemy.orm import Session
 
 from cmmc.models import CMMCDomain, CMMCLevel, CMMCPractice
+from cmmc.models.assessment import Assessment
+from cmmc.models.organization import Organization
 from cmmc.models.user import Role, User, UserRole
 from cmmc.services.auth_service import hash_password
 
@@ -23,6 +25,9 @@ def seed_all(db: Session) -> dict[str, int]:
     counts["domains"] = _seed_domains(db)
     counts["levels"] = _seed_levels(db)
     counts["practices"] = _seed_practices(db)
+    db.commit()
+    counts["organizations"] = _seed_organizations(db)
+    counts["assessments"] = _seed_assessments(db)
     db.commit()
     logger.info("Seed complete: %s", counts)
     return counts
@@ -50,6 +55,12 @@ def _seed_roles(db: Session) -> int:
 
 
 SEED_USERS = [
+    {
+        "username": "admin",
+        "email": "admin@datapact.local",
+        "password": "admin123!",
+        "roles": ["system_admin", "org_admin"],
+    },
     {
         "username": "jwchandna",
         "email": "jwchandna@datapact.local",
@@ -159,6 +170,104 @@ def _seed_practices(db: Session) -> int:
                     )
                 )
             count += 1
+    db.flush()
+    return count
+
+
+SEED_ORGS = [
+    {
+        "name": "Acme Defense Corp",
+        "cage_code": "1ABC2",
+        "duns_number": "123456789",
+        "target_level": 2,
+    },
+    {
+        "name": "Pinnacle Aero Systems",
+        "cage_code": "3DEF4",
+        "duns_number": "987654321",
+        "target_level": 3,
+    },
+]
+
+SEED_ASSESSMENTS = [
+    {
+        "org_name": "Acme Defense Corp",
+        "title": "Acme L1 Self-Assessment (FY25)",
+        "target_level": 1,
+        "assessment_type": "self",
+        "status": "in_progress",
+    },
+    {
+        "org_name": "Acme Defense Corp",
+        "title": "Acme L2 C3PAO Assessment (FY25)",
+        "target_level": 2,
+        "assessment_type": "third_party",
+        "status": "draft",
+    },
+    {
+        "org_name": "Pinnacle Aero Systems",
+        "title": "Pinnacle L2 Self-Assessment (FY25)",
+        "target_level": 2,
+        "assessment_type": "self",
+        "status": "completed",
+    },
+    {
+        "org_name": "Pinnacle Aero Systems",
+        "title": "Pinnacle L3 DIBCAC Assessment (FY26)",
+        "target_level": 3,
+        "assessment_type": "government",
+        "status": "draft",
+    },
+]
+
+
+def _seed_organizations(db: Session) -> int:
+    count = 0
+    for item in SEED_ORGS:
+        existing = db.query(Organization).filter_by(name=item["name"]).first()
+        if existing:
+            count += 1
+            continue
+        db.add(Organization(**item))
+        count += 1
+    db.flush()
+    return count
+
+
+def _seed_assessments(db: Session) -> int:
+    from cmmc.services.assessment_service import create_assessment
+
+    count = 0
+    for item in SEED_ASSESSMENTS:
+        org = db.query(Organization).filter_by(name=item["org_name"]).first()
+        if not org:
+            logger.warning("Org not found for assessment seed: %s", item["org_name"])
+            continue
+        existing = (
+            db.query(Assessment)
+            .filter_by(org_id=org.id, title=item["title"])
+            .first()
+        )
+        if existing:
+            count += 1
+            continue
+        assessment = create_assessment(
+            db,
+            org_id=org.id,
+            title=item["title"],
+            target_level=item["target_level"],
+            assessment_type=item["assessment_type"],
+        )
+        # Advance status beyond draft if needed
+        if item["status"] in ("in_progress", "under_review", "completed"):
+            assessment.status = "in_progress"
+            assessment.started_at = assessment.created_at
+        if item["status"] in ("under_review", "completed"):
+            assessment.status = "under_review"
+        if item["status"] == "completed":
+            assessment.status = "completed"
+            assessment.completed_at = assessment.updated_at
+        count += 1
     db.flush()
     return count
 

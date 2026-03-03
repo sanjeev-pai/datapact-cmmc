@@ -10,7 +10,6 @@ CMMC 2.0 compliance tracking platform — standalone app integrating with DataPa
 
 ### Setup
 - `make install` — install backend (uv) + frontend (npm) dependencies
-- `make db-start` — start PostgreSQL via Docker on port 5433
 - `make db-upgrade` — run Alembic migrations
 - `make db-seed` — seed CMMC reference data from YAML
 
@@ -28,7 +27,7 @@ CMMC 2.0 compliance tracking platform — standalone app integrating with DataPa
 
 ### Database
 - `make db-migrate msg="description"` — create new Alembic migration
-- `make db-reset` — drop volume, recreate, migrate, seed (destructive)
+- `make db-reset` — drop and recreate schema, migrate, seed (destructive)
 
 ### Build & Lint
 - `make build` — uv wheel + Vite bundle
@@ -90,15 +89,17 @@ Vite + React 19 + TypeScript + TailwindCSS + DaisyUI
 
 ## Environment Variables
 Key config in `cmmc/config.py`:
-- `DATABASE_URL` — default: `postgresql+psycopg://cmmc:cmmc@localhost:5433/cmmc`
+- `DATABASE_URL` — default: `postgresql+psycopg://sanjeevpai@localhost:5432/datapact`
+- `DATABASE_SCHEMA` — default: `datapact-cmmc`
 - `CMMC_PORT` — default: 8081
 - `CMMC_AUTO_SEED` — default: true
 - `DATAPACT_API_URL` — default: `http://localhost:8000`
 - `JWT_SECRET` — must change in production
 
-## Docker
-- `docker-compose.yml` runs PostgreSQL 16 on port 5433
-- DB credentials: `cmmc`/`cmmc`/`cmmc` (user/password/database)
+## Database
+- Local PostgreSQL 14 on port 5432 (Homebrew)
+- Database: `datapact`, Schema: `datapact-cmmc`
+- All tables live in the `datapact-cmmc` schema (set via Base metadata + search_path)
 
 ## Documentation
 - PRDs in `docs/PRD/`, plans in `docs/plans/`

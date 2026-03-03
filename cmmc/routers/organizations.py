@@ -17,7 +17,7 @@ from cmmc.schemas.organization import (
 router = APIRouter(prefix="/api/organizations", tags=["organizations"])
 
 
-@router.post("/", response_model=OrganizationResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=OrganizationResponse, status_code=status.HTTP_201_CREATED)
 def create_organization(
     body: OrganizationCreate,
     user: User = Depends(require_role("system_admin")),
@@ -40,7 +40,7 @@ def create_organization(
     return org
 
 
-@router.get("/", response_model=list[OrganizationResponse])
+@router.get("", response_model=list[OrganizationResponse])
 def list_organizations(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),

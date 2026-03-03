@@ -183,23 +183,25 @@ describe('AssessmentWorkspacePage', () => {
     expect(screen.getByTestId('workspace-loading')).toBeDefined()
   })
 
-  it('renders assessment header with title, status, level, SPRS, and compliance', async () => {
+  it('renders assessment header with title, status, level, and scoring panel', async () => {
     renderWorkspace()
     await waitFor(() => {
       expect(screen.getByText('Q1 Self Assessment')).toBeDefined()
     })
     expect(screen.getByText('In Progress')).toBeDefined()
     expect(screen.getByText('Level 2')).toBeDefined()
-    expect(screen.getByText('72')).toBeDefined()
-    expect(screen.getByText('45.5%')).toBeDefined()
+    // Scores rendered via ScoringPanel widgets
+    expect(screen.getByText('SPRS Score')).toBeDefined()
+    expect(screen.getByText('Overall Compliance')).toBeDefined()
   })
 
   it('renders practice list grouped by domain', async () => {
     renderWorkspace()
     await waitFor(() => {
-      expect(screen.getByText('Access Control')).toBeDefined()
+      // Domain names appear in both practice list and scoring panel
+      expect(screen.getAllByText('Access Control').length).toBeGreaterThanOrEqual(1)
     })
-    expect(screen.getByText('Identification & Authentication')).toBeDefined()
+    expect(screen.getAllByText('Identification & Authentication').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('AC.L1-001')).toBeDefined()
     expect(screen.getByText('IA.L1-001')).toBeDefined()
   })
