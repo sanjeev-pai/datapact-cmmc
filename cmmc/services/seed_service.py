@@ -7,6 +7,7 @@ import yaml
 from sqlalchemy.orm import Session
 
 from cmmc.models import CMMCDomain, CMMCLevel, CMMCPractice
+from cmmc.models.user import Role
 
 logger = logging.getLogger(__name__)
 
@@ -16,12 +17,34 @@ DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "cmmc"
 def seed_all(db: Session) -> dict[str, int]:
     """Seed all CMMC reference data. Returns counts of upserted records."""
     counts: dict[str, int] = {}
+    counts["roles"] = _seed_roles(db)
     counts["domains"] = _seed_domains(db)
     counts["levels"] = _seed_levels(db)
     counts["practices"] = _seed_practices(db)
     db.commit()
     logger.info("Seed complete: %s", counts)
     return counts
+
+
+DEFAULT_ROLES = [
+    "system_admin",
+    "org_admin",
+    "compliance_officer",
+    "assessor",
+    "c3pao_lead",
+    "viewer",
+]
+
+
+def _seed_roles(db: Session) -> int:
+    count = 0
+    for role_name in DEFAULT_ROLES:
+        existing = db.query(Role).filter_by(name=role_name).first()
+        if not existing:
+            db.add(Role(name=role_name))
+        count += 1
+    db.flush()
+    return count
 
 
 def _seed_domains(db: Session) -> int:
