@@ -7,8 +7,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 
-# Use SQLite for tests
+# Use SQLite for tests, disable auto-seed
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
+os.environ["CMMC_AUTO_SEED"] = "false"
 
 from cmmc.app import app  # noqa: E402
 from cmmc.database import get_db  # noqa: E402

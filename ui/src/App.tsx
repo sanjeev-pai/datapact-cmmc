@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import AppLayout from '@/components/AppLayout'
+import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
 
 // Placeholder pages — will be replaced in subsequent phases
 function DashboardPage() {
@@ -7,15 +8,6 @@ function DashboardPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
       <p className="text-base-content/70">Compliance overview coming in Phase 7.</p>
-    </div>
-  )
-}
-
-function CMMCLibraryPage() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">CMMC Practice Library</h1>
-      <p className="text-base-content/70">Browse all CMMC practices — coming in Phase 2.</p>
     </div>
   )
 }
