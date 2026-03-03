@@ -1,4 +1,10 @@
-import type { Assessment, AssessmentCreate, AssessmentListResponse } from '@/types/assessment'
+import type {
+  Assessment,
+  AssessmentCreate,
+  AssessmentListResponse,
+  AssessmentPractice,
+  AssessmentPracticeUpdate,
+} from '@/types/assessment'
 import { api } from './api'
 
 export async function getAssessments(params?: {
@@ -36,4 +42,28 @@ export async function submitAssessment(id: string): Promise<Assessment> {
 
 export async function completeAssessment(id: string): Promise<Assessment> {
   return api.post<Assessment>(`/assessments/${id}/complete`)
+}
+
+export async function getAssessmentPractices(
+  assessmentId: string,
+  params?: { status?: string; domain?: string },
+): Promise<AssessmentPractice[]> {
+  const query = new URLSearchParams()
+  if (params?.status) query.set('status', params.status)
+  if (params?.domain) query.set('domain', params.domain)
+  const qs = query.toString()
+  return api.get<AssessmentPractice[]>(
+    `/assessments/${assessmentId}/practices${qs ? `?${qs}` : ''}`,
+  )
+}
+
+export async function updatePracticeEvaluation(
+  assessmentId: string,
+  practiceId: string,
+  data: AssessmentPracticeUpdate,
+): Promise<AssessmentPractice> {
+  return api.patch<AssessmentPractice>(
+    `/assessments/${assessmentId}/practices/${practiceId}`,
+    data,
+  )
 }
