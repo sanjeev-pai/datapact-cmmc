@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import AppLayout from '@/components/AppLayout'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { AuthProvider } from '@/contexts/AuthContext'
+import AssessmentListPage from '@/modules/assessments/AssessmentListPage'
 import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
 import LoginPage from '@/modules/auth/LoginPage'
 import RegisterPage from '@/modules/auth/RegisterPage'
@@ -12,15 +13,6 @@ function DashboardPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
       <p className="text-base-content/70">Compliance overview coming in Phase 7.</p>
-    </div>
-  )
-}
-
-function AssessmentsPage() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Assessments</h1>
-      <p className="text-base-content/70">Assessment workflow — coming in Phase 4.</p>
     </div>
   )
 }
@@ -37,7 +29,7 @@ function App() {
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/cmmc" element={<CMMCLibraryPage />} />
-              <Route path="/assessments" element={<AssessmentsPage />} />
+              <Route path="/assessments" element={<AssessmentListPage />} />
             </Route>
           </Route>
         </Routes>
