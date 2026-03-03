@@ -1,3 +1,211 @@
-# CMMC Level 3 — NIST SP 800-172 Enhanced Security Practices
-# Full data will be populated in Phase 2 (PRD-002)
-practices: []
+# CMMC Level 3 — 24 Enhanced Security Practices (NIST SP 800-172, Feb 2021)
+# These are the 24 requirements selected from the 35 total NIST SP 800-172 requirements
+# for CMMC Level 3 certification, as specified in 32 CFR 170.14(c)(4) Table 1.
+practices:
+  # ============================================================
+  # ACCESS CONTROL (AC) — 2 enhanced practices
+  # ============================================================
+
+  - practice_id: AC.L3-3.1.2e
+    domain: AC
+    level: 3
+    title: Organizationally Controlled Assets
+    description: Restrict access to systems and system components to only those information resources that are owned, provisioned, or issued by the organization.
+    nist_refs: ["3.1.2e"]
+
+  - practice_id: AC.L3-3.1.3e
+    domain: AC
+    level: 3
+    title: Secured Information Transfer
+    description: Employ organization-defined secure information transfer solutions to control information flows between security domains on connected systems.
+    nist_refs: ["3.1.3e"]
+
+  # ============================================================
+  # AWARENESS AND TRAINING (AT) — 2 enhanced practices
+  # ============================================================
+
+  - practice_id: AT.L3-3.2.1e
+    domain: AT
+    level: 3
+    title: Advanced Threat Awareness
+    description: Provide awareness training upon initial hire, following a significant cyber event, and at least annually, focusing on recognizing and responding to threats from social engineering, advanced persistent threat actors, breaches, and suspicious behaviors; update the training at least annually or when there are significant changes to the threat.
+    nist_refs: ["3.2.1e"]
+
+  - practice_id: AT.L3-3.2.2e
+    domain: AT
+    level: 3
+    title: Practical Training Exercises
+    description: Include practical exercises in awareness training for all users, tailored by role, aligned with current threat scenarios and providing feedback to individuals involved in the training and their supervisors.
+    nist_refs: ["3.2.2e"]
+
+  # ============================================================
+  # CONFIGURATION MANAGEMENT (CM) — 3 enhanced practices
+  # ============================================================
+
+  - practice_id: CM.L3-3.4.1e
+    domain: CM
+    level: 3
+    title: Authoritative Repository
+    description: Establish and maintain an authoritative source and repository to provide a trusted source and accountability for approved and implemented system components.
+    nist_refs: ["3.4.1e"]
+
+  - practice_id: CM.L3-3.4.2e
+    domain: CM
+    level: 3
+    title: Automated Detection & Remediation
+    description: Employ automated mechanisms to detect misconfigured or unauthorized system components; after detection, remove the components or place the components in a quarantine or remediation network to facilitate patching, re-configuration, or other mitigations.
+    nist_refs: ["3.4.2e"]
+
+  - practice_id: CM.L3-3.4.3e
+    domain: CM
+    level: 3
+    title: Automated Inventory
+    description: Employ automated discovery and management tools to maintain an up-to-date, complete, accurate, and readily available inventory of system components.
+    nist_refs: ["3.4.3e"]
+
+  # ============================================================
+  # IDENTIFICATION AND AUTHENTICATION (IA) — 2 enhanced practices
+  # ============================================================
+
+  - practice_id: IA.L3-3.5.1e
+    domain: IA
+    level: 3
+    title: Bidirectional Authentication
+    description: Identify and authenticate systems and system components, where possible, before establishing a network connection using bidirectional authentication that is cryptographically based and replay resistant.
+    nist_refs: ["3.5.1e"]
+
+  - practice_id: IA.L3-3.5.3e
+    domain: IA
+    level: 3
+    title: Block Untrusted Assets
+    description: Employ automated or manual/procedural mechanisms to prohibit system components from connecting to organizational systems unless the component is known, authenticated, in a properly configured state, or in a trust profile.
+    nist_refs: ["3.5.3e"]
+
+  # ============================================================
+  # INCIDENT RESPONSE (IR) — 2 enhanced practices
+  # ============================================================
+
+  - practice_id: IR.L3-3.6.1e
+    domain: IR
+    level: 3
+    title: Security Operations Center
+    description: Establish and maintain a security operations center capability that operates at a organization-defined time period, with allowance for remote/on-call staff.
+    nist_refs: ["3.6.1e"]
+
+  - practice_id: IR.L3-3.6.2e
+    domain: IR
+    level: 3
+    title: Cyber Incident Response Team
+    description: Establish and maintain a cyber incident response team that can be deployed by the organization within 24 hours.
+    nist_refs: ["3.6.2e"]
+
+  # ============================================================
+  # PERSONNEL SECURITY (PS) — 1 enhanced practice
+  # ============================================================
+
+  - practice_id: PS.L3-3.9.2e
+    domain: PS
+    level: 3
+    title: Adverse Information
+    description: Ensure that organizational systems are protected if adverse information develops or is obtained about individuals with access to CUI.
+    nist_refs: ["3.9.2e"]
+
+  # ============================================================
+  # RISK ASSESSMENT (RA) — 7 enhanced practices
+  # ============================================================
+
+  - practice_id: RA.L3-3.11.1e
+    domain: RA
+    level: 3
+    title: Threat-Informed Risk Assessment
+    description: Employ organization-defined sources of threat intelligence as part of a risk assessment to guide and inform the development of organizational systems, security architectures, selection of security solutions, monitoring, threat hunting, and response and recovery activities.
+    nist_refs: ["3.11.1e"]
+
+  - practice_id: RA.L3-3.11.2e
+    domain: RA
+    level: 3
+    title: Threat Hunting
+    description: Conduct cyber threat hunting activities on an organization-defined frequency or upon organization-defined events to search for indicators of compromise in organizational systems and detect, track, and disrupt threats that evade existing controls.
+    nist_refs: ["3.11.2e"]
+
+  - practice_id: RA.L3-3.11.3e
+    domain: RA
+    level: 3
+    title: Advanced Risk Identification
+    description: Employ advanced automation and analytics capabilities in support of analysts to predict and identify risks to organizations, systems, and system components.
+    nist_refs: ["3.11.3e"]
+
+  - practice_id: RA.L3-3.11.4e
+    domain: RA
+    level: 3
+    title: Security Solution Rationale
+    description: Document the security solutions selected for the systems and the rationale for those solutions, including any risk determinations, in the system security plans.
+    nist_refs: ["3.11.4e"]
+
+  - practice_id: RA.L3-3.11.5e
+    domain: RA
+    level: 3
+    title: Security Solutions Effectiveness
+    description: Assess the effectiveness of security solutions at an organization-defined frequency to address anticipated risks to organizational systems and the organization based on current and accumulated threat intelligence.
+    nist_refs: ["3.11.5e"]
+
+  - practice_id: RA.L3-3.11.6e
+    domain: RA
+    level: 3
+    title: Supply Chain Risk Response
+    description: Assess, respond to, and monitor supply chain risks associated with organizational systems and system components.
+    nist_refs: ["3.11.6e"]
+
+  - practice_id: RA.L3-3.11.7e
+    domain: RA
+    level: 3
+    title: Supply Chain Risk Plan
+    description: Develop and update, at an organization-defined frequency, a plan for managing supply chain risks associated with organizational systems and system components.
+    nist_refs: ["3.11.7e"]
+
+  # ============================================================
+  # SECURITY ASSESSMENT (CA) — 1 enhanced practice
+  # ============================================================
+
+  - practice_id: CA.L3-3.12.1e
+    domain: CA
+    level: 3
+    title: Penetration Testing
+    description: Conduct penetration testing at an organization-defined frequency, leveraging automated scanning tools and ad hoc tests using subject matter experts.
+    nist_refs: ["3.12.1e"]
+
+  # ============================================================
+  # SYSTEM AND COMMUNICATIONS PROTECTION (SC) — 1 enhanced practice
+  # ============================================================
+
+  - practice_id: SC.L3-3.13.4e
+    domain: SC
+    level: 3
+    title: Isolation
+    description: Employ physical isolation techniques or logical isolation techniques or both in organizational systems and system components.
+    nist_refs: ["3.13.4e"]
+
+  # ============================================================
+  # SYSTEM AND INFORMATION INTEGRITY (SI) — 3 enhanced practices
+  # ============================================================
+
+  - practice_id: SI.L3-3.14.1e
+    domain: SI
+    level: 3
+    title: Integrity Verification
+    description: Verify the integrity of security-critical or essential software using root of trust mechanisms or cryptographic signatures.
+    nist_refs: ["3.14.1e"]
+
+  - practice_id: SI.L3-3.14.3e
+    domain: SI
+    level: 3
+    title: Specialized Asset Security
+    description: Ensure that organization-defined specialized assets including IoT, IIoT, OT, GFE, restricted information systems, and test equipment are included in the scope of the specified enhanced security requirements or are segregated in purpose-specific networks.
+    nist_refs: ["3.14.3e"]
+
+  - practice_id: SI.L3-3.14.6e
+    domain: SI
+    level: 3
+    title: Threat-Guided Intrusion Detection
+    description: Use threat indicator information and effective mitigations obtained from organization-defined external organizations to inform intrusion detection and threat hunting.
+    nist_refs: ["3.14.6e"]
