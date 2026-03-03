@@ -148,6 +148,12 @@ function renderWorkspace(assessmentOverrides = {}) {
         json: () => Promise.resolve(mockPractices),
       } as Response)
     }
+    if (urlStr.includes('/evidence')) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ items: [], total: 0 }),
+      } as Response)
+    }
     return Promise.resolve({
       ok: true,
       json: () => Promise.resolve({}),

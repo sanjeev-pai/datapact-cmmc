@@ -6,6 +6,7 @@ import type {
   AssessmentStatus,
   PracticeStatus,
 } from '@/types/assessment'
+import EvidencePanel from '@/modules/evidence/EvidencePanel'
 
 interface Props {
   practice: CMMCPractice
@@ -91,12 +92,19 @@ export default function WorkspacePracticeDetail({
         </div>
       )}
 
-      {/* Evidence placeholder */}
+      {/* Evidence */}
       <div className="mb-4">
         <h3 className="text-sm font-medium mb-1">Evidence</h3>
-        <p className="text-sm text-base-content/50 italic">
-          Evidence management coming in Phase 5.
-        </p>
+        {evaluation ? (
+          <EvidencePanel
+            assessmentPracticeId={evaluation.id}
+            editable={editable}
+          />
+        ) : (
+          <p className="text-sm text-base-content/50 italic">
+            Save an evaluation to attach evidence.
+          </p>
+        )}
       </div>
 
       <div className="divider my-2" />
