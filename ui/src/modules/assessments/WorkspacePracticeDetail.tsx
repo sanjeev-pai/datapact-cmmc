@@ -7,13 +7,16 @@ import type {
   PracticeStatus,
 } from '@/types/assessment'
 import EvidencePanel from '@/modules/evidence/EvidencePanel'
+import DataPactSyncPanel from '@/modules/datapact/DataPactSyncPanel'
 
 interface Props {
   practice: CMMCPractice
   evaluation: AssessmentPractice | undefined
+  assessmentId: string
   assessmentStatus: AssessmentStatus
   saving: boolean
   onSave: (practiceId: string, data: AssessmentPracticeUpdate) => void
+  onSyncComplete: () => void
 }
 
 const STATUS_OPTIONS: { value: PracticeStatus; label: string }[] = [
@@ -27,9 +30,11 @@ const STATUS_OPTIONS: { value: PracticeStatus; label: string }[] = [
 export default function WorkspacePracticeDetail({
   practice,
   evaluation,
+  assessmentId,
   assessmentStatus,
   saving,
   onSave,
+  onSyncComplete,
 }: Props) {
   const editable = assessmentStatus === 'in_progress'
 
@@ -106,6 +111,17 @@ export default function WorkspacePracticeDetail({
           </p>
         )}
       </div>
+
+      {/* DataPact Sync */}
+      {evaluation && (
+        <DataPactSyncPanel
+          assessmentId={assessmentId}
+          practiceId={practice.practice_id}
+          syncStatus={evaluation.datapact_sync_status}
+          syncAt={evaluation.datapact_sync_at}
+          onSyncComplete={onSyncComplete}
+        />
+      )}
 
       <div className="divider my-2" />
 

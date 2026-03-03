@@ -74,6 +74,18 @@ export default function WorkspacePracticeList({
                     />
                     <span className="font-mono text-xs text-base-content/60">{practice.practice_id}</span>
                     <span className="truncate">{practice.title}</span>
+                    {ev?.datapact_sync_status && (
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full shrink-0 ml-auto ${
+                          ev.datapact_sync_status === 'synced'
+                            ? 'bg-info'
+                            : ev.datapact_sync_status === 'error'
+                              ? 'bg-error'
+                              : 'bg-warning'
+                        }`}
+                        title={`Sync: ${ev.datapact_sync_status}`}
+                      />
+                    )}
                   </button>
                 )
               })}
