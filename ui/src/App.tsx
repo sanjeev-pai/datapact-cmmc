@@ -9,18 +9,9 @@ import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
 import DataPactMappingsPage from '@/modules/datapact/DataPactMappingsPage'
 import DataPactSettingsPage from '@/modules/datapact/DataPactSettingsPage'
 import EvidenceListPage from '@/modules/evidence/EvidenceListPage'
+import DashboardPage from '@/modules/dashboard/DashboardPage'
 import LoginPage from '@/modules/auth/LoginPage'
 import RegisterPage from '@/modules/auth/RegisterPage'
-
-// Placeholder pages — will be replaced in subsequent phases
-function DashboardPage() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <p className="text-base-content/70">Compliance overview coming in Phase 7.</p>
-    </div>
-  )
-}
 
 function App() {
   return (
