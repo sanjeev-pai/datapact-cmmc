@@ -97,11 +97,6 @@ async function request<T>(
     }
   }
 
-  if (res.status === 401) {
-    onAuthError?.()
-    throw new ApiError(401, 'Unauthorized')
-  }
-
   if (!res.ok) {
     const text = await res.text()
     let detail = `${res.status} ${res.statusText}`
@@ -110,6 +105,9 @@ async function request<T>(
       if (json.detail) detail = json.detail
     } catch {
       // use default detail
+    }
+    if (res.status === 401) {
+      onAuthError?.()
     }
     throw new ApiError(res.status, detail)
   }
