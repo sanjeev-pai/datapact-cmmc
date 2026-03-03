@@ -6,6 +6,7 @@ import AssessmentCreatePage from '@/modules/assessments/AssessmentCreatePage'
 import AssessmentListPage from '@/modules/assessments/AssessmentListPage'
 import AssessmentWorkspacePage from '@/modules/assessments/AssessmentWorkspacePage'
 import CMMCLibraryPage from '@/modules/cmmc/CMMCLibraryPage'
+import EvidenceListPage from '@/modules/evidence/EvidenceListPage'
 import LoginPage from '@/modules/auth/LoginPage'
 import RegisterPage from '@/modules/auth/RegisterPage'
 
@@ -34,6 +35,7 @@ function App() {
               <Route path="/assessments" element={<AssessmentListPage />} />
               <Route path="/assessments/new" element={<AssessmentCreatePage />} />
               <Route path="/assessments/:id" element={<AssessmentWorkspacePage />} />
+              <Route path="/evidence" element={<EvidenceListPage />} />
             </Route>
           </Route>
         </Routes>
