@@ -57,8 +57,10 @@ app = FastAPI(
 )
 
 # ── Routers ─────────────────────────────────────────────────────────────────
+from cmmc.routers.auth import router as auth_router  # noqa: E402
 from cmmc.routers.cmmc import router as cmmc_router  # noqa: E402
 
+app.include_router(auth_router)
 app.include_router(cmmc_router)
 
 # ── Middleware ───────────────────────────────────────────────────────────────
