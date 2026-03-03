@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import BigInteger, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from cmmc.models.base import BaseModel
@@ -20,6 +20,9 @@ class Evidence(BaseModel):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     file_path: Mapped[str | None] = mapped_column(String(512), nullable=True)
     file_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    file_name: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    file_size: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
+    mime_type: Mapped[str | None] = mapped_column(String(128), nullable=True)
     review_status: Mapped[str] = mapped_column(
         String(32), default="pending", nullable=False
     )
