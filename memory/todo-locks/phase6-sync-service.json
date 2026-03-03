@@ -1,0 +1,7 @@
+{
+  "session": "opus-2026-03-03d",
+  "branch": "todo/phase6-sync-service",
+  "claimed_at": "2026-03-03T03:00:00Z",
+  "todo": "DataPact sync service: sync_assessment, sync_practice, log to datapact_sync_logs",
+  "shared_files": []
+}
