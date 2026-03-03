@@ -7,7 +7,8 @@ import yaml
 from sqlalchemy.orm import Session
 
 from cmmc.models import CMMCDomain, CMMCLevel, CMMCPractice
-from cmmc.models.assessment import Assessment
+from cmmc.models.assessment import Assessment, AssessmentPractice
+from cmmc.models.evidence import Evidence
 from cmmc.models.organization import Organization
 from cmmc.models.user import Role, User, UserRole
 from cmmc.services.auth_service import hash_password
@@ -28,6 +29,8 @@ def seed_all(db: Session) -> dict[str, int]:
     db.commit()
     counts["organizations"] = _seed_organizations(db)
     counts["assessments"] = _seed_assessments(db)
+    db.commit()
+    counts["evidence"] = _seed_evidence(db)
     db.commit()
     logger.info("Seed complete: %s", counts)
     return counts
@@ -267,6 +270,140 @@ def _seed_assessments(db: Session) -> int:
         if item["status"] == "completed":
             assessment.status = "completed"
             assessment.completed_at = assessment.updated_at
+        count += 1
+    db.flush()
+    return count
+
+
+SEED_EVIDENCE = [
+    # Evidence for "Acme L1 Self-Assessment (FY25)" — in_progress
+    {
+        "assessment_title": "Acme L1 Self-Assessment (FY25)",
+        "practice_id": "AC.L1-3.1.1",
+        "title": "Access Control Policy v3.2",
+        "description": "Corporate access control policy covering user provisioning and deprovisioning.",
+        "file_name": "access_control_policy_v3.2.pdf",
+        "file_size": 245_760,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Acme L1 Self-Assessment (FY25)",
+        "practice_id": "AC.L1-3.1.1",
+        "title": "Active Directory User Audit - Feb 2026",
+        "description": "Screenshot showing quarterly AD user access review results.",
+        "file_name": "ad_user_audit_feb2026.png",
+        "file_size": 189_440,
+        "mime_type": "image/png",
+        "review_status": "pending",
+    },
+    {
+        "assessment_title": "Acme L1 Self-Assessment (FY25)",
+        "practice_id": "AC.L1-3.1.2",
+        "title": "VPN Configuration Export",
+        "description": "Network configuration showing transaction and function restrictions.",
+        "file_name": "vpn_config_export.xlsx",
+        "file_size": 87_040,
+        "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "review_status": "pending",
+    },
+    {
+        "assessment_title": "Acme L1 Self-Assessment (FY25)",
+        "practice_id": "IA.L1-3.5.1",
+        "title": "MFA Enrollment Report",
+        "description": "Report showing 98% MFA enrollment across all user accounts.",
+        "file_name": "mfa_enrollment_report.pdf",
+        "file_size": 156_672,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Acme L1 Self-Assessment (FY25)",
+        "practice_id": "IA.L1-3.5.2",
+        "title": "Password Policy Screenshot",
+        "description": "Azure AD password policy settings showing complexity requirements.",
+        "file_name": "password_policy_aad.png",
+        "file_size": 312_320,
+        "mime_type": "image/png",
+        "review_status": "rejected",
+    },
+    # Evidence for "Pinnacle L2 Self-Assessment (FY25)" — completed
+    {
+        "assessment_title": "Pinnacle L2 Self-Assessment (FY25)",
+        "practice_id": "AC.L1-3.1.1",
+        "title": "System Security Plan - Access Control",
+        "description": "SSP section covering access control policies and procedures.",
+        "file_name": "ssp_access_control.docx",
+        "file_size": 524_288,
+        "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Pinnacle L2 Self-Assessment (FY25)",
+        "practice_id": "AC.L2-3.1.3",
+        "title": "CUI Data Flow Diagram",
+        "description": "Network diagram showing CUI flow boundaries and access points.",
+        "file_name": "cui_data_flow_v2.pdf",
+        "file_size": 1_048_576,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Pinnacle L2 Self-Assessment (FY25)",
+        "practice_id": "SC.L2-3.13.1",
+        "title": "Network Boundary Protection Config",
+        "description": "Firewall rules and IDS/IPS configuration for CUI boundary monitoring.",
+        "file_name": "firewall_config_export.json",
+        "file_size": 42_000,
+        "mime_type": "application/json",
+        "review_status": "accepted",
+    },
+]
+
+
+def _seed_evidence(db: Session) -> int:
+    count = 0
+    for item in SEED_EVIDENCE:
+        # Find the assessment
+        assessment = db.query(Assessment).filter_by(title=item["assessment_title"]).first()
+        if not assessment:
+            logger.warning("Assessment not found for evidence seed: %s", item["assessment_title"])
+            continue
+
+        # Find the assessment practice
+        ap = (
+            db.query(AssessmentPractice)
+            .filter_by(assessment_id=assessment.id, practice_id=item["practice_id"])
+            .first()
+        )
+        if not ap:
+            logger.warning(
+                "AssessmentPractice not found: %s / %s",
+                item["assessment_title"],
+                item["practice_id"],
+            )
+            continue
+
+        # Skip if evidence with same title already exists for this practice
+        existing = (
+            db.query(Evidence)
+            .filter_by(assessment_practice_id=ap.id, title=item["title"])
+            .first()
+        )
+        if existing:
+            count += 1
+            continue
+
+        evidence = Evidence(
+            assessment_practice_id=ap.id,
+            title=item["title"],
+            description=item.get("description"),
+            file_name=item.get("file_name"),
+            file_size=item.get("file_size"),
+            mime_type=item.get("mime_type"),
+            review_status=item.get("review_status", "pending"),
+        )
+        db.add(evidence)
         count += 1
     db.flush()
     return count

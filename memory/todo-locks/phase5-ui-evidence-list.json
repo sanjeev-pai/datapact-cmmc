@@ -1,0 +1,7 @@
+{
+  "session": "opus-2026-03-03",
+  "branch": "todo/phase5-ui-evidence-list",
+  "claimed_at": "2026-03-03T00:00:00Z",
+  "todo": "Evidence list & review UI page with filters, review actions, download links, status badges",
+  "shared_files": ["ui/src/App.tsx", "ui/src/components/AppLayout.tsx", "cmmc/services/seed_service.py"]
+}
