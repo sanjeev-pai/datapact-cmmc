@@ -16,7 +16,7 @@ DATABASE_URL = os.environ.get(
 DATABASE_SCHEMA = os.environ.get("DATABASE_SCHEMA", "datapact-cmmc")
 
 # ── Auth ─────────────────────────────────────────────────────────────────────
-JWT_SECRET = os.environ.get("JWT_SECRET", "cmmc-dev-secret-change-in-prod")
+JWT_SECRET = os.environ.get("JWT_SECRET", "cmmc-dev-secret-change-in-prod!!")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRY_MINUTES = int(os.environ.get("JWT_EXPIRY_MINUTES", "60"))
 JWT_REFRESH_EXPIRY_DAYS = int(os.environ.get("JWT_REFRESH_EXPIRY_DAYS", "7"))

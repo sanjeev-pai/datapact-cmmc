@@ -350,7 +350,7 @@ SEED_EVIDENCE = [
     },
     {
         "assessment_title": "Pinnacle L2 Self-Assessment (FY25)",
-        "practice_id": "SC.L2-3.13.1",
+        "practice_id": "SC.L1-3.13.1",
         "title": "Network Boundary Protection Config",
         "description": "Firewall rules and IDS/IPS configuration for CUI boundary monitoring.",
         "file_name": "firewall_config_export.json",

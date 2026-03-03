@@ -13,7 +13,6 @@ from cmmc.schemas.datapact import (
     MappingResponse,
     SuggestionResponse,
     SyncLogListResponse,
-    SyncLogResponse,
     SyncResultResponse,
     SyncResultsResponse,
 )

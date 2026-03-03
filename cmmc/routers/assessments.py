@@ -73,7 +73,7 @@ def list_assessments(
     else:
         effective_org_id = user.org_id  # non-admin always scoped to own org
 
-    if not "system_admin" in user_roles and not effective_org_id:
+    if "system_admin" not in user_roles and not effective_org_id:
         return AssessmentListResponse(items=[], total=0)
 
     items, total = assessment_service.list_assessments(

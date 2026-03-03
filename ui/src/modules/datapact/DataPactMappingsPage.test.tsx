@@ -133,7 +133,7 @@ describe('DataPactMappingsPage', () => {
       </MemoryRouter>,
     )
     await waitFor(() => {
-      expect(screen.getByText(/AC\.L1-3\.1\.1/)).toBeDefined()
+      expect(screen.getAllByText(/AC\.L1-3\.1\.1/).length).toBeGreaterThanOrEqual(1)
     })
     expect(screen.getByText('Alpha Contract')).toBeDefined()
   })
@@ -163,7 +163,7 @@ describe('DataPactMappingsPage', () => {
       expect(screen.getByLabelText('Practice')).toBeDefined()
     })
     expect(screen.getByLabelText('Contract')).toBeDefined()
-    expect(screen.getByText('Add Mapping')).toBeDefined()
+    expect(screen.getByRole('button', { name: 'Add Mapping' })).toBeDefined()
   })
 
   it('has auto-suggest button', async () => {
