@@ -1,0 +1,10 @@
+{
+  "session": "phase5-evidence-router-20260303",
+  "branch": "todo/phase5-evidence-router",
+  "claimed_at": "2026-03-03T15:00:00Z",
+  "todo": "Evidence API endpoints. cmmc/routers/evidence.py with prefix /api/evidence: POST / (multipart file upload + metadata), GET / (list with filters), GET /{id}, GET /{id}/download (stream file), DELETE /{id}, POST /{id}/review (accept/reject). Auth-protected. Tests in tests/test_evidence_api.py.",
+  "shared_files": [
+    "cmmc/routers/evidence.py",
+    "cmmc/app.py"
+  ]
+}
