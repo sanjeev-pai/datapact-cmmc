@@ -2,6 +2,7 @@ import type {
   ContractListResponse,
   MappingListResponse,
   MappingCreate,
+  MappingSuggestion,
   SyncResultsResponse,
   SyncResult,
   SyncLogListResponse,
@@ -33,6 +34,12 @@ export async function createMapping(data: MappingCreate): Promise<unknown> {
 
 export async function deleteMapping(id: string): Promise<void> {
   return api.del<void>(`/datapact/mappings/${id}`)
+}
+
+// ── Suggestions ─────────────────────────────────────────────────────────────
+
+export async function suggestMappings(): Promise<MappingSuggestion[]> {
+  return api.post<MappingSuggestion[]>('/datapact/suggest')
 }
 
 // ── Sync ────────────────────────────────────────────────────────────────────

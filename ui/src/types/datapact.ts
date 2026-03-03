@@ -59,3 +59,10 @@ export interface SyncLogListResponse {
   items: SyncLog[]
   total: number
 }
+
+export interface MappingSuggestion {
+  practice_id: string
+  contract_id: string
+  contract_name: string | null
+  reason: string | null
+}

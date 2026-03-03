@@ -11,6 +11,7 @@ from cmmc.schemas.datapact import (
     MappingCreate,
     MappingListResponse,
     MappingResponse,
+    SuggestionResponse,
     SyncLogListResponse,
     SyncLogResponse,
     SyncResultResponse,
@@ -21,6 +22,7 @@ from cmmc.services.mapping_service import (
     create_mapping,
     delete_mapping,
     get_mappings,
+    suggest_mappings,
 )
 from cmmc.services.sync_service import sync_assessment, sync_practice
 
@@ -97,6 +99,25 @@ def delete_mapping_endpoint(
     """Delete a practice-to-contract mapping."""
     delete_mapping(db, mapping_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ---------------------------------------------------------------------------
+# POST /suggest — auto-suggest practice-to-contract mappings
+# ---------------------------------------------------------------------------
+
+
+@router.post("/suggest", response_model=list[SuggestionResponse])
+async def suggest_mappings_endpoint(
+    user: User = Depends(require_role(*_WRITE_ROLES)),
+    db: Session = Depends(get_db),
+):
+    """Auto-suggest practice-to-contract mappings based on domain keyword matching."""
+    org_id = user.org_id or ""
+    client = _client_for_user(db, user)
+    contracts_data = await client.get_contracts()
+    contracts = contracts_data.get("items", []) if isinstance(contracts_data, dict) else []
+    suggestions = suggest_mappings(db, org_id=org_id, contracts=contracts)
+    return suggestions
 
 
 # ---------------------------------------------------------------------------
