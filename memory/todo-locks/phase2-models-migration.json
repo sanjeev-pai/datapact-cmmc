@@ -1,0 +1,11 @@
+{
+  "session": "phase2-models-migration-20260303",
+  "branch": "todo/phase2-models-migration",
+  "claimed_at": "2026-03-03T00:00:00Z",
+  "todo": "Phase 2 sub-TODO: All SQLAlchemy models (13 tables) + Alembic migration + model tests",
+  "shared_files": [
+    "cmmc/models/__init__.py",
+    "cmmc/models/base.py",
+    "tests/conftest.py"
+  ]
+}
