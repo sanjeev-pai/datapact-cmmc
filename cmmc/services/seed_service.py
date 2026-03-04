@@ -179,6 +179,12 @@ def _seed_practices(db: Session) -> int:
 
 SEED_ORGS = [
     {
+        "name": "Mrisan",
+        "cage_code": "0MRS1",
+        "duns_number": "000000001",
+        "target_level": 3,
+    },
+    {
         "name": "Acme Defense Corp",
         "cage_code": "1ABC2",
         "duns_number": "123456789",
@@ -191,6 +197,12 @@ SEED_ORGS = [
         "target_level": 3,
     },
 ]
+
+# Map seed users to their organizations
+SEED_USER_ORGS = {
+    "admin": "Mrisan",
+    "jwchandna": "Mrisan",
+}
 
 SEED_ASSESSMENTS = [
     {
@@ -234,6 +246,15 @@ def _seed_organizations(db: Session) -> int:
         db.add(Organization(**item))
         count += 1
     db.flush()
+
+    # Assign users to their orgs
+    for username, org_name in SEED_USER_ORGS.items():
+        user = db.query(User).filter_by(username=username).first()
+        org = db.query(Organization).filter_by(name=org_name).first()
+        if user and org and user.org_id != org.id:
+            user.org_id = org.id
+    db.flush()
+
     return count
 
 
