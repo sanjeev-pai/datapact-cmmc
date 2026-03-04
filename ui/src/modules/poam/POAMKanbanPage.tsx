@@ -224,6 +224,9 @@ export default function POAMKanbanPage() {
             {poam.items.filter(isOverdue).length} overdue
           </p>
         </div>
+        <Link to={`/poams/${poam.id}/detail`} className="btn btn-ghost btn-sm">
+          Detail View
+        </Link>
       </div>
 
       {error && (
