@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import AppLayout from '@/components/AppLayout'
+import ErrorBoundary from '@/components/ErrorBoundary'
+import NotFoundPage from '@/components/NotFoundPage'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { AuthProvider } from '@/contexts/AuthContext'
 import AssessmentCreatePage from '@/modules/assessments/AssessmentCreatePage'
@@ -21,33 +24,44 @@ import RegisterPage from '@/modules/auth/RegisterPage'
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route element={<ProtectedRoute />}>
-            <Route element={<AppLayout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/cmmc" element={<CMMCLibraryPage />} />
-              <Route path="/assessments" element={<AssessmentListPage />} />
-              <Route path="/assessments/new" element={<AssessmentCreatePage />} />
-              <Route path="/assessments/:id" element={<AssessmentWorkspacePage />} />
-              <Route path="/evidence" element={<EvidenceListPage />} />
-              <Route path="/findings" element={<FindingsPage />} />
-              <Route path="/poams" element={<POAMListPage />} />
-              <Route path="/poams/:id" element={<POAMKanbanPage />} />
-              <Route path="/poams/:id/detail" element={<POAMDetailPage />} />
-              <Route path="/datapact" element={<DataPactSettingsPage />} />
-              <Route path="/datapact/mappings" element={<DataPactMappingsPage />} />
-              <Route path="/reports" element={<ReportsPage />} />
-              <Route path="/admin" element={<AdminPage />} />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: { maxWidth: 420 },
+              error: { duration: 5000 },
+            }}
+          />
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AppLayout />}>
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/cmmc" element={<CMMCLibraryPage />} />
+                <Route path="/assessments" element={<AssessmentListPage />} />
+                <Route path="/assessments/new" element={<AssessmentCreatePage />} />
+                <Route path="/assessments/:id" element={<AssessmentWorkspacePage />} />
+                <Route path="/evidence" element={<EvidenceListPage />} />
+                <Route path="/findings" element={<FindingsPage />} />
+                <Route path="/poams" element={<POAMListPage />} />
+                <Route path="/poams/:id" element={<POAMKanbanPage />} />
+                <Route path="/poams/:id/detail" element={<POAMDetailPage />} />
+                <Route path="/datapact" element={<DataPactSettingsPage />} />
+                <Route path="/datapact/mappings" element={<DataPactMappingsPage />} />
+                <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }
 
