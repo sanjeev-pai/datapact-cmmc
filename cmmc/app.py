@@ -73,8 +73,10 @@ from cmmc.routers.findings import router as findings_router  # noqa: E402
 from cmmc.routers.organizations import router as org_router  # noqa: E402
 from cmmc.routers.poams import router as poams_router  # noqa: E402
 from cmmc.routers.reports import router as reports_router  # noqa: E402
+from cmmc.routers.audit import router as audit_router  # noqa: E402
 from cmmc.routers.users import router as users_router  # noqa: E402
 
+app.include_router(audit_router)
 app.include_router(assessment_practices_router)
 app.include_router(assessments_router)
 app.include_router(auth_router)
@@ -96,6 +98,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from cmmc.middleware.audit import AuditMiddleware  # noqa: E402
+
+app.add_middleware(AuditMiddleware)
 
 
 # ── Exception handlers ──────────────────────────────────────────────────────
