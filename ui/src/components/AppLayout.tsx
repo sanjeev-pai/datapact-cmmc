@@ -14,6 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/assessments', label: 'Assessments', icon: '◈' },
   { to: '/evidence', label: 'Evidence', icon: '◆' },
   { to: '/datapact', label: 'DataPact', icon: '⬡' },
+  { to: '/reports', label: 'Reports', icon: '▤' },
   { to: '/admin', label: 'Admin', icon: '⚙', roles: ['system_admin', 'org_admin'] },
 ]
 
