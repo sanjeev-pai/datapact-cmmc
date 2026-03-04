@@ -37,3 +37,4 @@ MAX_UPLOAD_SIZE = int(os.environ.get("CMMC_MAX_UPLOAD_SIZE", str(50 * 1024 * 102
 
 # ── Seed ─────────────────────────────────────────────────────────────────────
 AUTO_SEED = os.environ.get("CMMC_AUTO_SEED", "true").lower() == "true"
+SEED_DEMO = os.environ.get("CMMC_SEED_DEMO", "true").lower() == "true"

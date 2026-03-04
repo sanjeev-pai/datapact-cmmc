@@ -1,3 +1,355 @@
-# Demo assessment seed data — pre-built mixed-status assessment
-# Will be populated in Phase 4 (PRD-004)
-assessment: {}
+# Demo assessment seed data — practice evaluations, findings, and POAMs
+# Loaded when CMMC_SEED_DEMO=true (default)
+
+# Practice evaluations for existing seed assessments
+# Assessments are matched by title (must exist from SEED_ASSESSMENTS)
+practice_evaluations:
+
+  # Acme L1 Self-Assessment (in_progress): ~60% met, some gaps
+  - assessment_title: "Acme L1 Self-Assessment (FY25)"
+    evaluations:
+      # Access Control — 3 met, 1 partially
+      - practice_id: AC.L1-3.1.1
+        status: met
+        score: 5.0
+        assessor_notes: "Access control policy in place. AD group-based access verified."
+      - practice_id: AC.L1-3.1.2
+        status: met
+        score: 5.0
+        assessor_notes: "Role-based access controls configured in ERP and file shares."
+      - practice_id: AC.L1-3.1.20
+        status: partially_met
+        score: 3.0
+        assessor_notes: "External system connections documented but approval process inconsistent."
+      - practice_id: AC.L1-3.1.22
+        status: met
+        score: 5.0
+        assessor_notes: "Public-facing website content review process documented and followed."
+
+      # Identification & Authentication — 1 met, 1 not_met
+      - practice_id: IA.L1-3.5.1
+        status: met
+        score: 5.0
+        assessor_notes: "All users uniquely identified via Active Directory."
+      - practice_id: IA.L1-3.5.2
+        status: not_met
+        score: 1.0
+        assessor_notes: "MFA not enforced for all users — only 60% enrolled. Password complexity policy is weak."
+
+      # Media Protection — not evaluated (in progress)
+      # MP.L1-3.8.3 left as not_evaluated
+
+      # Physical Protection — 2 met, 1 not_met, 1 partially
+      - practice_id: PE.L1-3.10.1
+        status: met
+        score: 5.0
+        assessor_notes: "Badge access system in place for all server rooms and data centers."
+      - practice_id: PE.L1-3.10.3
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Visitor escort policy exists but not consistently enforced in satellite office."
+      - practice_id: PE.L1-3.10.4
+        status: not_met
+        score: 1.0
+        assessor_notes: "Physical access logs not maintained for satellite office. HQ logs are paper-based only."
+      - practice_id: PE.L1-3.10.5
+        status: met
+        score: 5.0
+        assessor_notes: "Physical access devices (badges, keys) tracked in access control system."
+
+      # System & Comms Protection — 1 met, 1 not_evaluated
+      - practice_id: SC.L1-3.13.1
+        status: met
+        score: 5.0
+        assessor_notes: "Firewall and IDS/IPS deployed at network boundary. Rules reviewed quarterly."
+      # SC.L1-3.13.5 left as not_evaluated
+
+      # System & Info Integrity — 2 met, 1 partially, 1 not_evaluated
+      - practice_id: SI.L1-3.14.1
+        status: met
+        score: 5.0
+        assessor_notes: "Patch management process in place. WSUS configured for monthly updates."
+      - practice_id: SI.L1-3.14.2
+        status: met
+        score: 5.0
+        assessor_notes: "CrowdStrike deployed on all endpoints."
+      - practice_id: SI.L1-3.14.4
+        status: partially_met
+        score: 3.0
+        assessor_notes: "AV signatures update automatically but some legacy systems excluded from auto-update."
+      # SI.L1-3.14.5 left as not_evaluated
+
+  # Pinnacle L2 Self-Assessment (completed): ~85% met across L1+L2
+  - assessment_title: "Pinnacle L2 Self-Assessment (FY25)"
+    evaluations:
+      # L1 practices — all met
+      - practice_id: AC.L1-3.1.1
+        status: met
+        score: 5.0
+        assessor_notes: "Fully implemented. SSP documents all access control mechanisms."
+      - practice_id: AC.L1-3.1.2
+        status: met
+        score: 5.0
+        assessor_notes: "RBAC implemented across all systems. Annual access reviews conducted."
+      - practice_id: AC.L1-3.1.20
+        status: met
+        score: 5.0
+        assessor_notes: "External connections approved via change management board."
+      - practice_id: AC.L1-3.1.22
+        status: met
+        score: 5.0
+        assessor_notes: "Web content review SOP in place."
+      - practice_id: IA.L1-3.5.1
+        status: met
+        score: 5.0
+        assessor_notes: "Unique identifiers for all users and service accounts."
+      - practice_id: IA.L1-3.5.2
+        status: met
+        score: 5.0
+        assessor_notes: "MFA enforced via Azure AD for all accounts."
+      - practice_id: MP.L1-3.8.3
+        status: met
+        score: 5.0
+        assessor_notes: "NIST 800-88 compliant media sanitization procedures in place."
+      - practice_id: PE.L1-3.10.1
+        status: met
+        score: 5.0
+        assessor_notes: "Physical access controls meet requirements."
+      - practice_id: PE.L1-3.10.3
+        status: met
+        score: 5.0
+        assessor_notes: "Visitor management system deployed at all facilities."
+      - practice_id: PE.L1-3.10.4
+        status: met
+        score: 5.0
+        assessor_notes: "Electronic access logs maintained and reviewed monthly."
+      - practice_id: PE.L1-3.10.5
+        status: met
+        score: 5.0
+        assessor_notes: "Access device inventory maintained."
+      - practice_id: SC.L1-3.13.1
+        status: met
+        score: 5.0
+        assessor_notes: "Multi-layer boundary protection with monitoring."
+      - practice_id: SC.L1-3.13.5
+        status: met
+        score: 5.0
+        assessor_notes: "DMZ architecture implemented for public-facing services."
+      - practice_id: SI.L1-3.14.1
+        status: met
+        score: 5.0
+        assessor_notes: "Automated patch management with SLA tracking."
+      - practice_id: SI.L1-3.14.2
+        status: met
+        score: 5.0
+        assessor_notes: "Endpoint protection on all systems."
+      - practice_id: SI.L1-3.14.4
+        status: met
+        score: 5.0
+        assessor_notes: "Automatic signature updates configured."
+      - practice_id: SI.L1-3.14.5
+        status: met
+        score: 5.0
+        assessor_notes: "Weekly full scans and real-time file scanning enabled."
+
+      # L2 practices — mix of met, partially_met, not_met
+      - practice_id: AC.L2-3.1.3
+        status: met
+        score: 5.0
+        assessor_notes: "CUI flow documented in data flow diagrams. DLP rules enforce boundaries."
+      - practice_id: AC.L2-3.1.4
+        status: met
+        score: 5.0
+        assessor_notes: "Separation of duties matrix maintained and enforced."
+      - practice_id: AC.L2-3.1.5
+        status: met
+        score: 5.0
+        assessor_notes: "Least privilege implemented via JIT access for admin accounts."
+      - practice_id: AC.L2-3.1.6
+        status: met
+        score: 5.0
+        assessor_notes: "Admin staff use separate non-privileged accounts for daily work."
+      - practice_id: AC.L2-3.1.7
+        status: met
+        score: 5.0
+        assessor_notes: "Privileged function execution logged and reviewed."
+      - practice_id: AC.L2-3.1.8
+        status: met
+        score: 5.0
+        assessor_notes: "Account lockout after 5 failed attempts. 30-minute lockout duration."
+      - practice_id: AC.L2-3.1.9
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Privacy notices present on external systems but missing on some internal portals."
+      - practice_id: AC.L2-3.1.10
+        status: met
+        score: 5.0
+        assessor_notes: "15-minute session lock configured on all workstations."
+      - practice_id: AC.L2-3.1.11
+        status: met
+        score: 5.0
+        assessor_notes: "Automatic session termination after 4 hours of inactivity."
+      - practice_id: AC.L2-3.1.12
+        status: not_met
+        score: 1.0
+        assessor_notes: "Remote access monitoring not fully implemented. VPN logs exist but no real-time alerting."
+      - practice_id: AC.L2-3.1.13
+        status: met
+        score: 5.0
+        assessor_notes: "VPN with AES-256 encryption required for all remote access."
+      - practice_id: AC.L2-3.1.14
+        status: met
+        score: 5.0
+        assessor_notes: "Remote access routed through managed access control points."
+      - practice_id: AC.L2-3.1.15
+        status: met
+        score: 5.0
+        assessor_notes: "Privileged remote access limited to designated admin workstations."
+      - practice_id: AC.L2-3.1.16
+        status: not_met
+        score: 1.0
+        assessor_notes: "Wireless access not fully controlled. Guest WiFi segmentation needs improvement."
+      - practice_id: AC.L2-3.1.17
+        status: met
+        score: 5.0
+        assessor_notes: "WPA3-Enterprise with certificate-based auth for CUI wireless."
+      - practice_id: AC.L2-3.1.18
+        status: met
+        score: 5.0
+        assessor_notes: "Mobile device management (MDM) enforces connection profiles."
+      - practice_id: AC.L2-3.1.19
+        status: met
+        score: 5.0
+        assessor_notes: "CUI encrypted at rest and in transit on all mobile devices."
+      - practice_id: AC.L2-3.1.21
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Portable storage use restricted but enforcement on Linux workstations incomplete."
+
+# Findings for assessments with gaps
+findings:
+  # Findings for Acme L1 in-progress assessment
+  - assessment_title: "Acme L1 Self-Assessment (FY25)"
+    items:
+      - practice_id: IA.L1-3.5.2
+        finding_type: deficiency
+        severity: high
+        title: "MFA Not Enforced for All Users"
+        description: "Multi-factor authentication is only enabled for 60% of user accounts. Password complexity policy does not meet minimum requirements."
+        status: open
+
+      - practice_id: PE.L1-3.10.4
+        finding_type: deficiency
+        severity: medium
+        title: "Physical Access Logs Missing at Satellite Office"
+        description: "Satellite office does not maintain physical access logs. HQ logs are paper-based and not archived digitally."
+        status: open
+
+      - practice_id: AC.L1-3.1.20
+        finding_type: observation
+        severity: low
+        title: "External Connection Approval Process Inconsistent"
+        description: "External system connections are documented but the approval workflow is informal and not consistently followed."
+        status: open
+
+      - practice_id: PE.L1-3.10.3
+        finding_type: observation
+        severity: low
+        title: "Visitor Escort Policy Not Enforced at Satellite Office"
+        description: "Visitor escort policy exists but satellite office staff reported inconsistent enforcement."
+        status: open
+
+  # Findings for Pinnacle L2 completed assessment
+  - assessment_title: "Pinnacle L2 Self-Assessment (FY25)"
+    items:
+      - practice_id: AC.L2-3.1.12
+        finding_type: deficiency
+        severity: high
+        title: "Remote Access Monitoring Gaps"
+        description: "VPN session monitoring lacks real-time alerting. Logs are collected but not actively monitored for anomalies."
+        status: remediated
+
+      - practice_id: AC.L2-3.1.16
+        finding_type: deficiency
+        severity: high
+        title: "Wireless Access Controls Insufficient"
+        description: "Guest WiFi segmentation from CUI network is inadequate. Network boundary between guest and production needs strengthening."
+        status: open
+
+      - practice_id: AC.L2-3.1.9
+        finding_type: observation
+        severity: medium
+        title: "Privacy Notices Incomplete on Internal Portals"
+        description: "Privacy and security notices are displayed on external-facing systems but missing from several internal web portals."
+        status: remediated
+
+      - practice_id: AC.L2-3.1.21
+        finding_type: observation
+        severity: medium
+        title: "Portable Storage Restrictions Incomplete on Linux"
+        description: "USB storage restrictions enforced on Windows via GPO but Linux workstations lack equivalent controls."
+        status: open
+
+# POA&Ms linked to assessments
+poams:
+  - assessment_title: "Acme L1 Self-Assessment (FY25)"
+    org_name: "Acme Defense Corp"
+    title: "Acme L1 Remediation Plan (FY25)"
+    status: active
+    items:
+      - finding_title: "MFA Not Enforced for All Users"
+        practice_id: IA.L1-3.5.2
+        milestone: "Deploy MFA to remaining 40% of users via Azure AD Conditional Access"
+        scheduled_completion: "2026-04-15"
+        status: in_progress
+        resources_required: "Azure AD P2 license expansion, IT security team (2 FTEs, 3 weeks)"
+      - finding_title: "Physical Access Logs Missing at Satellite Office"
+        practice_id: PE.L1-3.10.4
+        milestone: "Install electronic badge reader and logging system at satellite office"
+        scheduled_completion: "2026-03-01"
+        status: open
+        resources_required: "Badge reader hardware ($5K), installation contractor, facilities team"
+      - finding_title: "External Connection Approval Process Inconsistent"
+        practice_id: AC.L1-3.1.20
+        milestone: "Formalize external connection approval workflow in ServiceNow"
+        scheduled_completion: "2026-05-01"
+        status: open
+        resources_required: "ServiceNow workflow development (IT ops, 1 week)"
+      - finding_title: "Visitor Escort Policy Not Enforced at Satellite Office"
+        practice_id: PE.L1-3.10.3
+        milestone: "Retrain satellite office staff and implement visitor check-in kiosk"
+        scheduled_completion: "2026-02-15"
+        status: completed
+        actual_completion: "2026-02-20"
+        resources_required: "Training materials, visitor kiosk hardware ($2K)"
+
+  - assessment_title: "Pinnacle L2 Self-Assessment (FY25)"
+    org_name: "Pinnacle Aero Systems"
+    title: "Pinnacle L2 Remediation Plan (FY25-26)"
+    status: active
+    items:
+      - finding_title: "Remote Access Monitoring Gaps"
+        practice_id: AC.L2-3.1.12
+        milestone: "Implement SIEM alerting rules for VPN anomalies"
+        scheduled_completion: "2026-03-30"
+        status: in_progress
+        resources_required: "Splunk SIEM configuration, SOC analyst (1 FTE, 2 weeks)"
+      - finding_title: "Wireless Access Controls Insufficient"
+        practice_id: AC.L2-3.1.16
+        milestone: "Redesign guest WiFi architecture with proper VLAN segmentation"
+        scheduled_completion: "2026-06-01"
+        status: open
+        resources_required: "Network architect ($15K contractor), switch/AP upgrades ($20K)"
+      - finding_title: "Privacy Notices Incomplete on Internal Portals"
+        practice_id: AC.L2-3.1.9
+        milestone: "Add standardized privacy banners to all internal web applications"
+        scheduled_completion: "2026-02-28"
+        status: completed
+        actual_completion: "2026-02-25"
+        resources_required: "Web development team (1 sprint)"
+      - finding_title: "Portable Storage Restrictions Incomplete on Linux"
+        practice_id: AC.L2-3.1.21
+        milestone: "Deploy USBGuard on all Linux workstations"
+        scheduled_completion: "2026-04-30"
+        status: open
+        resources_required: "Linux admin (1 FTE, 1 week), USBGuard configuration and testing"
