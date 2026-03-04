@@ -44,6 +44,9 @@ def seed_all(db: Session, *, seed_demo: bool = True) -> dict[str, int]:
     if seed_demo:
         demo = _load_yaml("demo_assessment.yaml")
         counts["practice_evaluations"] = _seed_practice_evaluations(db, demo)
+        db.commit()
+        _recalculate_scores(db, demo)
+        db.commit()
         counts["findings"] = _seed_findings(db, demo)
         db.commit()
         counts["poams"] = _seed_poams(db, demo)
@@ -85,6 +88,51 @@ SEED_USERS = [
         "email": "jwchandna@datapact.local",
         "password": "jwchandna_ciso_135$$$",
         "roles": ["system_admin", "org_admin"],
+    },
+    # Acme Defense Corp users
+    {
+        "username": "acme_ciso",
+        "email": "ciso@acmedefense.com",
+        "password": "AcmeCiso2026!",
+        "roles": ["org_admin", "compliance_officer"],
+    },
+    {
+        "username": "acme_assessor",
+        "email": "assessor@acmedefense.com",
+        "password": "AcmeAssess2026!",
+        "roles": ["assessor"],
+    },
+    # Pinnacle Aero Systems users
+    {
+        "username": "pinnacle_ciso",
+        "email": "ciso@pinnacleaero.com",
+        "password": "PinnacleCiso2026!",
+        "roles": ["org_admin", "compliance_officer"],
+    },
+    {
+        "username": "pinnacle_assessor",
+        "email": "assessor@pinnacleaero.com",
+        "password": "PinnacleAssess2026!",
+        "roles": ["assessor"],
+    },
+    # CMMC sync service accounts — used for API integration with DataPact
+    {
+        "username": "mrisan-cmmc-sync",
+        "email": "cmmc-sync@mrisan.io",
+        "password": "mrisan-sync-2026!",
+        "roles": ["compliance_officer"],
+    },
+    {
+        "username": "acme-cmmc-sync",
+        "email": "cmmc-sync@acmedefense.com",
+        "password": "acme-sync-2026!",
+        "roles": ["compliance_officer"],
+    },
+    {
+        "username": "pinnacle-cmmc-sync",
+        "email": "cmmc-sync@pinnacleaero.com",
+        "password": "pinnacle-sync-2026!",
+        "roles": ["compliance_officer"],
     },
 ]
 
@@ -218,9 +266,39 @@ SEED_ORGS = [
 SEED_USER_ORGS = {
     "admin": "Mrisan",
     "jwchandna": "Mrisan",
+    "acme_ciso": "Acme Defense Corp",
+    "acme_assessor": "Acme Defense Corp",
+    "pinnacle_ciso": "Pinnacle Aero Systems",
+    "pinnacle_assessor": "Pinnacle Aero Systems",
+    "mrisan-cmmc-sync": "Mrisan",
+    "acme-cmmc-sync": "Acme Defense Corp",
+    "pinnacle-cmmc-sync": "Pinnacle Aero Systems",
 }
 
 SEED_ASSESSMENTS = [
+    # Mrisan assessments — so admin/jwchandna see dashboard data
+    {
+        "org_name": "Mrisan",
+        "title": "Mrisan L1 Self-Assessment (FY25)",
+        "target_level": 1,
+        "assessment_type": "self",
+        "status": "completed",
+    },
+    {
+        "org_name": "Mrisan",
+        "title": "Mrisan L2 Self-Assessment (FY26)",
+        "target_level": 2,
+        "assessment_type": "self",
+        "status": "in_progress",
+    },
+    {
+        "org_name": "Mrisan",
+        "title": "Mrisan L3 DIBCAC Assessment (FY26)",
+        "target_level": 3,
+        "assessment_type": "government",
+        "status": "draft",
+    },
+    # Acme Defense Corp assessments
     {
         "org_name": "Acme Defense Corp",
         "title": "Acme L1 Self-Assessment (FY25)",
@@ -235,6 +313,7 @@ SEED_ASSESSMENTS = [
         "assessment_type": "third_party",
         "status": "draft",
     },
+    # Pinnacle Aero Systems assessments
     {
         "org_name": "Pinnacle Aero Systems",
         "title": "Pinnacle L2 Self-Assessment (FY25)",
@@ -364,6 +443,58 @@ SEED_EVIDENCE = [
         "mime_type": "image/png",
         "review_status": "rejected",
     },
+    # Evidence for "Mrisan L1 Self-Assessment (FY25)" — completed
+    {
+        "assessment_title": "Mrisan L1 Self-Assessment (FY25)",
+        "practice_id": "AC.L1-3.1.1",
+        "title": "Mrisan Access Control Policy v2.1",
+        "description": "Company-wide access control policy covering all information systems.",
+        "file_name": "mrisan_ac_policy_v2.1.pdf",
+        "file_size": 198_400,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Mrisan L1 Self-Assessment (FY25)",
+        "practice_id": "IA.L1-3.5.1",
+        "title": "Okta User Directory Export",
+        "description": "Export showing all user accounts with unique identifiers and MFA status.",
+        "file_name": "okta_user_directory_export.csv",
+        "file_size": 67_200,
+        "mime_type": "text/csv",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Mrisan L1 Self-Assessment (FY25)",
+        "practice_id": "SC.L1-3.13.1",
+        "title": "Firewall Rule Audit Report",
+        "description": "Quarterly firewall rule audit showing boundary protection controls.",
+        "file_name": "firewall_audit_q4_2025.pdf",
+        "file_size": 345_088,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    # Evidence for "Mrisan L2 Self-Assessment (FY26)" — in_progress
+    {
+        "assessment_title": "Mrisan L2 Self-Assessment (FY26)",
+        "practice_id": "AC.L2-3.1.3",
+        "title": "CUI Data Flow Architecture Diagram",
+        "description": "Network architecture diagram showing CUI data flow paths and boundaries.",
+        "file_name": "cui_data_flow_v3.pdf",
+        "file_size": 892_928,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Mrisan L2 Self-Assessment (FY26)",
+        "practice_id": "AC.L2-3.1.5",
+        "title": "Privileged Access Management Report",
+        "description": "CyberArk PAM report showing least privilege enforcement across systems.",
+        "file_name": "pam_report_jan2026.pdf",
+        "file_size": 256_000,
+        "mime_type": "application/pdf",
+        "review_status": "pending",
+    },
     # Evidence for "Pinnacle L2 Self-Assessment (FY25)" — completed
     {
         "assessment_title": "Pinnacle L2 Self-Assessment (FY25)",
@@ -473,6 +604,24 @@ def _seed_practice_evaluations(db: Session, demo: dict) -> int:
             count += 1
     db.flush()
     return count
+
+
+def _recalculate_scores(db: Session, demo: dict) -> None:
+    """Recalculate SPRS and overall scores for all assessments that have evaluations."""
+    from cmmc.services.scoring_service import calculate_overall_score, calculate_sprs_score
+
+    titles = {g["assessment_title"] for g in demo.get("practice_evaluations", [])}
+    for title in titles:
+        assessment = db.query(Assessment).filter_by(title=title).first()
+        if not assessment:
+            continue
+        assessment.sprs_score = calculate_sprs_score(db, assessment.id)
+        assessment.overall_score = calculate_overall_score(db, assessment.id)
+        logger.info(
+            "Scores for %s: SPRS=%s, Overall=%.1f%%",
+            title, assessment.sprs_score, assessment.overall_score,
+        )
+    db.flush()
 
 
 def _seed_findings(db: Session, demo: dict) -> int:

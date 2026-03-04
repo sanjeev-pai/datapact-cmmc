@@ -5,6 +5,144 @@
 # Assessments are matched by title (must exist from SEED_ASSESSMENTS)
 practice_evaluations:
 
+  # Mrisan L1 Self-Assessment (completed): all 17 L1 practices evaluated, 15 met
+  - assessment_title: "Mrisan L1 Self-Assessment (FY25)"
+    evaluations:
+      - practice_id: AC.L1-3.1.1
+        status: met
+        score: 5.0
+        assessor_notes: "Access control policy v2.1 reviewed and approved. Okta SSO configured for all apps."
+      - practice_id: AC.L1-3.1.2
+        status: met
+        score: 5.0
+        assessor_notes: "RBAC enforced via Okta groups mapped to application roles."
+      - practice_id: AC.L1-3.1.20
+        status: met
+        score: 5.0
+        assessor_notes: "All external connections approved via Jira change request process."
+      - practice_id: AC.L1-3.1.22
+        status: met
+        score: 5.0
+        assessor_notes: "Public content review SOP in place, quarterly reviews conducted."
+      - practice_id: IA.L1-3.5.1
+        status: met
+        score: 5.0
+        assessor_notes: "Unique user IDs managed via Okta directory. Service accounts tracked separately."
+      - practice_id: IA.L1-3.5.2
+        status: met
+        score: 5.0
+        assessor_notes: "MFA enforced for 100% of users via Okta Verify push notifications."
+      - practice_id: MP.L1-3.8.3
+        status: met
+        score: 5.0
+        assessor_notes: "Media sanitization follows NIST 800-88 guidelines. Shredding vendor on contract."
+      - practice_id: PE.L1-3.10.1
+        status: met
+        score: 5.0
+        assessor_notes: "Badge access at all entry points. Server room requires dual-factor badge + PIN."
+      - practice_id: PE.L1-3.10.3
+        status: met
+        score: 5.0
+        assessor_notes: "Visitor management system (Envoy) deployed at reception."
+      - practice_id: PE.L1-3.10.4
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Electronic logs at HQ but remote office still uses paper sign-in sheet."
+      - practice_id: PE.L1-3.10.5
+        status: met
+        score: 5.0
+        assessor_notes: "Badge inventory tracked in Okta hardware asset module."
+      - practice_id: SC.L1-3.13.1
+        status: met
+        score: 5.0
+        assessor_notes: "Palo Alto NGFW at network boundary with IPS enabled. Rules reviewed monthly."
+      - practice_id: SC.L1-3.13.5
+        status: not_met
+        score: 1.0
+        assessor_notes: "DMZ architecture exists but public-facing app server not properly segmented from CUI network."
+      - practice_id: SI.L1-3.14.1
+        status: met
+        score: 5.0
+        assessor_notes: "Automated patching via Intune for Windows, Jamf for Mac. 14-day SLA."
+      - practice_id: SI.L1-3.14.2
+        status: met
+        score: 5.0
+        assessor_notes: "SentinelOne deployed on all endpoints with real-time detection."
+      - practice_id: SI.L1-3.14.4
+        status: met
+        score: 5.0
+        assessor_notes: "Automatic signature updates every 4 hours."
+      - practice_id: SI.L1-3.14.5
+        status: met
+        score: 5.0
+        assessor_notes: "Full system scans weekly, real-time file monitoring enabled."
+
+  # Mrisan L2 Self-Assessment (in_progress): partial L2 evaluations
+  - assessment_title: "Mrisan L2 Self-Assessment (FY26)"
+    evaluations:
+      # L1 practices carried forward — all met
+      - practice_id: AC.L1-3.1.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward from L1 assessment. No changes."
+      - practice_id: AC.L1-3.1.2
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward from L1 assessment."
+      - practice_id: IA.L1-3.5.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+      - practice_id: IA.L1-3.5.2
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+      # L2 practices — in progress
+      - practice_id: AC.L2-3.1.3
+        status: met
+        score: 5.0
+        assessor_notes: "CUI flow documented in architecture diagrams. DLP deployed on endpoints."
+      - practice_id: AC.L2-3.1.4
+        status: met
+        score: 5.0
+        assessor_notes: "Separation of duties enforced via Okta role mapping."
+      - practice_id: AC.L2-3.1.5
+        status: met
+        score: 5.0
+        assessor_notes: "CyberArk PAM provides JIT access for all admin accounts."
+      - practice_id: AC.L2-3.1.6
+        status: met
+        score: 5.0
+        assessor_notes: "Separate admin accounts enforced via naming convention and Okta policy."
+      - practice_id: AC.L2-3.1.7
+        status: met
+        score: 5.0
+        assessor_notes: "Privileged action logging via CyberArk session recording."
+      - practice_id: AC.L2-3.1.8
+        status: met
+        score: 5.0
+        assessor_notes: "Account lockout after 5 failed attempts configured in Okta."
+      - practice_id: AC.L2-3.1.9
+        status: not_met
+        score: 1.0
+        assessor_notes: "Privacy notices missing from internal engineering portals and CI/CD dashboards."
+      - practice_id: AC.L2-3.1.10
+        status: met
+        score: 5.0
+        assessor_notes: "10-minute screen lock on all workstations via MDM."
+      - practice_id: AC.L2-3.1.11
+        status: met
+        score: 5.0
+        assessor_notes: "Session termination after 2 hours inactivity."
+      - practice_id: AC.L2-3.1.12
+        status: partially_met
+        score: 3.0
+        assessor_notes: "VPN logs collected in Datadog but alerting rules not yet configured."
+      - practice_id: AC.L2-3.1.13
+        status: met
+        score: 5.0
+        assessor_notes: "WireGuard VPN with AES-256 for all remote access."
+
   # Acme L1 Self-Assessment (in_progress): ~60% met, some gaps
   - assessment_title: "Acme L1 Self-Assessment (FY25)"
     evaluations:
@@ -228,6 +366,40 @@ practice_evaluations:
 
 # Findings for assessments with gaps
 findings:
+  # Findings for Mrisan L1 completed assessment
+  - assessment_title: "Mrisan L1 Self-Assessment (FY25)"
+    items:
+      - practice_id: PE.L1-3.10.4
+        finding_type: deficiency
+        severity: medium
+        title: "Remote Office Physical Access Logs Incomplete"
+        description: "Remote office uses paper sign-in sheet rather than electronic badge system. Logs are not archived digitally."
+        status: open
+
+      - practice_id: SC.L1-3.13.5
+        finding_type: deficiency
+        severity: high
+        title: "Public-Facing Server Not Properly Segmented"
+        description: "Public-facing application server has direct network path to CUI data stores. DMZ segmentation is insufficient."
+        status: open
+
+  # Findings for Mrisan L2 in-progress assessment
+  - assessment_title: "Mrisan L2 Self-Assessment (FY26)"
+    items:
+      - practice_id: AC.L2-3.1.9
+        finding_type: deficiency
+        severity: medium
+        title: "Privacy Notices Missing from Internal Systems"
+        description: "Internal engineering portals (GitLab, Grafana, CI/CD dashboards) do not display privacy/security notices."
+        status: open
+
+      - practice_id: AC.L2-3.1.12
+        finding_type: observation
+        severity: low
+        title: "VPN Monitoring Alerting Not Configured"
+        description: "VPN session logs are collected in Datadog but automated alerting rules for anomalous behavior are not yet in place."
+        status: open
+
   # Findings for Acme L1 in-progress assessment
   - assessment_title: "Acme L1 Self-Assessment (FY25)"
     items:
@@ -292,6 +464,42 @@ findings:
 
 # POA&Ms linked to assessments
 poams:
+  - assessment_title: "Mrisan L1 Self-Assessment (FY25)"
+    org_name: "Mrisan"
+    title: "Mrisan L1 Remediation Plan (FY25-26)"
+    status: active
+    items:
+      - finding_title: "Remote Office Physical Access Logs Incomplete"
+        practice_id: PE.L1-3.10.4
+        milestone: "Install electronic badge reader at remote office and integrate with HQ access control system"
+        scheduled_completion: "2026-04-01"
+        status: in_progress
+        resources_required: "Badge reader hardware ($3K), network cabling, IT ops (1 week)"
+      - finding_title: "Public-Facing Server Not Properly Segmented"
+        practice_id: SC.L1-3.13.5
+        milestone: "Redesign DMZ architecture and migrate public app server to isolated VLAN"
+        scheduled_completion: "2026-05-15"
+        status: open
+        resources_required: "Network engineer (2 FTEs, 3 weeks), firewall rule changes, load balancer reconfiguration"
+
+  - assessment_title: "Mrisan L2 Self-Assessment (FY26)"
+    org_name: "Mrisan"
+    title: "Mrisan L2 Remediation Plan (FY26)"
+    status: draft
+    items:
+      - finding_title: "Privacy Notices Missing from Internal Systems"
+        practice_id: AC.L2-3.1.9
+        milestone: "Add standardized privacy/security banners to all internal web applications"
+        scheduled_completion: "2026-06-01"
+        status: open
+        resources_required: "Frontend developer (1 sprint), design team review"
+      - finding_title: "VPN Monitoring Alerting Not Configured"
+        practice_id: AC.L2-3.1.12
+        milestone: "Configure Datadog alerting rules for VPN anomaly detection"
+        scheduled_completion: "2026-07-01"
+        status: open
+        resources_required: "SRE team (3 days), Datadog monitor configuration"
+
   - assessment_title: "Acme L1 Self-Assessment (FY25)"
     org_name: "Acme Defense Corp"
     title: "Acme L1 Remediation Plan (FY25)"

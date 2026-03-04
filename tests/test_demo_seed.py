@@ -102,19 +102,20 @@ class TestDemoSeed:
 
     def test_seed_creates_poams(self, db):
         counts = seed_all(db, seed_demo=True)
-        assert counts["poams"] == 2
-        assert db.query(POAM).count() == 2
+        # Mrisan (2) + Acme (1) + Pinnacle (1) = 4 POAMs
+        assert counts["poams"] == 4
+        assert db.query(POAM).count() == 4
 
     def test_poam_items_created(self, db):
         seed_all(db, seed_demo=True)
-        # 4 items per POAM = 8 total
-        assert db.query(POAMItem).count() == 8
+        # Mrisan L1 (2) + Mrisan L2 (2) + Acme (4) + Pinnacle (4) = 12 items
+        assert db.query(POAMItem).count() == 12
 
     def test_poam_items_linked_to_findings(self, db):
         seed_all(db, seed_demo=True)
         # All POAM items should be linked to findings
         linked = db.query(POAMItem).filter(POAMItem.finding_id.isnot(None)).count()
-        assert linked == 8
+        assert linked == 12
 
     def test_poam_item_statuses(self, db):
         seed_all(db, seed_demo=True)
@@ -142,9 +143,30 @@ class TestDemoSeed:
         seed_all(db, seed_demo=True)
         seed_all(db, seed_demo=True)
         # Counts should not double
-        assert db.query(Finding).count() == 8
-        assert db.query(POAM).count() == 2
-        assert db.query(POAMItem).count() == 8
+        # Mrisan (2+2) + Acme (4) + Pinnacle (4) = 12 findings
+        assert db.query(Finding).count() == 12
+        assert db.query(POAM).count() == 4
+        assert db.query(POAMItem).count() == 12
+
+    def test_mrisan_l1_scores_calculated(self, db):
+        seed_all(db, seed_demo=True)
+        assessment = db.query(Assessment).filter_by(
+            title="Mrisan L1 Self-Assessment (FY25)"
+        ).first()
+        assert assessment is not None
+        assert assessment.status == "completed"
+        # Scores should be non-null after seed
+        assert assessment.sprs_score is not None
+        assert assessment.overall_score is not None
+        assert assessment.overall_score > 0
+
+    def test_mrisan_findings(self, db):
+        seed_all(db, seed_demo=True)
+        assessment = db.query(Assessment).filter_by(
+            title="Mrisan L1 Self-Assessment (FY25)"
+        ).first()
+        findings = db.query(Finding).filter_by(assessment_id=assessment.id).all()
+        assert len(findings) == 2
 
     def test_seed_without_demo(self, db):
         counts = seed_all(db, seed_demo=False)
