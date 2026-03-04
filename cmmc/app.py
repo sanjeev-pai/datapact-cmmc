@@ -65,6 +65,7 @@ from cmmc.routers.dashboard import router as dashboard_router  # noqa: E402
 from cmmc.routers.datapact import router as datapact_router  # noqa: E402
 from cmmc.routers.evidence import router as evidence_router  # noqa: E402
 from cmmc.routers.organizations import router as org_router  # noqa: E402
+from cmmc.routers.poams import router as poams_router  # noqa: E402
 from cmmc.routers.reports import router as reports_router  # noqa: E402
 from cmmc.routers.users import router as users_router  # noqa: E402
 
@@ -76,6 +77,7 @@ app.include_router(dashboard_router)
 app.include_router(datapact_router)
 app.include_router(evidence_router)
 app.include_router(org_router)
+app.include_router(poams_router)
 app.include_router(reports_router)
 app.include_router(users_router)
 
