@@ -3,6 +3,17 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import AssessmentListPage from './AssessmentListPage'
 
+vi.mock('@/hooks/useOrg', () => ({
+  useOrg: () => ({
+    effectiveOrgId: 'org1',
+    selectedOrgId: 'org1',
+    selectedOrgName: 'Test Org',
+    isSystemAdmin: false,
+    organizations: [],
+    selectOrg: vi.fn(),
+  }),
+}))
+
 const mockAssessments = {
   items: [
     {

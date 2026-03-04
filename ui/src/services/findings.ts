@@ -6,12 +6,14 @@ export async function listFindings(params?: {
   type?: string
   severity?: string
   status?: string
+  org_id?: string
 }): Promise<FindingListResponse> {
   const query = new URLSearchParams()
   if (params?.assessment_id) query.set('assessment_id', params.assessment_id)
   if (params?.type) query.set('type', params.type)
   if (params?.severity) query.set('severity', params.severity)
   if (params?.status) query.set('status', params.status)
+  if (params?.org_id) query.set('org_id', params.org_id)
   const qs = query.toString()
   return api.get<FindingListResponse>(`/findings${qs ? `?${qs}` : ''}`)
 }

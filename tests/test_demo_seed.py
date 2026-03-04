@@ -12,14 +12,13 @@ class TestDemoSeed:
     def test_seed_creates_practice_evaluations(self, db):
         counts = seed_all(db, seed_demo=True)
         assert counts["practice_evaluations"] > 0
-        # Acme L1 has 14 evaluations in YAML, Pinnacle L2 has 17+18 = 35
-        # Total: 14 + 35 = 49 evaluations
+        # YAML provides 453 evaluations + fill adds ~241 = 694 total evaluated
         evaluated = (
             db.query(AssessmentPractice)
             .filter(AssessmentPractice.status != "not_evaluated")
             .count()
         )
-        assert evaluated == counts["practice_evaluations"]
+        assert evaluated == counts["practice_evaluations"] + counts["filled_evaluations"]
 
     def test_acme_l1_evaluations(self, db):
         seed_all(db, seed_demo=True)
@@ -48,11 +47,11 @@ class TestDemoSeed:
             .filter_by(assessment_id=assessment.id, status="not_evaluated")
             .count()
         )
-        # Acme L1 has 17 practices total, 14 evaluated in YAML
-        assert met == 9
-        assert not_met == 2
-        assert partially == 3
-        assert not_evaluated == 3  # MP.L1-3.8.3, SC.L1-3.13.5, SI.L1-3.14.5
+        # Acme L1 has 17 practices total, all 17 evaluated in YAML
+        assert met == 10
+        assert not_met == 3
+        assert partially == 4
+        assert not_evaluated == 0
 
     def test_pinnacle_l2_all_l1_met(self, db):
         seed_all(db, seed_demo=True)
@@ -82,7 +81,7 @@ class TestDemoSeed:
             title="Acme L1 Self-Assessment (FY25)"
         ).first()
         findings = db.query(Finding).filter_by(assessment_id=assessment.id).all()
-        assert len(findings) == 4
+        assert len(findings) == 5
         # Check severity distribution
         severities = {f.severity for f in findings}
         assert "high" in severities
@@ -102,20 +101,20 @@ class TestDemoSeed:
 
     def test_seed_creates_poams(self, db):
         counts = seed_all(db, seed_demo=True)
-        # Mrisan (2) + Acme (1) + Pinnacle (1) = 4 POAMs
-        assert counts["poams"] == 4
-        assert db.query(POAM).count() == 4
+        # Mrisan (2) + Acme (3) + Pinnacle (2) + Mrisan L3 (1) = 8 POAMs
+        assert counts["poams"] == 8
+        assert db.query(POAM).count() == 8
 
     def test_poam_items_created(self, db):
         seed_all(db, seed_demo=True)
-        # Mrisan L1 (2) + Mrisan L2 (2) + Acme (4) + Pinnacle (4) = 12 items
-        assert db.query(POAMItem).count() == 12
+        # All POAMs: 2+2+4+4+4+4+4+2 = 26 items
+        assert db.query(POAMItem).count() == 26
 
     def test_poam_items_linked_to_findings(self, db):
         seed_all(db, seed_demo=True)
         # All POAM items should be linked to findings
         linked = db.query(POAMItem).filter(POAMItem.finding_id.isnot(None)).count()
-        assert linked == 12
+        assert linked == 26
 
     def test_poam_item_statuses(self, db):
         seed_all(db, seed_demo=True)
@@ -143,10 +142,9 @@ class TestDemoSeed:
         seed_all(db, seed_demo=True)
         seed_all(db, seed_demo=True)
         # Counts should not double
-        # Mrisan (2+2) + Acme (4) + Pinnacle (4) = 12 findings
-        assert db.query(Finding).count() == 12
-        assert db.query(POAM).count() == 4
-        assert db.query(POAMItem).count() == 12
+        assert db.query(Finding).count() == 29
+        assert db.query(POAM).count() == 8
+        assert db.query(POAMItem).count() == 26
 
     def test_mrisan_l1_scores_calculated(self, db):
         seed_all(db, seed_demo=True)

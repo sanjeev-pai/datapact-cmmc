@@ -72,18 +72,32 @@ def list_evidence(
     assessment_practice_id: str | None = None,
     assessment_id: str | None = None,
     review_status: str | None = None,
+    org_id: str | None = None,
 ) -> tuple[list[Evidence], int]:
     """List evidence with optional filters. Returns (items, total)."""
+    from cmmc.models.assessment import Assessment
+
     query = db.query(Evidence)
 
+    # org_id requires joining through AssessmentPractice → Assessment
+    if org_id is not None:
+        query = (
+            query.join(AssessmentPractice)
+            .join(Assessment, AssessmentPractice.assessment_id == Assessment.id)
+            .filter(Assessment.org_id == org_id)
+        )
+        # Mark that we've already joined AssessmentPractice
+        ap_joined = True
+    else:
+        ap_joined = False
+
     if assessment_practice_id:
-        query = query.filter_by(assessment_practice_id=assessment_practice_id)
+        query = query.filter(Evidence.assessment_practice_id == assessment_practice_id)
 
     if assessment_id:
-        # Join through AssessmentPractice to filter by assessment
-        query = query.join(AssessmentPractice).filter(
-            AssessmentPractice.assessment_id == assessment_id
-        )
+        if not ap_joined:
+            query = query.join(AssessmentPractice)
+        query = query.filter(AssessmentPractice.assessment_id == assessment_id)
 
     if review_status:
         query = query.filter_by(review_status=review_status)

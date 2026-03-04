@@ -15,6 +15,18 @@ vi.mock('@/hooks/useAuth', () => ({
   }),
 }))
 
+// Mock useOrg to provide org context
+vi.mock('@/hooks/useOrg', () => ({
+  useOrg: () => ({
+    effectiveOrgId: 'org1',
+    selectedOrgId: 'org1',
+    selectedOrgName: 'Test Org',
+    isSystemAdmin: false,
+    organizations: [],
+    selectOrg: vi.fn(),
+  }),
+}))
+
 const mockSummary = { level_1: 88.2, level_2: 45.0, level_3: null }
 
 const mockSprs = {

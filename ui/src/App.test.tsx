@@ -14,6 +14,17 @@ vi.mock('@/contexts/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => children,
 }))
 
+// Mock OrgProvider to pass children through
+vi.mock('@/contexts/OrgContext', () => ({
+  OrgContext: { Provider: ({ children }: { children: React.ReactNode }) => children },
+  OrgProvider: ({ children }: { children: React.ReactNode }) => children,
+}))
+
+// Mock OrgSelector since it depends on OrgContext
+vi.mock('@/components/OrgSelector', () => ({
+  default: () => null,
+}))
+
 beforeEach(() => {
   vi.clearAllMocks()
   localStorage.removeItem('access_token')

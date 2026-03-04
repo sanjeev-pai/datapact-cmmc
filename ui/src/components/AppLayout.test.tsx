@@ -12,6 +12,10 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => mockUseAuth(),
 }))
 
+vi.mock('@/components/OrgSelector', () => ({
+  default: () => null,
+}))
+
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
   return {

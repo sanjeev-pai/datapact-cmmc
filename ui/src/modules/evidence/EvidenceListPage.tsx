@@ -4,6 +4,7 @@ import type { Assessment } from '@/types/assessment'
 import { listEvidence, reviewEvidence, deleteEvidence, getDownloadUrl } from '@/services/evidence'
 import { getAssessments } from '@/services/assessments'
 import { useAuth } from '@/hooks/useAuth'
+import { useOrg } from '@/hooks/useOrg'
 
 const STATUS_BADGE: Record<ReviewStatus, string> = {
   pending: 'badge-ghost',
@@ -39,6 +40,7 @@ function formatDate(dateStr: string | null): string {
 
 export default function EvidenceListPage() {
   const { hasRole } = useAuth()
+  const { effectiveOrgId } = useOrg()
   const canReview = hasRole(...REVIEW_ROLES)
 
   const [evidence, setEvidence] = useState<Evidence[]>([])
@@ -49,12 +51,14 @@ export default function EvidenceListPage() {
   const [assessmentFilter, setAssessmentFilter] = useState('')
   const [assessments, setAssessments] = useState<Assessment[]>([])
 
-  // Load assessments for filter dropdown
+  // Load assessments for filter dropdown (scoped by org)
   useEffect(() => {
-    getAssessments()
+    const params: { org_id?: string } = {}
+    if (effectiveOrgId) params.org_id = effectiveOrgId
+    getAssessments(params)
       .then((data) => setAssessments(data.items))
       .catch(() => {})
-  }, [])
+  }, [effectiveOrgId])
 
   // Load evidence
   useEffect(() => {
@@ -62,9 +66,10 @@ export default function EvidenceListPage() {
     setLoading(true)
     setError(null)
 
-    const params: { review_status?: string; assessment_id?: string } = {}
+    const params: { review_status?: string; assessment_id?: string; org_id?: string } = {}
     if (statusFilter) params.review_status = statusFilter
     if (assessmentFilter) params.assessment_id = assessmentFilter
+    if (effectiveOrgId) params.org_id = effectiveOrgId
 
     listEvidence(params)
       .then((data) => {
@@ -81,7 +86,7 @@ export default function EvidenceListPage() {
       })
 
     return () => { cancelled = true }
-  }, [statusFilter, assessmentFilter])
+  }, [statusFilter, assessmentFilter, effectiveOrgId])
 
   async function handleReview(id: string, status: 'accepted' | 'rejected') {
     try {

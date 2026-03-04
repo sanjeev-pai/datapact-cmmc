@@ -69,15 +69,24 @@ def list_evidence(
     assessment_practice_id: str | None = Query(None),
     assessment_id: str | None = Query(None),
     review_status: str | None = Query(None),
+    org_id: str | None = Query(None),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """List evidence with optional filters."""
+    """List evidence with optional filters. System admins can filter by org_id."""
+    user_roles = {r.name for r in user.roles}
+
+    if "system_admin" in user_roles:
+        effective_org_id = org_id  # None → all orgs
+    else:
+        effective_org_id = user.org_id
+
     items, total = evidence_service.list_evidence(
         db,
         assessment_practice_id=assessment_practice_id,
         assessment_id=assessment_id,
         review_status=review_status,
+        org_id=effective_org_id,
     )
     return EvidenceListResponse(items=items, total=total)
 

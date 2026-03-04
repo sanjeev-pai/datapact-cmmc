@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from cmmc.database import get_db
 from cmmc.dependencies.auth import get_current_user
+from cmmc.errors import ForbiddenError
 from cmmc.models.user import User
 from cmmc.services.dashboard_service import (
     get_assessment_timeline,
@@ -17,18 +18,34 @@ from cmmc.services.dashboard_service import (
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
 
+def _is_system_admin(user: User) -> bool:
+    return "system_admin" in {r.name for r in user.roles}
+
+
+def _check_org_access(user: User, org_id: str) -> None:
+    """Non-system-admins may only access their own org."""
+    if _is_system_admin(user):
+        return
+    if user.org_id != org_id:
+        raise ForbiddenError("Access denied to this organization's data")
+
+
 # ---------------------------------------------------------------------------
-# GET /summary — org compliance overview (scoped to current user's org)
+# GET /summary — org compliance overview
 # ---------------------------------------------------------------------------
 
 @router.get("/summary")
 def summary(
+    org_id: str | None = Query(None),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Overall compliance % by level for the user's organization."""
-    org_id = user.org_id or ""
-    return get_compliance_summary(db, org_id)
+    """Overall compliance % by level. System admins can pass org_id or omit for all."""
+    if _is_system_admin(user):
+        effective_org_id = org_id  # None → all orgs
+    else:
+        effective_org_id = user.org_id or ""
+    return get_compliance_summary(db, effective_org_id)
 
 
 # ---------------------------------------------------------------------------
@@ -56,6 +73,7 @@ def sprs_history(
     db: Session = Depends(get_db),
 ):
     """Current + historical SPRS scores for an organization."""
+    _check_org_access(user, org_id)
     return get_sprs_summary(db, org_id)
 
 
@@ -71,6 +89,7 @@ def timeline(
     db: Session = Depends(get_db),
 ):
     """Recent assessments for an organization, newest first."""
+    _check_org_access(user, org_id)
     return get_assessment_timeline(db, org_id, limit=limit)
 
 

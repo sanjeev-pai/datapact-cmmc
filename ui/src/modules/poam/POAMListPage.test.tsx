@@ -23,6 +23,17 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: vi.fn(),
 }))
 
+vi.mock('@/hooks/useOrg', () => ({
+  useOrg: () => ({
+    effectiveOrgId: 'org1',
+    selectedOrgId: 'org1',
+    selectedOrgName: 'Test Org',
+    isSystemAdmin: false,
+    organizations: [],
+    selectOrg: vi.fn(),
+  }),
+}))
+
 import { listPoams, getPoam, createPoam, deletePoam, activatePoam } from '@/services/poam'
 import { getAssessments } from '@/services/assessments'
 import { useAuth } from '@/hooks/useAuth'

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Assessment, AssessmentStatus } from '@/types/assessment'
 import { getAssessments } from '@/services/assessments'
+import { useOrg } from '@/hooks/useOrg'
 
 const STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: '', label: 'All Statuses' },
@@ -45,6 +46,7 @@ function formatDate(dateStr: string | null): string {
 
 export default function AssessmentListPage() {
   const navigate = useNavigate()
+  const { effectiveOrgId } = useOrg()
   const [assessments, setAssessments] = useState<Assessment[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -57,9 +59,10 @@ export default function AssessmentListPage() {
     setLoading(true)
     setError(null)
 
-    const params: { status?: string; target_level?: number } = {}
+    const params: { status?: string; target_level?: number; org_id?: string } = {}
     if (statusFilter) params.status = statusFilter
     if (levelFilter) params.target_level = Number(levelFilter)
+    if (effectiveOrgId) params.org_id = effectiveOrgId
 
     getAssessments(params)
       .then((data) => {
@@ -76,7 +79,7 @@ export default function AssessmentListPage() {
       })
 
     return () => { cancelled = true }
-  }, [statusFilter, levelFilter])
+  }, [statusFilter, levelFilter, effectiveOrgId])
 
   return (
     <div className="p-6">

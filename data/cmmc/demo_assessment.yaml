@@ -77,7 +77,7 @@ practice_evaluations:
         score: 5.0
         assessor_notes: "Full system scans weekly, real-time file monitoring enabled."
 
-  # Mrisan L2 Self-Assessment (in_progress): partial L2 evaluations
+  # Mrisan L2 Self-Assessment (in_progress): comprehensive L2 evaluations
   - assessment_title: "Mrisan L2 Self-Assessment (FY26)"
     evaluations:
       # L1 practices carried forward — all met
@@ -89,6 +89,14 @@ practice_evaluations:
         status: met
         score: 5.0
         assessor_notes: "Carried forward from L1 assessment."
+      - practice_id: AC.L1-3.1.20
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Jira approval workflow verified."
+      - practice_id: AC.L1-3.1.22
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Quarterly content review continues."
       - practice_id: IA.L1-3.5.1
         status: met
         score: 5.0
@@ -97,7 +105,52 @@ practice_evaluations:
         status: met
         score: 5.0
         assessor_notes: "Carried forward."
-      # L2 practices — in progress
+      - practice_id: MP.L1-3.8.3
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. NIST 800-88 procedures maintained."
+      - practice_id: PE.L1-3.10.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Badge access at all locations."
+      - practice_id: PE.L1-3.10.3
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Envoy visitor system operational."
+      - practice_id: PE.L1-3.10.4
+        status: met
+        score: 5.0
+        assessor_notes: "Upgraded since L1. Electronic badge reader now installed at remote office."
+      - practice_id: PE.L1-3.10.5
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+      - practice_id: SC.L1-3.13.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Palo Alto NGFW maintained."
+      - practice_id: SC.L1-3.13.5
+        status: met
+        score: 5.0
+        assessor_notes: "Remediated since L1. DMZ redesigned with isolated VLAN for public services."
+      - practice_id: SI.L1-3.14.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Patching SLA maintained."
+      - practice_id: SI.L1-3.14.2
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. SentinelOne operational."
+      - practice_id: SI.L1-3.14.4
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+      - practice_id: SI.L1-3.14.5
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+
+      # L2 Access Control practices
       - practice_id: AC.L2-3.1.3
         status: met
         score: 5.0
@@ -142,8 +195,362 @@ practice_evaluations:
         status: met
         score: 5.0
         assessor_notes: "WireGuard VPN with AES-256 for all remote access."
+      - practice_id: AC.L2-3.1.14
+        status: met
+        score: 5.0
+        assessor_notes: "All remote access routes through managed VPN concentrators."
+      - practice_id: AC.L2-3.1.15
+        status: met
+        score: 5.0
+        assessor_notes: "Privileged remote access restricted to dedicated admin jump boxes."
+      - practice_id: AC.L2-3.1.16
+        status: met
+        score: 5.0
+        assessor_notes: "WPA3-Enterprise on all wireless APs. Guest WiFi isolated on separate VLAN."
+      - practice_id: AC.L2-3.1.17
+        status: met
+        score: 5.0
+        assessor_notes: "Certificate-based wireless auth for CUI-bearing systems."
+      - practice_id: AC.L2-3.1.18
+        status: met
+        score: 5.0
+        assessor_notes: "Jamf and Intune MDM enforce connection profiles on all mobile devices."
+      - practice_id: AC.L2-3.1.19
+        status: met
+        score: 5.0
+        assessor_notes: "CUI encrypted at rest (AES-256) and in transit (TLS 1.3) on all mobile devices."
+      - practice_id: AC.L2-3.1.21
+        status: met
+        score: 5.0
+        assessor_notes: "USB storage blocked via endpoint DLP. Exceptions require CISO approval."
 
-  # Acme L1 Self-Assessment (in_progress): ~60% met, some gaps
+      # L2 Awareness & Training
+      - practice_id: AT.L2-3.2.1
+        status: met
+        score: 5.0
+        assessor_notes: "Annual security awareness training via KnowBe4. 98% completion rate."
+      - practice_id: AT.L2-3.2.2
+        status: met
+        score: 5.0
+        assessor_notes: "Role-based training for admin, dev, and exec roles. Quarterly phishing simulations."
+      - practice_id: AT.L2-3.2.3
+        status: met
+        score: 5.0
+        assessor_notes: "Insider threat awareness module added to annual training program."
+
+      # L2 Audit & Accountability
+      - practice_id: AU.L2-3.3.1
+        status: met
+        score: 5.0
+        assessor_notes: "Comprehensive audit logging via Datadog. All system events captured."
+      - practice_id: AU.L2-3.3.2
+        status: met
+        score: 5.0
+        assessor_notes: "Individual accountability ensured through unique session IDs and user mapping."
+      - practice_id: AU.L2-3.3.3
+        status: met
+        score: 5.0
+        assessor_notes: "Audit event types defined in logging policy. Reviewed annually."
+      - practice_id: AU.L2-3.3.4
+        status: met
+        score: 5.0
+        assessor_notes: "Audit failure alerts configured in Datadog with PagerDuty escalation."
+      - practice_id: AU.L2-3.3.5
+        status: met
+        score: 5.0
+        assessor_notes: "Audit log correlation via Datadog SIEM with automated anomaly detection."
+      - practice_id: AU.L2-3.3.6
+        status: met
+        score: 5.0
+        assessor_notes: "Audit reduction and report generation automated via Datadog dashboards."
+      - practice_id: AU.L2-3.3.7
+        status: met
+        score: 5.0
+        assessor_notes: "NTP sync across all systems. Timestamps in UTC with millisecond precision."
+      - practice_id: AU.L2-3.3.8
+        status: met
+        score: 5.0
+        assessor_notes: "Audit logs shipped to immutable S3 bucket with object lock. 1-year retention."
+      - practice_id: AU.L2-3.3.9
+        status: met
+        score: 5.0
+        assessor_notes: "Audit log access restricted to security team via IAM policy."
+
+      # L2 Configuration Management
+      - practice_id: CM.L2-3.4.1
+        status: met
+        score: 5.0
+        assessor_notes: "Configuration baselines maintained in Terraform + Ansible. Git-tracked."
+      - practice_id: CM.L2-3.4.2
+        status: met
+        score: 5.0
+        assessor_notes: "Security configuration settings enforced via CIS benchmarks."
+      - practice_id: CM.L2-3.4.3
+        status: met
+        score: 5.0
+        assessor_notes: "Change management via Jira with CAB approval for production changes."
+      - practice_id: CM.L2-3.4.4
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Impact analysis required for changes but documentation varies in quality."
+      - practice_id: CM.L2-3.4.5
+        status: met
+        score: 5.0
+        assessor_notes: "Physical and logical access restrictions enforced for config changes."
+      - practice_id: CM.L2-3.4.6
+        status: met
+        score: 5.0
+        assessor_notes: "Least functionality principle applied. Unnecessary services disabled in hardening."
+      - practice_id: CM.L2-3.4.7
+        status: met
+        score: 5.0
+        assessor_notes: "Non-essential programs blocked via application whitelisting (AppLocker)."
+      - practice_id: CM.L2-3.4.8
+        status: met
+        score: 5.0
+        assessor_notes: "Application execution policy enforced via deny-by-default with exceptions."
+      - practice_id: CM.L2-3.4.9
+        status: met
+        score: 5.0
+        assessor_notes: "User-installed software requires IT approval. MDM enforces policy."
+
+      # L2 Identification & Authentication
+      - practice_id: IA.L2-3.5.3
+        status: met
+        score: 5.0
+        assessor_notes: "MFA enforced via Okta Verify for all remote and privileged access."
+      - practice_id: IA.L2-3.5.4
+        status: met
+        score: 5.0
+        assessor_notes: "Replay-resistant auth via TOTP and push notification (no SMS)."
+      - practice_id: IA.L2-3.5.5
+        status: met
+        score: 5.0
+        assessor_notes: "Okta unique session identifiers prevent identifier reuse."
+      - practice_id: IA.L2-3.5.6
+        status: met
+        score: 5.0
+        assessor_notes: "Password complexity: 16+ chars, complexity rules. 90-day rotation policy."
+      - practice_id: IA.L2-3.5.7
+        status: met
+        score: 5.0
+        assessor_notes: "Password storage uses bcrypt with per-user salt. No plaintext anywhere."
+      - practice_id: IA.L2-3.5.8
+        status: not_met
+        score: 1.0
+        assessor_notes: "Obscured password feedback not enforced on all legacy admin consoles."
+      - practice_id: IA.L2-3.5.9
+        status: met
+        score: 5.0
+        assessor_notes: "Temporary passwords expire after first use. Enforced via Okta policy."
+      - practice_id: IA.L2-3.5.10
+        status: met
+        score: 5.0
+        assessor_notes: "Cryptographic key-based auth for all automated service-to-service calls."
+      - practice_id: IA.L2-3.5.11
+        status: met
+        score: 5.0
+        assessor_notes: "Cached authenticators invalidated after 24 hours. Session tokens rotate."
+
+      # L2 Incident Response
+      - practice_id: IR.L2-3.6.1
+        status: met
+        score: 5.0
+        assessor_notes: "IR plan maintained and tested quarterly via tabletop exercises."
+      - practice_id: IR.L2-3.6.2
+        status: met
+        score: 5.0
+        assessor_notes: "IR events tracked and reported. Incident commander on-call rotation."
+      - practice_id: IR.L2-3.6.3
+        status: met
+        score: 5.0
+        assessor_notes: "IR capabilities tested annually. Red team exercise completed Q4 2025."
+
+      # L2 Maintenance
+      - practice_id: MA.L2-3.7.1
+        status: met
+        score: 5.0
+        assessor_notes: "System maintenance scheduled via change management process."
+      - practice_id: MA.L2-3.7.2
+        status: met
+        score: 5.0
+        assessor_notes: "Maintenance tools controlled and monitored. Authorized tool list maintained."
+      - practice_id: MA.L2-3.7.3
+        status: met
+        score: 5.0
+        assessor_notes: "Equipment sanitized before off-site maintenance per NIST 800-88."
+      - practice_id: MA.L2-3.7.4
+        status: met
+        score: 5.0
+        assessor_notes: "Diagnostic media scanned before use in production environment."
+      - practice_id: MA.L2-3.7.5
+        status: met
+        score: 5.0
+        assessor_notes: "Remote maintenance sessions require MFA and are fully recorded."
+      - practice_id: MA.L2-3.7.6
+        status: met
+        score: 5.0
+        assessor_notes: "Maintenance personnel supervised when accessing CUI systems."
+
+      # L2 Media Protection
+      - practice_id: MP.L2-3.8.1
+        status: met
+        score: 5.0
+        assessor_notes: "CUI media protected during storage and transport. Encryption required."
+      - practice_id: MP.L2-3.8.2
+        status: met
+        score: 5.0
+        assessor_notes: "Access to CUI media restricted to authorized personnel only."
+      - practice_id: MP.L2-3.8.4
+        status: met
+        score: 5.0
+        assessor_notes: "CUI markings applied to all digital and physical media."
+      - practice_id: MP.L2-3.8.5
+        status: met
+        score: 5.0
+        assessor_notes: "CUI media access controlled in designated storage areas."
+      - practice_id: MP.L2-3.8.6
+        status: met
+        score: 5.0
+        assessor_notes: "FIPS 140-2 validated encryption for CUI on portable storage."
+      - practice_id: MP.L2-3.8.7
+        status: met
+        score: 5.0
+        assessor_notes: "Removable media use controlled and restricted via DLP policy."
+      - practice_id: MP.L2-3.8.8
+        status: met
+        score: 5.0
+        assessor_notes: "Shared system resources cleared between user sessions."
+      - practice_id: MP.L2-3.8.9
+        status: met
+        score: 5.0
+        assessor_notes: "Backup media encrypted and stored in secure off-site location."
+
+      # L2 Personnel Security
+      - practice_id: PS.L2-3.9.1
+        status: met
+        score: 5.0
+        assessor_notes: "Background screening for all personnel with CUI access."
+      - practice_id: PS.L2-3.9.2
+        status: met
+        score: 5.0
+        assessor_notes: "CUI access revoked within 24 hours of personnel transfer/termination."
+
+      # L2 Physical & Environmental Protection
+      - practice_id: PE.L2-3.10.2
+        status: met
+        score: 5.0
+        assessor_notes: "Facility and equipment protected from environmental hazards."
+      - practice_id: PE.L2-3.10.6
+        status: met
+        score: 5.0
+        assessor_notes: "Alternate work sites assessed for security compliance."
+
+      # L2 Risk Assessment
+      - practice_id: RA.L2-3.11.1
+        status: met
+        score: 5.0
+        assessor_notes: "Annual risk assessments conducted. Last completed Jan 2026."
+      - practice_id: RA.L2-3.11.2
+        status: met
+        score: 5.0
+        assessor_notes: "Vulnerability scans run weekly via Qualys. Critical findings remediated within 7 days."
+      - practice_id: RA.L2-3.11.3
+        status: met
+        score: 5.0
+        assessor_notes: "Vulnerabilities remediated per risk-based prioritization framework."
+
+      # L2 Security Assessment
+      - practice_id: CA.L2-3.12.1
+        status: met
+        score: 5.0
+        assessor_notes: "Security controls assessed annually with independent review."
+      - practice_id: CA.L2-3.12.2
+        status: met
+        score: 5.0
+        assessor_notes: "Plans of action developed for identified deficiencies."
+      - practice_id: CA.L2-3.12.3
+        status: met
+        score: 5.0
+        assessor_notes: "Continuous monitoring program in place via Datadog and Qualys."
+      - practice_id: CA.L2-3.12.4
+        status: met
+        score: 5.0
+        assessor_notes: "System Security Plan maintained and updated quarterly."
+
+      # L2 System & Communications Protection
+      - practice_id: SC.L2-3.13.2
+        status: met
+        score: 5.0
+        assessor_notes: "Security architecture separates user and admin functionality."
+      - practice_id: SC.L2-3.13.3
+        status: met
+        score: 5.0
+        assessor_notes: "User-initiated traffic separated from management traffic via VLANs."
+      - practice_id: SC.L2-3.13.4
+        status: met
+        score: 5.0
+        assessor_notes: "Shared resources controlled via network segmentation and ACLs."
+      - practice_id: SC.L2-3.13.6
+        status: met
+        score: 5.0
+        assessor_notes: "Network traffic denied by default. Explicit allow rules for approved flows."
+      - practice_id: SC.L2-3.13.7
+        status: met
+        score: 5.0
+        assessor_notes: "Split tunneling disabled on all VPN clients via MDM policy."
+      - practice_id: SC.L2-3.13.8
+        status: met
+        score: 5.0
+        assessor_notes: "TLS 1.3 enforced for all CUI data in transit. Certificates managed via Let's Encrypt + internal CA."
+      - practice_id: SC.L2-3.13.9
+        status: met
+        score: 5.0
+        assessor_notes: "Network connections terminated at session end. Idle timeout enforced."
+      - practice_id: SC.L2-3.13.10
+        status: met
+        score: 5.0
+        assessor_notes: "Cryptographic key management per NIST SP 800-57."
+      - practice_id: SC.L2-3.13.11
+        status: met
+        score: 5.0
+        assessor_notes: "FIPS 140-2 validated cryptographic modules for CUI encryption."
+      - practice_id: SC.L2-3.13.12
+        status: met
+        score: 5.0
+        assessor_notes: "Collaborative computing devices controlled. Camera/mic require user consent."
+      - practice_id: SC.L2-3.13.13
+        status: met
+        score: 5.0
+        assessor_notes: "Mobile code execution controlled via browser security policies."
+      - practice_id: SC.L2-3.13.14
+        status: met
+        score: 5.0
+        assessor_notes: "VoIP traffic encrypted and isolated on dedicated VLAN."
+      - practice_id: SC.L2-3.13.15
+        status: met
+        score: 5.0
+        assessor_notes: "Session authenticity protected via mutual TLS for internal services."
+      - practice_id: SC.L2-3.13.16
+        status: met
+        score: 5.0
+        assessor_notes: "CUI confidentiality protected at rest via AES-256 full-disk encryption."
+
+      # L2 System & Information Integrity
+      - practice_id: SI.L2-3.14.3
+        status: met
+        score: 5.0
+        assessor_notes: "Security alerts monitored via Datadog with PagerDuty escalation."
+      - practice_id: SI.L2-3.14.6
+        status: met
+        score: 5.0
+        assessor_notes: "System inputs validated. WAF deployed for web applications."
+      - practice_id: SI.L2-3.14.7
+        status: met
+        score: 5.0
+        assessor_notes: "Unauthorized use monitoring via Datadog anomaly detection."
+
+  # Acme L1 Self-Assessment (completed): all 17 evaluated, ~59% met
   - assessment_title: "Acme L1 Self-Assessment (FY25)"
     evaluations:
       # Access Control — 3 met, 1 partially
@@ -174,8 +581,11 @@ practice_evaluations:
         score: 1.0
         assessor_notes: "MFA not enforced for all users — only 60% enrolled. Password complexity policy is weak."
 
-      # Media Protection — not evaluated (in progress)
-      # MP.L1-3.8.3 left as not_evaluated
+      # Media Protection — partially met
+      - practice_id: MP.L1-3.8.3
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Media sanitization procedure exists but not consistently followed. No degausser for magnetic media."
 
       # Physical Protection — 2 met, 1 not_met, 1 partially
       - practice_id: PE.L1-3.10.1
@@ -195,14 +605,17 @@ practice_evaluations:
         score: 5.0
         assessor_notes: "Physical access devices (badges, keys) tracked in access control system."
 
-      # System & Comms Protection — 1 met, 1 not_evaluated
+      # System & Comms Protection — 1 met, 1 not_met
       - practice_id: SC.L1-3.13.1
         status: met
         score: 5.0
         assessor_notes: "Firewall and IDS/IPS deployed at network boundary. Rules reviewed quarterly."
-      # SC.L1-3.13.5 left as not_evaluated
+      - practice_id: SC.L1-3.13.5
+        status: not_met
+        score: 1.0
+        assessor_notes: "No DMZ segmentation for public-facing services. All servers on same network segment."
 
-      # System & Info Integrity — 2 met, 1 partially, 1 not_evaluated
+      # System & Info Integrity — 3 met, 1 partially
       - practice_id: SI.L1-3.14.1
         status: met
         score: 5.0
@@ -215,7 +628,10 @@ practice_evaluations:
         status: partially_met
         score: 3.0
         assessor_notes: "AV signatures update automatically but some legacy systems excluded from auto-update."
-      # SI.L1-3.14.5 left as not_evaluated
+      - practice_id: SI.L1-3.14.5
+        status: met
+        score: 5.0
+        assessor_notes: "Weekly scheduled scans configured across all managed systems."
 
   # Pinnacle L2 Self-Assessment (completed): ~85% met across L1+L2
   - assessment_title: "Pinnacle L2 Self-Assessment (FY25)"
@@ -364,6 +780,1176 @@ practice_evaluations:
         score: 3.0
         assessor_notes: "Portable storage use restricted but enforcement on Linux workstations incomplete."
 
+      # Additional L2 practices for Pinnacle (completed assessment — all evaluated)
+      - practice_id: AT.L2-3.2.1
+        status: met
+        score: 5.0
+        assessor_notes: "Security training program with annual completion requirement."
+      - practice_id: AT.L2-3.2.2
+        status: met
+        score: 5.0
+        assessor_notes: "Role-based training modules for technical and executive staff."
+      - practice_id: AT.L2-3.2.3
+        status: met
+        score: 5.0
+        assessor_notes: "Insider threat awareness training conducted semi-annually."
+      - practice_id: AU.L2-3.3.1
+        status: met
+        score: 5.0
+        assessor_notes: "Splunk SIEM captures all auditable events across infrastructure."
+      - practice_id: AU.L2-3.3.2
+        status: met
+        score: 5.0
+        assessor_notes: "Unique user IDs ensure individual accountability in audit logs."
+      - practice_id: AU.L2-3.3.3
+        status: met
+        score: 5.0
+        assessor_notes: "Audit event types documented in logging standard."
+      - practice_id: AU.L2-3.3.4
+        status: met
+        score: 5.0
+        assessor_notes: "Audit log failure alerts with automatic escalation."
+      - practice_id: AU.L2-3.3.5
+        status: met
+        score: 5.0
+        assessor_notes: "Audit correlation via Splunk with automated detection rules."
+      - practice_id: AU.L2-3.3.6
+        status: met
+        score: 5.0
+        assessor_notes: "Audit reports generated weekly for management review."
+      - practice_id: AU.L2-3.3.7
+        status: met
+        score: 5.0
+        assessor_notes: "NTP synchronization across all systems verified monthly."
+      - practice_id: AU.L2-3.3.8
+        status: met
+        score: 5.0
+        assessor_notes: "Audit logs stored in immutable cloud storage with 2-year retention."
+      - practice_id: AU.L2-3.3.9
+        status: met
+        score: 5.0
+        assessor_notes: "Audit management restricted to security operations team."
+      - practice_id: CM.L2-3.4.1
+        status: met
+        score: 5.0
+        assessor_notes: "Configuration baselines documented and enforced via Ansible."
+      - practice_id: CM.L2-3.4.2
+        status: met
+        score: 5.0
+        assessor_notes: "Security settings hardened per DISA STIGs."
+      - practice_id: CM.L2-3.4.3
+        status: met
+        score: 5.0
+        assessor_notes: "Change management process with documented approvals."
+      - practice_id: CM.L2-3.4.4
+        status: met
+        score: 5.0
+        assessor_notes: "Security impact analysis performed for all changes."
+      - practice_id: CM.L2-3.4.5
+        status: met
+        score: 5.0
+        assessor_notes: "Configuration change access restricted to authorized admins."
+      - practice_id: CM.L2-3.4.6
+        status: met
+        score: 5.0
+        assessor_notes: "Least functionality enforced. Unnecessary services disabled."
+      - practice_id: CM.L2-3.4.7
+        status: met
+        score: 5.0
+        assessor_notes: "Non-essential programs restricted via application whitelisting."
+      - practice_id: CM.L2-3.4.8
+        status: met
+        score: 5.0
+        assessor_notes: "Application execution policy enforced with deny-by-default."
+      - practice_id: CM.L2-3.4.9
+        status: met
+        score: 5.0
+        assessor_notes: "User-installed software controlled via MDM restrictions."
+      - practice_id: IA.L2-3.5.3
+        status: met
+        score: 5.0
+        assessor_notes: "MFA enforced for all privileged and remote access."
+      - practice_id: IA.L2-3.5.4
+        status: met
+        score: 5.0
+        assessor_notes: "Replay-resistant auth mechanisms (FIDO2 keys) deployed."
+      - practice_id: IA.L2-3.5.5
+        status: met
+        score: 5.0
+        assessor_notes: "Unique session identifiers prevent identifier reuse."
+      - practice_id: IA.L2-3.5.6
+        status: met
+        score: 5.0
+        assessor_notes: "Password complexity enforced. 20+ character minimum."
+      - practice_id: IA.L2-3.5.7
+        status: met
+        score: 5.0
+        assessor_notes: "Passwords stored using Argon2id hashing algorithm."
+      - practice_id: IA.L2-3.5.8
+        status: met
+        score: 5.0
+        assessor_notes: "Password fields masked in all interfaces."
+      - practice_id: IA.L2-3.5.9
+        status: met
+        score: 5.0
+        assessor_notes: "Temporary passwords expire on first use."
+      - practice_id: IA.L2-3.5.10
+        status: met
+        score: 5.0
+        assessor_notes: "mTLS certificates used for all service-to-service auth."
+      - practice_id: IA.L2-3.5.11
+        status: met
+        score: 5.0
+        assessor_notes: "Cached credentials expire after 12 hours."
+      - practice_id: IR.L2-3.6.1
+        status: met
+        score: 5.0
+        assessor_notes: "IR plan documented, tested, and approved by CISO."
+      - practice_id: IR.L2-3.6.2
+        status: met
+        score: 5.0
+        assessor_notes: "Incident tracking and reporting procedures in place."
+      - practice_id: IR.L2-3.6.3
+        status: met
+        score: 5.0
+        assessor_notes: "Annual IR exercise with lessons learned documented."
+      - practice_id: MA.L2-3.7.1
+        status: met
+        score: 5.0
+        assessor_notes: "Maintenance activities scheduled and tracked."
+      - practice_id: MA.L2-3.7.2
+        status: met
+        score: 5.0
+        assessor_notes: "Maintenance tools inventoried and controlled."
+      - practice_id: MA.L2-3.7.3
+        status: met
+        score: 5.0
+        assessor_notes: "Equipment sanitized before external maintenance."
+      - practice_id: MA.L2-3.7.4
+        status: met
+        score: 5.0
+        assessor_notes: "Diagnostic media verified before use."
+      - practice_id: MA.L2-3.7.5
+        status: met
+        score: 5.0
+        assessor_notes: "Remote maintenance requires MFA and session recording."
+      - practice_id: MA.L2-3.7.6
+        status: met
+        score: 5.0
+        assessor_notes: "Maintenance personnel supervised during CUI system access."
+      - practice_id: MP.L2-3.8.1
+        status: met
+        score: 5.0
+        assessor_notes: "CUI media protection procedures documented and followed."
+      - practice_id: MP.L2-3.8.2
+        status: met
+        score: 5.0
+        assessor_notes: "CUI media access limited to authorized personnel."
+      - practice_id: MP.L2-3.8.4
+        status: met
+        score: 5.0
+        assessor_notes: "CUI markings applied consistently."
+      - practice_id: MP.L2-3.8.5
+        status: met
+        score: 5.0
+        assessor_notes: "CUI media storage access controlled."
+      - practice_id: MP.L2-3.8.6
+        status: met
+        score: 5.0
+        assessor_notes: "FIPS-validated encryption for portable CUI storage."
+      - practice_id: MP.L2-3.8.7
+        status: met
+        score: 5.0
+        assessor_notes: "Removable media strictly controlled and logged."
+      - practice_id: MP.L2-3.8.8
+        status: met
+        score: 5.0
+        assessor_notes: "Shared system resources sanitized between sessions."
+      - practice_id: MP.L2-3.8.9
+        status: met
+        score: 5.0
+        assessor_notes: "Backup media encrypted with AES-256."
+      - practice_id: PS.L2-3.9.1
+        status: met
+        score: 5.0
+        assessor_notes: "Background checks completed for all CUI personnel."
+      - practice_id: PS.L2-3.9.2
+        status: met
+        score: 5.0
+        assessor_notes: "Access revocation within 4 hours of termination."
+      - practice_id: PE.L2-3.10.2
+        status: met
+        score: 5.0
+        assessor_notes: "Environmental protection controls in place at all facilities."
+      - practice_id: PE.L2-3.10.6
+        status: met
+        score: 5.0
+        assessor_notes: "Alternate work sites approved and monitored."
+      - practice_id: RA.L2-3.11.1
+        status: met
+        score: 5.0
+        assessor_notes: "Risk assessments conducted quarterly."
+      - practice_id: RA.L2-3.11.2
+        status: met
+        score: 5.0
+        assessor_notes: "Vulnerability scanning performed weekly with Nessus."
+      - practice_id: RA.L2-3.11.3
+        status: met
+        score: 5.0
+        assessor_notes: "Vulnerability remediation tracked via ticketing system."
+      - practice_id: CA.L2-3.12.1
+        status: met
+        score: 5.0
+        assessor_notes: "Annual security assessment with independent review."
+      - practice_id: CA.L2-3.12.2
+        status: met
+        score: 5.0
+        assessor_notes: "POA&Ms maintained for all deficiencies."
+      - practice_id: CA.L2-3.12.3
+        status: met
+        score: 5.0
+        assessor_notes: "Continuous monitoring via Splunk and Nessus."
+      - practice_id: CA.L2-3.12.4
+        status: met
+        score: 5.0
+        assessor_notes: "SSP maintained and reviewed semi-annually."
+      - practice_id: SC.L2-3.13.2
+        status: met
+        score: 5.0
+        assessor_notes: "Architectural separation of user and admin functions."
+      - practice_id: SC.L2-3.13.3
+        status: met
+        score: 5.0
+        assessor_notes: "User and management traffic separated."
+      - practice_id: SC.L2-3.13.4
+        status: met
+        score: 5.0
+        assessor_notes: "Shared resource access controlled via ACLs."
+      - practice_id: SC.L2-3.13.6
+        status: met
+        score: 5.0
+        assessor_notes: "Default deny network policy enforced."
+      - practice_id: SC.L2-3.13.7
+        status: met
+        score: 5.0
+        assessor_notes: "Split tunneling prohibited on all VPN clients."
+      - practice_id: SC.L2-3.13.8
+        status: met
+        score: 5.0
+        assessor_notes: "TLS 1.3 enforced for all CUI data in transit."
+      - practice_id: SC.L2-3.13.9
+        status: met
+        score: 5.0
+        assessor_notes: "Network connections terminated at session end."
+      - practice_id: SC.L2-3.13.10
+        status: met
+        score: 5.0
+        assessor_notes: "Cryptographic key management per NIST guidelines."
+      - practice_id: SC.L2-3.13.11
+        status: met
+        score: 5.0
+        assessor_notes: "FIPS 140-2 validated cryptography for CUI."
+      - practice_id: SC.L2-3.13.12
+        status: met
+        score: 5.0
+        assessor_notes: "Collaborative computing device controls enforced."
+      - practice_id: SC.L2-3.13.13
+        status: met
+        score: 5.0
+        assessor_notes: "Mobile code restrictions via browser policies."
+      - practice_id: SC.L2-3.13.14
+        status: met
+        score: 5.0
+        assessor_notes: "VoIP traffic encrypted and segmented."
+      - practice_id: SC.L2-3.13.15
+        status: met
+        score: 5.0
+        assessor_notes: "Session authenticity via mutual TLS."
+      - practice_id: SC.L2-3.13.16
+        status: met
+        score: 5.0
+        assessor_notes: "CUI at rest encrypted with AES-256."
+      - practice_id: SI.L2-3.14.3
+        status: met
+        score: 5.0
+        assessor_notes: "Security alerts monitored and acted upon."
+      - practice_id: SI.L2-3.14.6
+        status: met
+        score: 5.0
+        assessor_notes: "Input validation enforced on all web applications."
+      - practice_id: SI.L2-3.14.7
+        status: met
+        score: 5.0
+        assessor_notes: "Unauthorized use detection via behavioral analytics."
+
+  # Pinnacle L1 Self-Assessment (FY24): completed, all 17 met — very mature org
+  - assessment_title: "Pinnacle L1 Self-Assessment (FY24)"
+    evaluations:
+      - practice_id: AC.L1-3.1.1
+        status: met
+        score: 5.0
+        assessor_notes: "Comprehensive access control policy. Annual reviews conducted."
+      - practice_id: AC.L1-3.1.2
+        status: met
+        score: 5.0
+        assessor_notes: "RBAC implemented across all systems."
+      - practice_id: AC.L1-3.1.20
+        status: met
+        score: 5.0
+        assessor_notes: "External connections controlled via change management board."
+      - practice_id: AC.L1-3.1.22
+        status: met
+        score: 5.0
+        assessor_notes: "Public content review process documented and executed."
+      - practice_id: IA.L1-3.5.1
+        status: met
+        score: 5.0
+        assessor_notes: "Unique user IDs for all accounts. Service accounts tracked."
+      - practice_id: IA.L1-3.5.2
+        status: met
+        score: 5.0
+        assessor_notes: "MFA enforced for 100% of users via Azure AD."
+      - practice_id: MP.L1-3.8.3
+        status: met
+        score: 5.0
+        assessor_notes: "NIST 800-88 compliant media sanitization procedures."
+      - practice_id: PE.L1-3.10.1
+        status: met
+        score: 5.0
+        assessor_notes: "Physical access controls at all facilities. Dual-factor for server rooms."
+      - practice_id: PE.L1-3.10.3
+        status: met
+        score: 5.0
+        assessor_notes: "Visitor management system deployed at all locations."
+      - practice_id: PE.L1-3.10.4
+        status: met
+        score: 5.0
+        assessor_notes: "Electronic access logs maintained and reviewed weekly."
+      - practice_id: PE.L1-3.10.5
+        status: met
+        score: 5.0
+        assessor_notes: "Physical access device inventory maintained in asset management system."
+      - practice_id: SC.L1-3.13.1
+        status: met
+        score: 5.0
+        assessor_notes: "Multi-layer boundary protection with IDS/IPS."
+      - practice_id: SC.L1-3.13.5
+        status: met
+        score: 5.0
+        assessor_notes: "DMZ architecture with proper network segmentation."
+      - practice_id: SI.L1-3.14.1
+        status: met
+        score: 5.0
+        assessor_notes: "Automated patch management with 7-day critical SLA."
+      - practice_id: SI.L1-3.14.2
+        status: met
+        score: 5.0
+        assessor_notes: "CrowdStrike Falcon on all endpoints."
+      - practice_id: SI.L1-3.14.4
+        status: met
+        score: 5.0
+        assessor_notes: "Signature updates every 2 hours."
+      - practice_id: SI.L1-3.14.5
+        status: met
+        score: 5.0
+        assessor_notes: "Daily full scans and real-time file monitoring."
+
+  # Acme L2 C3PAO Assessment (in_progress): partial evaluations, ~50% coverage
+  - assessment_title: "Acme L2 C3PAO Assessment (FY25)"
+    evaluations:
+      # L1 practices carried forward from completed L1
+      - practice_id: AC.L1-3.1.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward from L1. AD group access verified."
+      - practice_id: AC.L1-3.1.2
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. RBAC maintained."
+      - practice_id: AC.L1-3.1.20
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Carried forward. Approval process improved but still manual."
+      - practice_id: AC.L1-3.1.22
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+      - practice_id: IA.L1-3.5.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. AD identifiers maintained."
+      - practice_id: IA.L1-3.5.2
+        status: partially_met
+        score: 3.0
+        assessor_notes: "MFA enrollment improved to 85% but not yet universal."
+      - practice_id: MP.L1-3.8.3
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Carried forward. Sanitization improving but not fully compliant."
+      - practice_id: PE.L1-3.10.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+      - practice_id: PE.L1-3.10.3
+        status: met
+        score: 5.0
+        assessor_notes: "Improved since L1. Visitor kiosk installed at satellite office."
+      - practice_id: PE.L1-3.10.4
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Electronic badge installed at satellite but integration incomplete."
+      - practice_id: PE.L1-3.10.5
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+      - practice_id: SC.L1-3.13.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Firewall rules reviewed."
+      - practice_id: SC.L1-3.13.5
+        status: not_met
+        score: 1.0
+        assessor_notes: "DMZ segmentation still not implemented. Remediation planned for Q3."
+      - practice_id: SI.L1-3.14.1
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Patching operational."
+      - practice_id: SI.L1-3.14.2
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. CrowdStrike active."
+      - practice_id: SI.L1-3.14.4
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward. Auto-update fixed for legacy systems."
+      - practice_id: SI.L1-3.14.5
+        status: met
+        score: 5.0
+        assessor_notes: "Carried forward."
+
+      # L2 Access Control — partially evaluated
+      - practice_id: AC.L2-3.1.3
+        status: partially_met
+        score: 3.0
+        assessor_notes: "CUI flow diagrams drafted but not yet approved by CISO."
+      - practice_id: AC.L2-3.1.4
+        status: met
+        score: 5.0
+        assessor_notes: "Separation of duties enforced via AD group policies."
+      - practice_id: AC.L2-3.1.5
+        status: not_met
+        score: 1.0
+        assessor_notes: "No PAM solution deployed. Admin accounts have standing privileges."
+      - practice_id: AC.L2-3.1.6
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Some admins use separate accounts but practice not universally enforced."
+      - practice_id: AC.L2-3.1.7
+        status: not_met
+        score: 1.0
+        assessor_notes: "Privileged function logging not centralized. Gap in visibility."
+      - practice_id: AC.L2-3.1.8
+        status: met
+        score: 5.0
+        assessor_notes: "Account lockout configured in AD. 5 attempts, 30-min lockout."
+
+      # L2 Awareness & Training
+      - practice_id: AT.L2-3.2.1
+        status: met
+        score: 5.0
+        assessor_notes: "Annual security training via internal LMS. 92% completion."
+      - practice_id: AT.L2-3.2.2
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Role-based training exists for IT staff but not for executive/management roles."
+      - practice_id: AT.L2-3.2.3
+        status: not_met
+        score: 1.0
+        assessor_notes: "No insider threat awareness program established."
+
+      # L2 Audit — partial
+      - practice_id: AU.L2-3.3.1
+        status: met
+        score: 5.0
+        assessor_notes: "Splunk SIEM configured for core systems audit logging."
+      - practice_id: AU.L2-3.3.2
+        status: met
+        score: 5.0
+        assessor_notes: "Individual accountability via unique AD accounts."
+      - practice_id: AU.L2-3.3.5
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Basic correlation rules in Splunk but limited coverage."
+      - practice_id: AU.L2-3.3.8
+        status: not_met
+        score: 1.0
+        assessor_notes: "Audit logs not protected from modification. No immutable storage."
+
+      # L2 Configuration Management
+      - practice_id: CM.L2-3.4.1
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Configuration baselines exist for servers but not for workstations."
+      - practice_id: CM.L2-3.4.2
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Security settings documented but not consistently enforced."
+
+      # L2 IA
+      - practice_id: IA.L2-3.5.3
+        status: partially_met
+        score: 3.0
+        assessor_notes: "MFA for remote access but not for local privileged access."
+      - practice_id: IA.L2-3.5.10
+        status: not_met
+        score: 1.0
+        assessor_notes: "No cryptographic authenticator management for service accounts."
+
+      # L2 SC
+      - practice_id: SC.L2-3.13.8
+        status: met
+        score: 5.0
+        assessor_notes: "TLS 1.2+ enforced for all external communications."
+      - practice_id: SC.L2-3.13.11
+        status: not_met
+        score: 1.0
+        assessor_notes: "FIPS 140-2 validated modules not deployed. Using standard OpenSSL."
+
+      # L2 Access Control (continued)
+      - practice_id: AC.L2-3.1.9
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not implemented. Corrective action plan required."
+      - practice_id: AC.L2-3.1.10
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: AC.L2-3.1.11
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: AC.L2-3.1.12
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+      - practice_id: AC.L2-3.1.13
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Technical controls in place but monitoring and logging insufficient."
+      - practice_id: AC.L2-3.1.14
+        status: met
+        score: 5.0
+        assessor_notes: "Documented procedures in place. Evidence reviewed and accepted."
+      - practice_id: AC.L2-3.1.15
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not yet deployed. Vendor selection in progress."
+      - practice_id: AC.L2-3.1.16
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Core capability exists but does not cover all CUI-bearing systems."
+      - practice_id: AC.L2-3.1.17
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: AC.L2-3.1.18
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Procedures documented but not consistently followed across all departments."
+      - practice_id: AC.L2-3.1.19
+        status: met
+        score: 5.0
+        assessor_notes: "Requirements satisfied. Process documentation current."
+      - practice_id: AC.L2-3.1.21
+        status: met
+        score: 5.0
+        assessor_notes: "Requirements satisfied. Process documentation current."
+
+      # L2 Audit & Accountability (continued)
+      - practice_id: AU.L2-3.3.3
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: AU.L2-3.3.4
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: AU.L2-3.3.6
+        status: met
+        score: 5.0
+        assessor_notes: "Controls implemented and verified by C3PAO assessor."
+      - practice_id: AU.L2-3.3.7
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not implemented. Corrective action plan required."
+      - practice_id: AU.L2-3.3.9
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+
+      # L2 Configuration Management (continued)
+      - practice_id: CM.L2-3.4.3
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+      - practice_id: CM.L2-3.4.4
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: CM.L2-3.4.5
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: CM.L2-3.4.6
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not yet deployed. Vendor selection in progress."
+      - practice_id: CM.L2-3.4.7
+        status: met
+        score: 5.0
+        assessor_notes: "Documented procedures in place. Evidence reviewed and accepted."
+      - practice_id: CM.L2-3.4.8
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+      - practice_id: CM.L2-3.4.9
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+
+      # L2 Identification & Authentication (continued)
+      - practice_id: IA.L2-3.5.4
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: IA.L2-3.5.5
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Procedures documented but not consistently followed across all departments."
+      - practice_id: IA.L2-3.5.6
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: IA.L2-3.5.7
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Partial implementation. Policy exists but enforcement gaps identified."
+      - practice_id: IA.L2-3.5.8
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Technical controls in place but monitoring and logging insufficient."
+      - practice_id: IA.L2-3.5.9
+        status: met
+        score: 5.0
+        assessor_notes: "Controls implemented and verified by C3PAO assessor."
+      - practice_id: IA.L2-3.5.11
+        status: not_met
+        score: 1.0
+        assessor_notes: "Requires implementation. Budget allocated for Q2 FY26."
+
+      # L2 Incident Response (continued)
+      - practice_id: IR.L2-3.6.1
+        status: not_met
+        score: 1.0
+        assessor_notes: "Requires implementation. Budget allocated for Q2 FY26."
+      - practice_id: IR.L2-3.6.2
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: IR.L2-3.6.3
+        status: not_met
+        score: 1.0
+        assessor_notes: "Requires implementation. Budget allocated for Q2 FY26."
+
+      # L2 Maintenance (continued)
+      - practice_id: MA.L2-3.7.1
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Partial implementation. Policy exists but enforcement gaps identified."
+      - practice_id: MA.L2-3.7.2
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: MA.L2-3.7.3
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+      - practice_id: MA.L2-3.7.4
+        status: met
+        score: 5.0
+        assessor_notes: "Controls implemented and verified by C3PAO assessor."
+      - practice_id: MA.L2-3.7.5
+        status: met
+        score: 5.0
+        assessor_notes: "Controls implemented and verified by C3PAO assessor."
+      - practice_id: MA.L2-3.7.6
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Partial implementation. Policy exists but enforcement gaps identified."
+
+      # L2 Media Protection (continued)
+      - practice_id: MP.L2-3.8.1
+        status: met
+        score: 5.0
+        assessor_notes: "Compliant. Supporting artifacts collected and verified."
+      - practice_id: MP.L2-3.8.2
+        status: not_met
+        score: 1.0
+        assessor_notes: "Major deficiency identified. Immediate attention required."
+      - practice_id: MP.L2-3.8.4
+        status: met
+        score: 5.0
+        assessor_notes: "Documented procedures in place. Evidence reviewed and accepted."
+      - practice_id: MP.L2-3.8.5
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+      - practice_id: MP.L2-3.8.6
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+      - practice_id: MP.L2-3.8.7
+        status: met
+        score: 5.0
+        assessor_notes: "Compliant. Supporting artifacts collected and verified."
+      - practice_id: MP.L2-3.8.8
+        status: met
+        score: 5.0
+        assessor_notes: "Compliant. Supporting artifacts collected and verified."
+      - practice_id: MP.L2-3.8.9
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+
+      # L2 Personnel Security (continued)
+      - practice_id: PS.L2-3.9.1
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Implementation started. Full deployment expected within 90 days."
+      - practice_id: PS.L2-3.9.2
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+
+      # L2 Physical Protection (continued)
+      - practice_id: PE.L2-3.10.2
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: PE.L2-3.10.6
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+
+      # L2 Risk Assessment (continued)
+      - practice_id: RA.L2-3.11.1
+        status: not_met
+        score: 1.0
+        assessor_notes: "Requires implementation. Budget allocated for Q2 FY26."
+      - practice_id: RA.L2-3.11.2
+        status: met
+        score: 5.0
+        assessor_notes: "Documented procedures in place. Evidence reviewed and accepted."
+      - practice_id: RA.L2-3.11.3
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+
+      # L2 Security Assessment (continued)
+      - practice_id: CA.L2-3.12.1
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Partial implementation. Policy exists but enforcement gaps identified."
+      - practice_id: CA.L2-3.12.2
+        status: met
+        score: 5.0
+        assessor_notes: "Documented procedures in place. Evidence reviewed and accepted."
+      - practice_id: CA.L2-3.12.3
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Control partially operational. Remediation plan submitted to C3PAO."
+      - practice_id: CA.L2-3.12.4
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+
+      # L2 System & Communications (continued)
+      - practice_id: SC.L2-3.13.2
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+      - practice_id: SC.L2-3.13.3
+        status: met
+        score: 5.0
+        assessor_notes: "Controls implemented and verified by C3PAO assessor."
+      - practice_id: SC.L2-3.13.4
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: SC.L2-3.13.6
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not yet deployed. Vendor selection in progress."
+      - practice_id: SC.L2-3.13.7
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+      - practice_id: SC.L2-3.13.9
+        status: met
+        score: 5.0
+        assessor_notes: "Compliant. Supporting artifacts collected and verified."
+      - practice_id: SC.L2-3.13.10
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Partial implementation. Policy exists but enforcement gaps identified."
+      - practice_id: SC.L2-3.13.12
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+      - practice_id: SC.L2-3.13.13
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not yet deployed. Vendor selection in progress."
+      - practice_id: SC.L2-3.13.14
+        status: met
+        score: 5.0
+        assessor_notes: "Requirements satisfied. Process documentation current."
+      - practice_id: SC.L2-3.13.15
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not yet deployed. Vendor selection in progress."
+      - practice_id: SC.L2-3.13.16
+        status: met
+        score: 5.0
+        assessor_notes: "Compliant. Supporting artifacts collected and verified."
+
+      # L2 System & Information Integrity (continued)
+      - practice_id: SI.L2-3.14.3
+        status: met
+        score: 5.0
+        assessor_notes: "Controls implemented and verified by C3PAO assessor."
+      - practice_id: SI.L2-3.14.6
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+      - practice_id: SI.L2-3.14.7
+        status: met
+        score: 5.0
+        assessor_notes: "Compliant. Supporting artifacts collected and verified."
+
+
+  # Acme L3 DIBCAC Assessment (in_progress): L3-specific practice evaluations
+  - assessment_title: "Acme L3 DIBCAC Assessment (FY26)"
+    evaluations:
+      # L3 Access Control
+      - practice_id: AC.L3-3.1.2e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Control partially operational. Remediation plan submitted to C3PAO."
+      - practice_id: AC.L3-3.1.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      # L3 AT
+      - practice_id: AT.L3-3.2.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Requirements satisfied. Process documentation current."
+      - practice_id: AT.L3-3.2.2e
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+      # L3 Configuration Management
+      - practice_id: CM.L3-3.4.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: CM.L3-3.4.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: CM.L3-3.4.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+      # L3 Identification & Authentication
+      - practice_id: IA.L3-3.5.1e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Implementation started. Full deployment expected within 90 days."
+      - practice_id: IA.L3-3.5.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      # L3 Incident Response
+      - practice_id: IR.L3-3.6.1e
+        status: not_met
+        score: 1.0
+        assessor_notes: "Not yet deployed. Vendor selection in progress."
+      - practice_id: IR.L3-3.6.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      # L3 Personnel Security
+      - practice_id: PS.L3-3.9.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      # L3 Risk Assessment
+      - practice_id: RA.L3-3.11.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: RA.L3-3.11.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: RA.L3-3.11.3e
+        status: not_met
+        score: 1.0
+        assessor_notes: "Control absent. Added to POA&M for remediation."
+      - practice_id: RA.L3-3.11.4e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Implementation started. Full deployment expected within 90 days."
+      - practice_id: RA.L3-3.11.5e
+        status: met
+        score: 5.0
+        assessor_notes: "Control operational. Tested during assessment walkthrough."
+      - practice_id: RA.L3-3.11.6e
+        status: not_met
+        score: 1.0
+        assessor_notes: "Major deficiency identified. Immediate attention required."
+      - practice_id: RA.L3-3.11.7e
+        status: met
+        score: 5.0
+        assessor_notes: "Requirements satisfied. Process documentation current."
+      # L3 Security Assessment
+      - practice_id: CA.L3-3.12.1e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Core capability exists but does not cover all CUI-bearing systems."
+      # L3 System & Communications
+      - practice_id: SC.L3-3.13.4e
+        status: met
+        score: 5.0
+        assessor_notes: "Implemented per Acme security baseline. Evidence on file."
+      # L3 System & Information Integrity
+      - practice_id: SI.L3-3.14.1e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Procedures documented but not consistently followed across all departments."
+      - practice_id: SI.L3-3.14.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Implementation confirmed during on-site assessment."
+      - practice_id: SI.L3-3.14.6e
+        status: met
+        score: 5.0
+        assessor_notes: "Requirements satisfied. Process documentation current."
+
+  # Mrisan L3 DIBCAC Assessment (in_progress): L3-specific practice evaluations
+  - assessment_title: "Mrisan L3 DIBCAC Assessment (FY26)"
+    evaluations:
+      # Key L3 practices evaluated so far
+      - practice_id: AC.L3-3.1.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Dual authorization enforced for critical CUI operations via CyberArk."
+      - practice_id: AC.L3-3.1.3e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Network segmentation for high-value assets in progress. 70% complete."
+      - practice_id: AT.L3-3.2.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Advanced threat training including APT scenarios and social engineering."
+      - practice_id: AT.L3-3.2.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Practical exercises with simulated attacks conducted quarterly."
+      - practice_id: CM.L3-3.4.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Automated configuration monitoring with drift detection."
+      - practice_id: CM.L3-3.4.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Deny-by-default with application whitelisting via CrowdStrike Falcon."
+      - practice_id: CM.L3-3.4.3e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Some firmware integrity verification in place but not comprehensive."
+      - practice_id: IA.L3-3.5.1e
+        status: met
+        score: 5.0
+        assessor_notes: "FIDO2 hardware tokens required for all admin access to CUI systems."
+      - practice_id: IA.L3-3.5.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Bidirectional authentication for all system interconnections."
+      - practice_id: IR.L3-3.6.1e
+        status: met
+        score: 5.0
+        assessor_notes: "SOC operates 24/7 with dedicated incident commanders."
+      - practice_id: IR.L3-3.6.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Automated containment actions for known threat signatures."
+      - practice_id: PS.L3-3.9.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Enhanced personnel screening for critical CUI roles."
+      - practice_id: RA.L3-3.11.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Threat intelligence feeds from CISA, FBI IC3 integrated into risk assessments."
+      - practice_id: RA.L3-3.11.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Cyber threat hunting performed monthly by dedicated team."
+      - practice_id: RA.L3-3.11.3e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Advanced persistent threat modeling initiated but not yet comprehensive."
+      - practice_id: RA.L3-3.11.4e
+        status: not_met
+        score: 1.0
+        assessor_notes: "Supply chain risk assessment framework not yet established."
+      - practice_id: RA.L3-3.11.5e
+        status: met
+        score: 5.0
+        assessor_notes: "Penetration testing conducted semi-annually by third-party firm."
+      - practice_id: RA.L3-3.11.6e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Threat modeling for some systems but not all critical assets."
+      - practice_id: RA.L3-3.11.7e
+        status: not_met
+        score: 1.0
+        assessor_notes: "Automated threat analysis tools not yet procured."
+      - practice_id: CA.L3-3.12.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Independent security assessments conducted by accredited assessor."
+      - practice_id: SC.L3-3.13.4e
+        status: met
+        score: 5.0
+        assessor_notes: "Network isolation for high-value CUI assets via micro-segmentation."
+      - practice_id: SI.L3-3.14.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Automated threat indicator sharing with DIB-ISAC."
+      - practice_id: SI.L3-3.14.3e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Some sandboxing for suspicious files. Full deployment pending."
+      - practice_id: SI.L3-3.14.6e
+        status: met
+        score: 5.0
+        assessor_notes: "Runtime application security testing (RAST) deployed on CUI applications."
+
+  # Pinnacle L3 DIBCAC Assessment (in_progress): partial L3 evaluations
+  - assessment_title: "Pinnacle L3 DIBCAC Assessment (FY26)"
+    evaluations:
+      # Key L3 practices evaluated
+      - practice_id: AC.L3-3.1.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Dual authorization required for all CUI administrative operations."
+      - practice_id: AC.L3-3.1.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Comprehensive network segmentation for CUI assets implemented."
+      - practice_id: AT.L3-3.2.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Advanced threat awareness training with real-world scenarios."
+      - practice_id: AT.L3-3.2.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Quarterly red team exercises for security personnel."
+      - practice_id: CM.L3-3.4.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Real-time configuration monitoring with automated remediation."
+      - practice_id: CM.L3-3.4.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Application whitelisting enforced across all endpoints."
+      - practice_id: CM.L3-3.4.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Firmware integrity verification for all critical hardware."
+      - practice_id: IA.L3-3.5.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Hardware security modules (HSM) for authentication of privileged users."
+      - practice_id: IA.L3-3.5.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Mutual authentication for all cross-system communications."
+      - practice_id: IR.L3-3.6.1e
+        status: met
+        score: 5.0
+        assessor_notes: "24/7 SOC with automated initial response capabilities."
+      - practice_id: IR.L3-3.6.2e
+        status: met
+        score: 5.0
+        assessor_notes: "SOAR platform for automated incident containment."
+      - practice_id: PS.L3-3.9.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Enhanced vetting for personnel with access to critical CUI."
+      - practice_id: RA.L3-3.11.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Multi-source threat intelligence integrated into risk management."
+      - practice_id: RA.L3-3.11.2e
+        status: met
+        score: 5.0
+        assessor_notes: "Proactive cyber threat hunting with dedicated team."
+      - practice_id: RA.L3-3.11.3e
+        status: met
+        score: 5.0
+        assessor_notes: "APT threat modeling performed for all critical systems."
+      - practice_id: RA.L3-3.11.4e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Supply chain risk assessment covers Tier-1 vendors but not Tier-2."
+      - practice_id: RA.L3-3.11.5e
+        status: met
+        score: 5.0
+        assessor_notes: "Quarterly penetration testing by accredited third party."
+      - practice_id: RA.L3-3.11.6e
+        status: met
+        score: 5.0
+        assessor_notes: "Comprehensive threat modeling methodology established."
+      - practice_id: RA.L3-3.11.7e
+        status: partially_met
+        score: 3.0
+        assessor_notes: "Automated threat analysis partially deployed. Full rollout Q3 2026."
+      - practice_id: CA.L3-3.12.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Independent assessments by DIBCAC-accredited assessor."
+      - practice_id: SC.L3-3.13.4e
+        status: met
+        score: 5.0
+        assessor_notes: "Zero-trust micro-segmentation for all CUI network zones."
+      - practice_id: SI.L3-3.14.1e
+        status: met
+        score: 5.0
+        assessor_notes: "Automated threat indicator sharing with government partners."
+      - practice_id: SI.L3-3.14.3e
+        status: met
+        score: 5.0
+        assessor_notes: "Full sandboxing infrastructure for suspicious files and URLs."
+      - practice_id: SI.L3-3.14.6e
+        status: met
+        score: 5.0
+        assessor_notes: "DAST and RAST deployed across all CUI-handling applications."
+
 # Findings for assessments with gaps
 findings:
   # Findings for Mrisan L1 completed assessment
@@ -400,7 +1986,7 @@ findings:
         description: "VPN session logs are collected in Datadog but automated alerting rules for anomalous behavior are not yet in place."
         status: open
 
-  # Findings for Acme L1 in-progress assessment
+  # Findings for Acme L1 completed assessment
   - assessment_title: "Acme L1 Self-Assessment (FY25)"
     items:
       - practice_id: IA.L1-3.5.2
@@ -415,6 +2001,13 @@ findings:
         severity: medium
         title: "Physical Access Logs Missing at Satellite Office"
         description: "Satellite office does not maintain physical access logs. HQ logs are paper-based and not archived digitally."
+        status: open
+
+      - practice_id: SC.L1-3.13.5
+        finding_type: deficiency
+        severity: high
+        title: "No DMZ Segmentation for Public Services"
+        description: "Public-facing services operate on the same network segment as internal systems. No DMZ architecture implemented."
         status: open
 
       - practice_id: AC.L1-3.1.20
@@ -460,6 +2053,130 @@ findings:
         severity: medium
         title: "Portable Storage Restrictions Incomplete on Linux"
         description: "USB storage restrictions enforced on Windows via GPO but Linux workstations lack equivalent controls."
+        status: open
+
+  # Findings for Acme L2 in-progress assessment
+  - assessment_title: "Acme L2 C3PAO Assessment (FY25)"
+    items:
+      - practice_id: AC.L2-3.1.5
+        finding_type: deficiency
+        severity: high
+        title: "No Privileged Access Management Solution"
+        description: "Admin accounts have standing privileges without just-in-time access controls. No PAM solution deployed."
+        status: open
+
+      - practice_id: AC.L2-3.1.7
+        finding_type: deficiency
+        severity: high
+        title: "Privileged Function Logging Not Centralized"
+        description: "Privileged actions are logged locally but not centrally collected. No visibility into admin activity patterns."
+        status: open
+
+      - practice_id: AU.L2-3.3.8
+        finding_type: deficiency
+        severity: high
+        title: "Audit Logs Not Protected from Modification"
+        description: "Audit logs stored on standard file systems without integrity protection. No immutable storage configured."
+        status: open
+
+      - practice_id: AT.L2-3.2.3
+        finding_type: deficiency
+        severity: medium
+        title: "No Insider Threat Awareness Program"
+        description: "Organization lacks a formal insider threat awareness program. Employees are not trained on insider threat indicators."
+        status: open
+
+      - practice_id: SC.L2-3.13.11
+        finding_type: deficiency
+        severity: high
+        title: "FIPS 140-2 Validated Cryptography Not Deployed"
+        description: "Standard OpenSSL libraries used instead of FIPS-validated cryptographic modules for CUI protection."
+        status: open
+
+      - practice_id: IA.L2-3.5.10
+        finding_type: deficiency
+        severity: medium
+        title: "Service Account Authentication Lacks Cryptographic Management"
+        description: "Service-to-service authentication uses static credentials without cryptographic authenticator management."
+        status: open
+
+  # Findings for Mrisan L3 in-progress assessment
+  - assessment_title: "Mrisan L3 DIBCAC Assessment (FY26)"
+    items:
+      - practice_id: RA.L3-3.11.4e
+        finding_type: deficiency
+        severity: high
+        title: "Supply Chain Risk Assessment Not Established"
+        description: "No formal supply chain risk assessment framework. Vendor security posture not systematically evaluated."
+        status: open
+
+      - practice_id: RA.L3-3.11.7e
+        finding_type: deficiency
+        severity: medium
+        title: "Automated Threat Analysis Tools Not Deployed"
+        description: "Manual threat analysis processes in place but automated tools not yet procured or deployed."
+        status: open
+
+      - practice_id: AC.L3-3.1.3e
+        finding_type: observation
+        severity: medium
+        title: "Network Segmentation for High-Value Assets Incomplete"
+        description: "Micro-segmentation project 70% complete. Some high-value CUI assets not yet in isolated network zones."
+        status: open
+
+      - practice_id: SI.L3-3.14.3e
+        finding_type: observation
+        severity: low
+        title: "Sandboxing Deployment Partially Complete"
+        description: "Sandboxing infrastructure operational for email attachments but not yet covering web downloads."
+        status: open
+
+
+  # Findings for Acme L3 assessment
+  - assessment_title: "Acme L3 DIBCAC Assessment (FY26)"
+    items:
+      - practice_id: AT.L3-3.2.2e
+        finding_type: deficiency
+        severity: high
+        title: "Practical Exercises for Insider Threat Not Conducted"
+        description: "No evidence of practical exercises or simulations for insider threat scenarios. Training is awareness-only without hands-on components."
+        status: open
+
+      - practice_id: IR.L3-3.6.1e
+        finding_type: deficiency
+        severity: high
+        title: "Automated Incident Response Capability Not Deployed"
+        description: "Incident response processes are manual. No SOAR platform or automated playbooks for containment and eradication."
+        status: open
+
+      - practice_id: RA.L3-3.11.3e
+        finding_type: deficiency
+        severity: critical
+        title: "Threat Hunting Program Not Established"
+        description: "No formalized threat hunting capability. SOC operates reactively to alerts only. No proactive threat hunting exercises documented."
+        status: open
+
+      - practice_id: RA.L3-3.11.6e
+        finding_type: deficiency
+        severity: high
+        title: "Supply Chain Risk Assessment Missing for Critical Components"
+        description: "Supply chain risk assessment does not cover firmware, embedded systems, or COTS components used in CUI-handling systems."
+        status: open
+  # Findings for Pinnacle L3 in-progress assessment
+  - assessment_title: "Pinnacle L3 DIBCAC Assessment (FY26)"
+    items:
+      - practice_id: RA.L3-3.11.4e
+        finding_type: observation
+        severity: medium
+        title: "Supply Chain Risk Assessment Limited to Tier-1 Vendors"
+        description: "Supply chain risk framework covers direct vendors but does not extend to sub-tier suppliers."
+        status: open
+
+      - practice_id: RA.L3-3.11.7e
+        finding_type: observation
+        severity: low
+        title: "Automated Threat Analysis Rollout Pending"
+        description: "Automated threat analysis platform procured but full deployment scheduled for Q3 2026."
         status: open
 
 # POA&Ms linked to assessments
@@ -561,3 +2278,112 @@ poams:
         scheduled_completion: "2026-04-30"
         status: open
         resources_required: "Linux admin (1 FTE, 1 week), USBGuard configuration and testing"
+
+  - assessment_title: "Acme L2 C3PAO Assessment (FY25)"
+    org_name: "Acme Defense Corp"
+    title: "Acme L2 Remediation Plan (FY25-26)"
+    status: draft
+    items:
+      - finding_title: "No Privileged Access Management Solution"
+        practice_id: AC.L2-3.1.5
+        milestone: "Evaluate and deploy PAM solution (CyberArk or BeyondTrust)"
+        scheduled_completion: "2026-09-01"
+        status: open
+        resources_required: "PAM solution license ($50K), Security engineer (2 FTEs, 6 weeks)"
+      - finding_title: "Audit Logs Not Protected from Modification"
+        practice_id: AU.L2-3.3.8
+        milestone: "Configure immutable log storage in AWS S3 with Object Lock"
+        scheduled_completion: "2026-07-01"
+        status: open
+        resources_required: "AWS S3 Object Lock setup, SRE team (1 FTE, 2 weeks)"
+      - finding_title: "FIPS 140-2 Validated Cryptography Not Deployed"
+        practice_id: SC.L2-3.13.11
+        milestone: "Replace standard crypto libraries with FIPS-validated modules"
+        scheduled_completion: "2026-10-01"
+        status: open
+        resources_required: "FIPS module licenses, Application testing (3 FTEs, 4 weeks)"
+      - finding_title: "No Insider Threat Awareness Program"
+        practice_id: AT.L2-3.2.3
+        milestone: "Develop and deploy insider threat awareness training module"
+        scheduled_completion: "2026-06-15"
+        status: open
+        resources_required: "Training vendor ($15K), HR coordination (2 weeks)"
+
+  - assessment_title: "Mrisan L3 DIBCAC Assessment (FY26)"
+    org_name: "Mrisan"
+    title: "Mrisan L3 Remediation Plan (FY26)"
+    status: active
+    items:
+      - finding_title: "Supply Chain Risk Assessment Not Established"
+        practice_id: RA.L3-3.11.4e
+        milestone: "Establish supply chain risk management program and vendor assessment framework"
+        scheduled_completion: "2026-09-01"
+        status: in_progress
+        resources_required: "GRC analyst (1 FTE, 8 weeks), Legal review, Vendor questionnaire development"
+      - finding_title: "Automated Threat Analysis Tools Not Deployed"
+        practice_id: RA.L3-3.11.7e
+        milestone: "Procure and deploy automated threat analysis platform (Recorded Future or similar)"
+        scheduled_completion: "2026-08-01"
+        status: open
+        resources_required: "Threat intelligence platform license ($80K/yr), SOC integration (2 FTEs, 4 weeks)"
+      - finding_title: "Network Segmentation for High-Value Assets Incomplete"
+        practice_id: AC.L3-3.1.3e
+        milestone: "Complete micro-segmentation deployment for remaining high-value CUI assets"
+        scheduled_completion: "2026-07-15"
+        status: in_progress
+        resources_required: "Network engineer (1 FTE, 4 weeks), Illumio/Guardicore configuration"
+      - finding_title: "Sandboxing Deployment Partially Complete"
+        practice_id: SI.L3-3.14.3e
+        milestone: "Extend sandboxing to cover web downloads and USB content"
+        scheduled_completion: "2026-06-01"
+        status: open
+        resources_required: "Security engineer (1 FTE, 2 weeks), Sandbox appliance expansion ($25K)"
+
+
+  - assessment_title: "Acme L3 DIBCAC Assessment (FY26)"
+    org_name: "Acme Defense Corp"
+    title: "Acme L3 Remediation Plan (FY26-27)"
+    status: active
+    items:
+      - finding_title: "Practical Exercises for Insider Threat Not Conducted"
+        practice_id: AT.L3-3.2.2e
+        milestone: "Develop and conduct quarterly insider threat tabletop exercises with all departments"
+        scheduled_completion: "2026-06-15"
+        status: open
+        resources_required: "Security awareness team (1 FTE, 8 weeks), Tabletop exercise platform ($15K)"
+      - finding_title: "Automated Incident Response Capability Not Deployed"
+        practice_id: IR.L3-3.6.1e
+        milestone: "Procure and deploy SOAR platform with automated playbooks for top 10 incident types"
+        scheduled_completion: "2026-09-01"
+        status: open
+        resources_required: "SOAR platform license ($120K/yr), SOC integration (2 FTEs, 8 weeks)"
+      - finding_title: "Threat Hunting Program Not Established"
+        practice_id: RA.L3-3.11.3e
+        milestone: "Establish dedicated threat hunting team and conduct monthly proactive hunts"
+        scheduled_completion: "2026-08-01"
+        status: open
+        resources_required: "Threat hunting team (2 FTEs), Threat intelligence platform ($60K/yr), Training ($20K)"
+      - finding_title: "Supply Chain Risk Assessment Missing for Critical Components"
+        practice_id: RA.L3-3.11.6e
+        milestone: "Extend SCRM program to cover firmware, embedded systems, and all COTS components"
+        scheduled_completion: "2026-10-01"
+        status: open
+        resources_required: "Supply chain security analyst (1 FTE), Third-party assessment vendor ($45K)"
+
+  - assessment_title: "Pinnacle L3 DIBCAC Assessment (FY26)"
+    org_name: "Pinnacle Aero Systems"
+    title: "Pinnacle L3 Remediation Plan (FY26)"
+    status: active
+    items:
+      - finding_title: "Supply Chain Risk Assessment Limited to Tier-1 Vendors"
+        practice_id: RA.L3-3.11.4e
+        milestone: "Extend supply chain risk assessment to Tier-2 and Tier-3 suppliers"
+        scheduled_completion: "2026-08-01"
+        status: in_progress
+        resources_required: "Procurement team coordination, Third-party risk platform ($30K)"
+      - finding_title: "Automated Threat Analysis Rollout Pending"
+        practice_id: RA.L3-3.11.7e
+        milestone: "Complete deployment of automated threat analysis across all CUI environments"
+        scheduled_completion: "2026-07-01"
+        status: in_progress
+        resources_required: "SOC integration team (1 FTE, 3 weeks)"
