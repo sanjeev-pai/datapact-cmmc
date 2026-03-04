@@ -37,7 +37,7 @@ def _startup() -> None:
 
         db = SessionLocal()
         try:
-            seed_all(db)
+            seed_all(db, seed_demo=config.SEED_DEMO)
         finally:
             db.close()
 

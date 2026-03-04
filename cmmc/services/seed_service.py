@@ -1,6 +1,7 @@
 """Seed CMMC reference data from YAML files into the database."""
 
 import logging
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -9,7 +10,9 @@ from sqlalchemy.orm import Session
 from cmmc.models import CMMCDomain, CMMCLevel, CMMCPractice
 from cmmc.models.assessment import Assessment, AssessmentPractice
 from cmmc.models.evidence import Evidence
+from cmmc.models.finding import Finding
 from cmmc.models.organization import Organization
+from cmmc.models.poam import POAM, POAMItem
 from cmmc.models.user import Role, User, UserRole
 from cmmc.services.auth_service import hash_password
 
@@ -18,8 +21,14 @@ logger = logging.getLogger(__name__)
 DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "cmmc"
 
 
-def seed_all(db: Session) -> dict[str, int]:
-    """Seed all CMMC reference data. Returns counts of upserted records."""
+def seed_all(db: Session, *, seed_demo: bool = True) -> dict[str, int]:
+    """Seed all CMMC reference data. Returns counts of upserted records.
+
+    Args:
+        db: Database session.
+        seed_demo: If True, also load demo assessment data (evaluations, findings, POAMs)
+                   from demo_assessment.yaml.
+    """
     counts: dict[str, int] = {}
     counts["roles"] = _seed_roles(db)
     counts["users"] = _seed_users(db)
@@ -32,6 +41,13 @@ def seed_all(db: Session) -> dict[str, int]:
     db.commit()
     counts["evidence"] = _seed_evidence(db)
     db.commit()
+    if seed_demo:
+        demo = _load_yaml("demo_assessment.yaml")
+        counts["practice_evaluations"] = _seed_practice_evaluations(db, demo)
+        counts["findings"] = _seed_findings(db, demo)
+        db.commit()
+        counts["poams"] = _seed_poams(db, demo)
+        db.commit()
     logger.info("Seed complete: %s", counts)
     return counts
 
@@ -425,6 +441,128 @@ def _seed_evidence(db: Session) -> int:
             review_status=item.get("review_status", "pending"),
         )
         db.add(evidence)
+        count += 1
+    db.flush()
+    return count
+
+
+def _seed_practice_evaluations(db: Session, demo: dict) -> int:
+    """Seed practice evaluation statuses from demo YAML data."""
+    count = 0
+    for group in demo.get("practice_evaluations", []):
+        assessment = db.query(Assessment).filter_by(title=group["assessment_title"]).first()
+        if not assessment:
+            logger.warning("Assessment not found for eval seed: %s", group["assessment_title"])
+            continue
+        for ev in group.get("evaluations", []):
+            ap = (
+                db.query(AssessmentPractice)
+                .filter_by(assessment_id=assessment.id, practice_id=ev["practice_id"])
+                .first()
+            )
+            if not ap:
+                logger.warning(
+                    "AssessmentPractice not found: %s / %s",
+                    group["assessment_title"],
+                    ev["practice_id"],
+                )
+                continue
+            ap.status = ev["status"]
+            ap.score = ev.get("score")
+            ap.assessor_notes = ev.get("assessor_notes")
+            count += 1
+    db.flush()
+    return count
+
+
+def _seed_findings(db: Session, demo: dict) -> int:
+    """Seed findings from demo YAML data."""
+    count = 0
+    for group in demo.get("findings", []):
+        assessment = db.query(Assessment).filter_by(title=group["assessment_title"]).first()
+        if not assessment:
+            logger.warning("Assessment not found for finding seed: %s", group["assessment_title"])
+            continue
+        for item in group.get("items", []):
+            existing = (
+                db.query(Finding)
+                .filter_by(assessment_id=assessment.id, title=item["title"])
+                .first()
+            )
+            if existing:
+                count += 1
+                continue
+            db.add(
+                Finding(
+                    assessment_id=assessment.id,
+                    practice_id=item.get("practice_id"),
+                    finding_type=item["finding_type"],
+                    severity=item["severity"],
+                    title=item["title"],
+                    description=item.get("description"),
+                    status=item.get("status", "open"),
+                )
+            )
+            count += 1
+    db.flush()
+    return count
+
+
+def _seed_poams(db: Session, demo: dict) -> int:
+    """Seed POAMs and their items from demo YAML data."""
+    count = 0
+    for poam_data in demo.get("poams", []):
+        org = db.query(Organization).filter_by(name=poam_data["org_name"]).first()
+        assessment = db.query(Assessment).filter_by(title=poam_data["assessment_title"]).first()
+        if not org or not assessment:
+            logger.warning(
+                "Org/assessment not found for POAM seed: %s / %s",
+                poam_data["org_name"],
+                poam_data["assessment_title"],
+            )
+            continue
+
+        existing = db.query(POAM).filter_by(org_id=org.id, title=poam_data["title"]).first()
+        if existing:
+            count += 1
+            continue
+
+        poam = POAM(
+            org_id=org.id,
+            assessment_id=assessment.id,
+            title=poam_data["title"],
+            status=poam_data.get("status", "draft"),
+        )
+        db.add(poam)
+        db.flush()
+
+        for item in poam_data.get("items", []):
+            # Optionally link to finding by title
+            finding = None
+            if item.get("finding_title"):
+                finding = (
+                    db.query(Finding)
+                    .filter_by(assessment_id=assessment.id, title=item["finding_title"])
+                    .first()
+                )
+            scheduled = None
+            if item.get("scheduled_completion"):
+                scheduled = date.fromisoformat(item["scheduled_completion"])
+            actual = None
+            if item.get("actual_completion"):
+                actual = date.fromisoformat(item["actual_completion"])
+            db.add(
+                POAMItem(
+                    poam_id=poam.id,
+                    finding_id=finding.id if finding else None,
+                    practice_id=item.get("practice_id"),
+                    milestone=item.get("milestone"),
+                    scheduled_completion=scheduled,
+                    actual_completion=actual,
+                    status=item.get("status", "open"),
+                    resources_required=item.get("resources_required"),
+                )
+            )
         count += 1
     db.flush()
     return count
