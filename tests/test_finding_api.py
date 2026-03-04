@@ -395,3 +395,55 @@ class TestDeleteFinding:
 
         res = client.delete(f"/api/findings/{finding.id}", headers=_auth_header(user1))
         assert res.status_code == 403
+
+
+# ---------------------------------------------------------------------------
+# Org-scoped list tests (system_admin with org_id param)
+# ---------------------------------------------------------------------------
+
+
+class TestListFindingsOrgScoping:
+    def test_system_admin_filters_by_org_id(self, client, db):
+        org1 = _create_org(db, "Org1")
+        org2 = _create_org(db, "Org2")
+        admin = _create_user(db, username="admin", email="admin@t.com", org_id=org1.id, role_names=["system_admin"])
+        a1 = _create_assessment(db, org1.id)
+        a2 = _create_assessment(db, org2.id)
+        _create_finding(db, a1.id, "Org1 Finding")
+        _create_finding(db, a2.id, "Org2 Finding")
+
+        # Filter to org2 only
+        res = client.get(f"/api/findings?org_id={org2.id}", headers=_auth_header(admin))
+        assert res.status_code == 200
+        data = res.json()
+        assert data["total"] == 1
+        assert data["items"][0]["title"] == "Org2 Finding"
+
+    def test_system_admin_sees_all_without_org_id(self, client, db):
+        org1 = _create_org(db, "OrgA")
+        org2 = _create_org(db, "OrgB")
+        admin = _create_user(db, username="admin2", email="admin2@t.com", org_id=org1.id, role_names=["system_admin"])
+        a1 = _create_assessment(db, org1.id)
+        a2 = _create_assessment(db, org2.id)
+        _create_finding(db, a1.id, "Finding A")
+        _create_finding(db, a2.id, "Finding B")
+
+        res = client.get("/api/findings", headers=_auth_header(admin))
+        assert res.status_code == 200
+        assert res.json()["total"] == 2
+
+    def test_non_admin_ignores_org_id_param(self, client, db):
+        org1 = _create_org(db, "MyOrg")
+        org2 = _create_org(db, "OtherOrg")
+        user = _create_user(db, username="reg", email="reg@t.com", org_id=org1.id, role_names=["compliance_officer"])
+        a1 = _create_assessment(db, org1.id)
+        a2 = _create_assessment(db, org2.id)
+        _create_finding(db, a1.id, "My Finding")
+        _create_finding(db, a2.id, "Other Finding")
+
+        # Non-admin passing org_id of another org — should still only see own
+        res = client.get(f"/api/findings?org_id={org2.id}", headers=_auth_header(user))
+        assert res.status_code == 200
+        data = res.json()
+        assert data["total"] == 1
+        assert data["items"][0]["title"] == "My Finding"

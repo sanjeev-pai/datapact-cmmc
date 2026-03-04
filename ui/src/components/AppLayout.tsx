@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import OrgSelector from '@/components/OrgSelector'
 
 interface NavItem {
   to: string
@@ -71,6 +72,7 @@ export default function AppLayout() {
           <h1 className="text-lg font-bold text-primary">CMMC Tracker</h1>
           <p className="text-xs text-base-content/50">Compliance Platform</p>
         </div>
+        <OrgSelector />
         <nav className="flex-1 overflow-y-auto p-2 space-y-4">
           {NAV_SECTIONS.map((section) => {
             const visibleItems = section.items.filter(

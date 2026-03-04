@@ -44,11 +44,13 @@ export async function listEvidence(params?: {
   assessment_practice_id?: string
   assessment_id?: string
   review_status?: string
+  org_id?: string
 }): Promise<EvidenceListResponse> {
   const query = new URLSearchParams()
   if (params?.assessment_practice_id) query.set('assessment_practice_id', params.assessment_practice_id)
   if (params?.assessment_id) query.set('assessment_id', params.assessment_id)
   if (params?.review_status) query.set('review_status', params.review_status)
+  if (params?.org_id) query.set('org_id', params.org_id)
   const qs = query.toString()
   return api.get<EvidenceListResponse>(`/evidence${qs ? `?${qs}` : ''}`)
 }

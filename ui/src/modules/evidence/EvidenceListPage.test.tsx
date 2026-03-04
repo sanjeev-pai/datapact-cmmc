@@ -9,6 +9,17 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => mockUseAuth(),
 }))
 
+vi.mock('@/hooks/useOrg', () => ({
+  useOrg: () => ({
+    effectiveOrgId: 'org1',
+    selectedOrgId: 'org1',
+    selectedOrgName: 'Test Org',
+    isSystemAdmin: false,
+    organizations: [],
+    selectOrg: vi.fn(),
+  }),
+}))
+
 const mockEvidence = {
   items: [
     {

@@ -4,6 +4,7 @@ import type { Assessment } from '@/types/assessment'
 import { listFindings, createFinding, updateFinding, deleteFinding } from '@/services/findings'
 import { getAssessments } from '@/services/assessments'
 import { useAuth } from '@/hooks/useAuth'
+import { useOrg } from '@/hooks/useOrg'
 
 const SEVERITY_BADGE: Record<FindingSeverity, string> = {
   high: 'badge-error',
@@ -59,6 +60,7 @@ function formatDate(dateStr: string | null): string {
 
 export default function FindingsPage() {
   const { hasRole } = useAuth()
+  const { effectiveOrgId } = useOrg()
   const canManage = hasRole(...MANAGE_ROLES)
 
   const [findings, setFindings] = useState<Finding[]>([])
@@ -87,12 +89,14 @@ export default function FindingsPage() {
   })
   const [saving, setSaving] = useState(false)
 
-  // Load assessments for filter and form dropdowns
+  // Load assessments for filter and form dropdowns (scoped by org)
   useEffect(() => {
-    getAssessments()
+    const params: { org_id?: string } = {}
+    if (effectiveOrgId) params.org_id = effectiveOrgId
+    getAssessments(params)
       .then((data) => setAssessments(data.items))
       .catch(() => {})
-  }, [])
+  }, [effectiveOrgId])
 
   // Load findings
   useEffect(() => {
@@ -100,11 +104,12 @@ export default function FindingsPage() {
     setLoading(true)
     setError(null)
 
-    const params: { assessment_id?: string; type?: string; severity?: string; status?: string } = {}
+    const params: { assessment_id?: string; type?: string; severity?: string; status?: string; org_id?: string } = {}
     if (assessmentFilter) params.assessment_id = assessmentFilter
     if (typeFilter) params.type = typeFilter
     if (severityFilter) params.severity = severityFilter
     if (statusFilter) params.status = statusFilter
+    if (effectiveOrgId) params.org_id = effectiveOrgId
 
     listFindings(params)
       .then((data) => {
@@ -121,7 +126,7 @@ export default function FindingsPage() {
       })
 
     return () => { cancelled = true }
-  }, [assessmentFilter, typeFilter, severityFilter, statusFilter])
+  }, [assessmentFilter, typeFilter, severityFilter, statusFilter, effectiveOrgId])
 
   function openCreate() {
     setEditingId(null)

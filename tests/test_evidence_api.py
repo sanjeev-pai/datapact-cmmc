@@ -455,3 +455,65 @@ class TestReviewEvidence:
             json={"review_status": "accepted"},
         )
         assert resp.status_code == 401
+
+
+# ---------------------------------------------------------------------------
+# Org-scoped list tests (system_admin with org_id param)
+# ---------------------------------------------------------------------------
+
+
+class TestListEvidenceOrgScoping:
+    def test_system_admin_filters_by_org_id(self, client, db):
+        org1 = _create_org(db, "Org1")
+        org2 = _create_org(db, "Org2")
+        ap1 = _seed_assessment_practice(db, org1.id)
+        ap2 = _seed_assessment_practice(db, org2.id)
+        admin = _create_user(db, username="admin", email="admin@t.com", org_id=org1.id, role_names=["system_admin"])
+
+        upload_evidence(db, assessment_practice_id=ap1.id, title="Org1 Doc")
+        upload_evidence(db, assessment_practice_id=ap2.id, title="Org2 Doc")
+
+        resp = client.get(
+            f"/api/evidence?org_id={org2.id}",
+            headers=_auth_header(_token_for(admin)),
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["total"] == 1
+        assert data["items"][0]["title"] == "Org2 Doc"
+
+    def test_system_admin_sees_all_without_org_id(self, client, db):
+        org1 = _create_org(db, "OrgA")
+        org2 = _create_org(db, "OrgB")
+        ap1 = _seed_assessment_practice(db, org1.id)
+        ap2 = _seed_assessment_practice(db, org2.id)
+        admin = _create_user(db, username="admin2", email="admin2@t.com", org_id=org1.id, role_names=["system_admin"])
+
+        upload_evidence(db, assessment_practice_id=ap1.id, title="Doc A")
+        upload_evidence(db, assessment_practice_id=ap2.id, title="Doc B")
+
+        resp = client.get(
+            "/api/evidence",
+            headers=_auth_header(_token_for(admin)),
+        )
+        assert resp.status_code == 200
+        assert resp.json()["total"] == 2
+
+    def test_non_admin_scoped_to_own_org(self, client, db):
+        org1 = _create_org(db, "MyOrg")
+        org2 = _create_org(db, "OtherOrg")
+        ap1 = _seed_assessment_practice(db, org1.id)
+        ap2 = _seed_assessment_practice(db, org2.id)
+        user = _create_user(db, username="reg", email="reg@t.com", org_id=org1.id, role_names=["compliance_officer"])
+
+        upload_evidence(db, assessment_practice_id=ap1.id, title="My Doc")
+        upload_evidence(db, assessment_practice_id=ap2.id, title="Other Doc")
+
+        resp = client.get(
+            "/api/evidence",
+            headers=_auth_header(_token_for(user)),
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["total"] == 1
+        assert data["items"][0]["title"] == "My Doc"

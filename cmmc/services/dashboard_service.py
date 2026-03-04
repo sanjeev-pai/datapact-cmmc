@@ -9,8 +9,10 @@ from cmmc.models.cmmc_ref import CMMCDomain, CMMCPractice
 from cmmc.models.finding import Finding
 
 
-def get_compliance_summary(db: Session, org_id: str) -> dict:
+def get_compliance_summary(db: Session, org_id: str | None) -> dict:
     """Overall compliance % for the org's most recent completed assessment per level.
+
+    When *org_id* is ``None``, aggregates across all organizations.
 
     Returns ``{level_1: float|None, level_2: float|None, level_3: float|None}``.
     """
@@ -21,12 +23,10 @@ def get_compliance_summary(db: Session, org_id: str) -> dict:
     }
 
     for level in (1, 2, 3):
-        assessment = (
-            db.query(Assessment)
-            .filter_by(org_id=org_id, status="completed", target_level=level)
-            .order_by(Assessment.created_at.desc())
-            .first()
-        )
+        q = db.query(Assessment).filter_by(status="completed", target_level=level)
+        if org_id is not None:
+            q = q.filter_by(org_id=org_id)
+        assessment = q.order_by(Assessment.created_at.desc()).first()
         if not assessment:
             continue
 
@@ -87,17 +87,17 @@ def get_domain_compliance(db: Session, assessment_id: str) -> list[dict]:
     return result
 
 
-def get_sprs_summary(db: Session, org_id: str) -> dict:
+def get_sprs_summary(db: Session, org_id: str | None) -> dict:
     """Current + historical SPRS scores for an org.
+
+    When *org_id* is ``None``, returns scores across all organizations.
 
     Returns ``{current: int|None, history: [{assessment_id, title, sprs_score, date}, ...]}``.
     """
-    assessments = (
-        db.query(Assessment)
-        .filter(Assessment.org_id == org_id, Assessment.sprs_score.isnot(None))
-        .order_by(Assessment.created_at.desc())
-        .all()
-    )
+    q = db.query(Assessment).filter(Assessment.sprs_score.isnot(None))
+    if org_id is not None:
+        q = q.filter(Assessment.org_id == org_id)
+    assessments = q.order_by(Assessment.created_at.desc()).all()
 
     if not assessments:
         return {"current": None, "history": []}
@@ -119,19 +119,18 @@ def get_sprs_summary(db: Session, org_id: str) -> dict:
 
 
 def get_assessment_timeline(
-    db: Session, org_id: str, *, limit: int = 10
+    db: Session, org_id: str | None, *, limit: int = 10
 ) -> list[dict]:
     """Recent assessments for an org, newest first.
 
+    When *org_id* is ``None``, returns assessments across all organizations.
+
     Returns list of assessment summaries.
     """
-    assessments = (
-        db.query(Assessment)
-        .filter_by(org_id=org_id)
-        .order_by(Assessment.created_at.desc())
-        .limit(limit)
-        .all()
-    )
+    q = db.query(Assessment)
+    if org_id is not None:
+        q = q.filter_by(org_id=org_id)
+    assessments = q.order_by(Assessment.created_at.desc()).limit(limit).all()
 
     return [
         {

@@ -13,6 +13,7 @@ import {
 } from '@/services/poam'
 import { getAssessments } from '@/services/assessments'
 import { useAuth } from '@/hooks/useAuth'
+import { useOrg } from '@/hooks/useOrg'
 
 const STATUS_BADGE: Record<POAMStatus, string> = {
   draft: 'badge-ghost',
@@ -52,6 +53,7 @@ function countOverdue(detail: POAMDetail): number {
 
 export default function POAMListPage() {
   const { user, hasRole } = useAuth()
+  const { effectiveOrgId } = useOrg()
   const navigate = useNavigate()
   const canManage = hasRole(...MANAGE_ROLES)
 
@@ -77,12 +79,14 @@ export default function POAMListPage() {
   const [generateAssessmentId, setGenerateAssessmentId] = useState('')
   const [generating, setGenerating] = useState(false)
 
-  // Load assessments for dropdowns
+  // Load assessments for dropdowns (scoped by org)
   useEffect(() => {
-    getAssessments()
+    const params: { org_id?: string } = {}
+    if (effectiveOrgId) params.org_id = effectiveOrgId
+    getAssessments(params)
       .then((data) => setAssessments(data.items))
       .catch(() => {})
-  }, [])
+  }, [effectiveOrgId])
 
   // Load POA&Ms
   useEffect(() => {
@@ -90,9 +94,10 @@ export default function POAMListPage() {
     setLoading(true)
     setError(null)
 
-    const params: { assessment_id?: string; status?: string } = {}
+    const params: { assessment_id?: string; status?: string; org_id?: string } = {}
     if (assessmentFilter) params.assessment_id = assessmentFilter
     if (statusFilter) params.status = statusFilter
+    if (effectiveOrgId) params.org_id = effectiveOrgId
 
     listPoams(params)
       .then(async (data) => {
@@ -118,7 +123,7 @@ export default function POAMListPage() {
       })
 
     return () => { cancelled = true }
-  }, [assessmentFilter, statusFilter])
+  }, [assessmentFilter, statusFilter, effectiveOrgId])
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()

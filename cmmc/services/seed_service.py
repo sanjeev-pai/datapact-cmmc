@@ -1,5 +1,6 @@
 """Seed CMMC reference data from YAML files into the database."""
 
+import hashlib
 import logging
 from datetime import date
 from pathlib import Path
@@ -45,7 +46,9 @@ def seed_all(db: Session, *, seed_demo: bool = True) -> dict[str, int]:
         demo = _load_yaml("demo_assessment.yaml")
         counts["practice_evaluations"] = _seed_practice_evaluations(db, demo)
         db.commit()
-        _recalculate_scores(db, demo)
+        counts["filled_evaluations"] = _fill_remaining_evaluations(db)
+        db.commit()
+        _recalculate_all_scores(db)
         db.commit()
         counts["findings"] = _seed_findings(db, demo)
         db.commit()
@@ -296,7 +299,7 @@ SEED_ASSESSMENTS = [
         "title": "Mrisan L3 DIBCAC Assessment (FY26)",
         "target_level": 3,
         "assessment_type": "government",
-        "status": "draft",
+        "status": "in_progress",
     },
     # Acme Defense Corp assessments
     {
@@ -304,16 +307,30 @@ SEED_ASSESSMENTS = [
         "title": "Acme L1 Self-Assessment (FY25)",
         "target_level": 1,
         "assessment_type": "self",
-        "status": "in_progress",
+        "status": "completed",
     },
     {
         "org_name": "Acme Defense Corp",
         "title": "Acme L2 C3PAO Assessment (FY25)",
         "target_level": 2,
         "assessment_type": "third_party",
-        "status": "draft",
+        "status": "in_progress",
+    },
+    {
+        "org_name": "Acme Defense Corp",
+        "title": "Acme L3 DIBCAC Assessment (FY26)",
+        "target_level": 3,
+        "assessment_type": "government",
+        "status": "in_progress",
     },
     # Pinnacle Aero Systems assessments
+    {
+        "org_name": "Pinnacle Aero Systems",
+        "title": "Pinnacle L1 Self-Assessment (FY24)",
+        "target_level": 1,
+        "assessment_type": "self",
+        "status": "completed",
+    },
     {
         "org_name": "Pinnacle Aero Systems",
         "title": "Pinnacle L2 Self-Assessment (FY25)",
@@ -326,7 +343,7 @@ SEED_ASSESSMENTS = [
         "title": "Pinnacle L3 DIBCAC Assessment (FY26)",
         "target_level": 3,
         "assessment_type": "government",
-        "status": "draft",
+        "status": "in_progress",
     },
 ]
 
@@ -526,6 +543,79 @@ SEED_EVIDENCE = [
         "mime_type": "application/json",
         "review_status": "accepted",
     },
+    # Evidence for "Pinnacle L1 Self-Assessment (FY24)" — completed
+    {
+        "assessment_title": "Pinnacle L1 Self-Assessment (FY24)",
+        "practice_id": "AC.L1-3.1.1",
+        "title": "Pinnacle Access Control Policy v4.0",
+        "description": "Corporate access control policy covering all information systems.",
+        "file_name": "pinnacle_ac_policy_v4.pdf",
+        "file_size": 312_000,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Pinnacle L1 Self-Assessment (FY24)",
+        "practice_id": "IA.L1-3.5.1",
+        "title": "Azure AD User Directory Export",
+        "description": "Export of all user accounts with MFA status and unique identifiers.",
+        "file_name": "azure_ad_export_fy24.csv",
+        "file_size": 89_600,
+        "mime_type": "text/csv",
+        "review_status": "accepted",
+    },
+    {
+        "assessment_title": "Pinnacle L1 Self-Assessment (FY24)",
+        "practice_id": "PE.L1-3.10.1",
+        "title": "Physical Security Assessment Report",
+        "description": "Annual physical security assessment covering all Pinnacle facilities.",
+        "file_name": "phys_sec_assessment_fy24.pdf",
+        "file_size": 456_000,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
+    # Evidence for "Acme L2 C3PAO Assessment (FY25)" — in_progress
+    {
+        "assessment_title": "Acme L2 C3PAO Assessment (FY25)",
+        "practice_id": "AC.L2-3.1.3",
+        "title": "CUI Flow Documentation",
+        "description": "Data flow diagrams showing CUI handling across Acme systems.",
+        "file_name": "acme_cui_flow_v1.pdf",
+        "file_size": 678_400,
+        "mime_type": "application/pdf",
+        "review_status": "pending",
+    },
+    {
+        "assessment_title": "Acme L2 C3PAO Assessment (FY25)",
+        "practice_id": "AU.L2-3.3.1",
+        "title": "SIEM Configuration Export",
+        "description": "Splunk SIEM configuration showing audit event collection rules.",
+        "file_name": "siem_config_export.json",
+        "file_size": 134_200,
+        "mime_type": "application/json",
+        "review_status": "pending",
+    },
+    # Evidence for "Mrisan L3 DIBCAC Assessment (FY26)" — in_progress
+    {
+        "assessment_title": "Mrisan L3 DIBCAC Assessment (FY26)",
+        "practice_id": "RA.L3-3.11.1e",
+        "title": "Threat Intelligence Program Overview",
+        "description": "Documentation of Mrisan threat intelligence integration with CISA feeds.",
+        "file_name": "threat_intel_program_v2.pdf",
+        "file_size": 398_000,
+        "mime_type": "application/pdf",
+        "review_status": "pending",
+    },
+    {
+        "assessment_title": "Mrisan L3 DIBCAC Assessment (FY26)",
+        "practice_id": "IR.L3-3.6.1e",
+        "title": "Incident Response Playbook - Advanced",
+        "description": "Enhanced IR playbook covering APT scenarios and supply chain attacks.",
+        "file_name": "ir_playbook_advanced_v3.pdf",
+        "file_size": 567_000,
+        "mime_type": "application/pdf",
+        "review_status": "accepted",
+    },
 ]
 
 
@@ -606,20 +696,21 @@ def _seed_practice_evaluations(db: Session, demo: dict) -> int:
     return count
 
 
-def _recalculate_scores(db: Session, demo: dict) -> None:
-    """Recalculate SPRS and overall scores for all assessments that have evaluations."""
+def _recalculate_all_scores(db: Session) -> None:
+    """Recalculate SPRS and overall scores for all non-draft assessments."""
     from cmmc.services.scoring_service import calculate_overall_score, calculate_sprs_score
 
-    titles = {g["assessment_title"] for g in demo.get("practice_evaluations", [])}
-    for title in titles:
-        assessment = db.query(Assessment).filter_by(title=title).first()
-        if not assessment:
-            continue
+    assessments = (
+        db.query(Assessment)
+        .filter(Assessment.status.in_(["completed", "in_progress", "under_review"]))
+        .all()
+    )
+    for assessment in assessments:
         assessment.sprs_score = calculate_sprs_score(db, assessment.id)
         assessment.overall_score = calculate_overall_score(db, assessment.id)
         logger.info(
             "Scores for %s: SPRS=%s, Overall=%.1f%%",
-            title, assessment.sprs_score, assessment.overall_score,
+            assessment.title, assessment.sprs_score, assessment.overall_score,
         )
     db.flush()
 
@@ -713,6 +804,100 @@ def _seed_poams(db: Session, demo: dict) -> int:
                 )
             )
         count += 1
+    db.flush()
+    return count
+
+
+# ---------------------------------------------------------------------------
+# Deterministic evaluation fill for remaining unevaluated practices
+# ---------------------------------------------------------------------------
+
+# Org maturity profiles: probability of met/partial/not_met
+_ORG_PROFILES: dict[str, dict[str, float]] = {
+    "Mrisan": {"met": 0.82, "partial": 0.10, "not_met": 0.08},
+    "Acme Defense Corp": {"met": 0.55, "partial": 0.20, "not_met": 0.25},
+    "Pinnacle Aero Systems": {"met": 0.88, "partial": 0.08, "not_met": 0.04},
+}
+
+_FILL_NOTES = {
+    "met": [
+        "Controls implemented and operational. Evidence reviewed.",
+        "Compliant. Documented processes verified.",
+        "Requirements satisfied. Procedures in place and followed.",
+        "Implementation verified through documentation and testing.",
+        "Fully implemented per organizational policy.",
+    ],
+    "partially_met": [
+        "Partial implementation identified. Remediation in progress.",
+        "Some controls in place but gaps exist. Plan of action documented.",
+        "Implementation incomplete. Additional work needed to close gaps.",
+        "Control partially implemented. Follow-up review scheduled.",
+    ],
+    "not_met": [
+        "Control not implemented. Finding documented for remediation.",
+        "Significant gaps identified. Corrective action required.",
+        "Not yet implemented. Included in remediation plan.",
+        "Requires implementation. Resources allocated for next quarter.",
+    ],
+}
+
+
+def _fill_remaining_evaluations(db: Session) -> int:
+    """Deterministically fill unevaluated practices for completed/in-progress assessments.
+
+    Uses a hash of (org_name, target_level, practice_id) to produce repeatable
+    evaluations that match each org's maturity profile.
+    """
+    count = 0
+    assessments = (
+        db.query(Assessment)
+        .filter(Assessment.status.in_(["completed", "in_progress", "under_review"]))
+        .all()
+    )
+
+    for assessment in assessments:
+        org = db.query(Organization).filter_by(id=assessment.org_id).first()
+        if not org:
+            continue
+        profile = _ORG_PROFILES.get(org.name)
+        if not profile:
+            continue
+
+        practices = (
+            db.query(AssessmentPractice)
+            .filter_by(assessment_id=assessment.id, status="not_evaluated")
+            .all()
+        )
+
+        # For in-progress, evaluate ~75% of remaining; for completed, evaluate all
+        eval_rate = 1.0 if assessment.status == "completed" else 0.75
+
+        for ap in practices:
+            key = f"{org.name}:{assessment.target_level}:{ap.practice_id}"
+            h = int(hashlib.md5(key.encode()).hexdigest(), 16)  # noqa: S324
+
+            # Decide whether to evaluate this practice
+            if (h % 1000) / 1000.0 >= eval_rate:
+                continue
+
+            # Determine status based on org profile
+            bucket = ((h >> 16) % 1000) / 1000.0
+            if bucket < profile["met"]:
+                ap.status = "met"
+                ap.score = 5.0
+                notes = _FILL_NOTES["met"]
+            elif bucket < profile["met"] + profile["partial"]:
+                ap.status = "partially_met"
+                ap.score = 3.0
+                notes = _FILL_NOTES["partially_met"]
+            else:
+                ap.status = "not_met"
+                ap.score = 1.0
+                notes = _FILL_NOTES["not_met"]
+
+            ap.assessor_notes = notes[(h >> 32) % len(notes)]
+            count += 1
+
     db.flush()
     return count
 

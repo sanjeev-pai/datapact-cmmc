@@ -74,14 +74,15 @@ def list_findings(
     finding_type: str | None = Query(None, alias="type"),
     severity: str | None = Query(None),
     status_filter: str | None = Query(None, alias="status"),
+    org_id: str | None = Query(None),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """List findings. Non-admins see only their org's findings."""
+    """List findings. System admins can filter by org_id; others see own org only."""
     user_roles = {r.name for r in user.roles}
 
     if "system_admin" in user_roles:
-        effective_org_id = None
+        effective_org_id = org_id  # None → all orgs
     else:
         effective_org_id = user.org_id
 

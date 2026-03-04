@@ -7,8 +7,9 @@ import type {
 } from '@/types/dashboard'
 import { api } from './api'
 
-export async function getComplianceSummary(): Promise<ComplianceSummary> {
-  return api.get<ComplianceSummary>('/dashboard/summary')
+export async function getComplianceSummary(orgId?: string | null): Promise<ComplianceSummary> {
+  const params = orgId ? `?org_id=${encodeURIComponent(orgId)}` : ''
+  return api.get<ComplianceSummary>(`/dashboard/summary${params}`)
 }
 
 export async function getDomainCompliance(assessmentId: string): Promise<DomainCompliance[]> {

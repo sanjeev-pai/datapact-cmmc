@@ -12,6 +12,7 @@ import {
   CartesianGrid,
 } from 'recharts'
 import { useAuth } from '@/hooks/useAuth'
+import { useOrg } from '@/hooks/useOrg'
 import {
   getComplianceSummary,
   getDomainCompliance,
@@ -266,7 +267,7 @@ function AssessmentTimeline({ entries }: { entries: TimelineEntry[] }) {
 
 export default function DashboardPage() {
   const { user } = useAuth()
-  const orgId = user?.org_id ?? ''
+  const { effectiveOrgId, selectedOrgName, isSystemAdmin } = useOrg()
 
   const [compliance, setCompliance] = useState<ComplianceSummary | null>(null)
   const [sprsSummary, setSprsSummary] = useState<SprsSummary | null>(null)
@@ -279,18 +280,21 @@ export default function DashboardPage() {
   const [selectedAssessmentId, setSelectedAssessmentId] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!orgId) return
+    // Non-admin users need an org_id to load data
+    if (!isSystemAdmin && !effectiveOrgId) return
     let cancelled = false
 
     async function load() {
       setLoading(true)
       setError(null)
       try {
-        const [comp, sprs, tl] = await Promise.all([
-          getComplianceSummary(),
-          getSprsHistory(orgId),
-          getTimeline(orgId),
-        ])
+        const promises: [Promise<ComplianceSummary>, Promise<SprsSummary | null>, Promise<TimelineEntry[]>] = [
+          getComplianceSummary(effectiveOrgId),
+          // SPRS history and timeline need a specific org_id (path param)
+          effectiveOrgId ? getSprsHistory(effectiveOrgId) : Promise.resolve(null),
+          effectiveOrgId ? getTimeline(effectiveOrgId) : Promise.resolve([]),
+        ]
+        const [comp, sprs, tl] = await Promise.all(promises)
         if (cancelled) return
         setCompliance(comp)
         setSprsSummary(sprs)
@@ -302,6 +306,8 @@ export default function DashboardPage() {
           setSelectedAssessmentId(completed.id)
         } else if (tl.length > 0) {
           setSelectedAssessmentId(tl[0].id)
+        } else {
+          setSelectedAssessmentId(null)
         }
       } catch (err: unknown) {
         if (!cancelled) {
@@ -316,7 +322,7 @@ export default function DashboardPage() {
     return () => {
       cancelled = true
     }
-  }, [orgId])
+  }, [effectiveOrgId, isSystemAdmin])
 
   // Load domain compliance when selectedAssessmentId changes
   useEffect(() => {
@@ -360,7 +366,12 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-sm text-base-content/60 mt-1">
-          CMMC compliance overview for your organization
+          CMMC compliance overview
+          {isSystemAdmin
+            ? selectedOrgName
+              ? ` for ${selectedOrgName}`
+              : ' across all organizations'
+            : ' for your organization'}
         </p>
       </div>
 
@@ -382,33 +393,41 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Domain heat map with assessment selector */}
-        <div>
-          {timeline.length > 1 && (
-            <div className="mb-2">
-              <select
-                className="select select-bordered select-sm"
-                value={selectedAssessmentId ?? ''}
-                onChange={(e) => setSelectedAssessmentId(e.target.value)}
-              >
-                {timeline.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.title} (L{a.target_level})
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-          <DomainHeatMap domains={domains} />
-        </div>
+      {effectiveOrgId ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Domain heat map with assessment selector */}
+          <div>
+            {timeline.length > 1 && (
+              <div className="mb-2">
+                <select
+                  className="select select-bordered select-sm"
+                  value={selectedAssessmentId ?? ''}
+                  onChange={(e) => setSelectedAssessmentId(e.target.value)}
+                >
+                  {timeline.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.title} (L{a.target_level})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <DomainHeatMap domains={domains} />
+          </div>
 
-        {/* SPRS history */}
-        <SprsHistoryChart summary={sprsSummary} />
-      </div>
+          {/* SPRS history */}
+          <SprsHistoryChart summary={sprsSummary} />
+        </div>
+      ) : (
+        <div className="card bg-base-100 shadow-sm border border-base-200">
+          <div className="card-body p-4 text-sm text-base-content/60">
+            Select a specific organization to view SPRS history, domain compliance, and timeline.
+          </div>
+        </div>
+      )}
 
       {/* Assessment timeline table */}
-      <AssessmentTimeline entries={timeline} />
+      {effectiveOrgId && <AssessmentTimeline entries={timeline} />}
     </div>
   )
 }
