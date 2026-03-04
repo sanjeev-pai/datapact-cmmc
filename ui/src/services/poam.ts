@@ -45,6 +45,21 @@ export async function completePoam(id: string): Promise<POAM> {
   return api.post<POAM>(`/poams/${id}/complete`, {})
 }
 
+export async function updatePoamItem(
+  poamId: string,
+  itemId: string,
+  data: {
+    milestone?: string
+    scheduled_completion?: string | null
+    actual_completion?: string | null
+    status?: string
+    resources_required?: string | null
+    risk_accepted?: boolean
+  },
+): Promise<POAMItem> {
+  return api.patch<POAMItem>(`/poams/${poamId}/items/${itemId}`, data)
+}
+
 export async function generateFromAssessment(
   poamId: string,
   assessmentId: string,
