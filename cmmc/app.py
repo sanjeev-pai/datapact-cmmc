@@ -1,15 +1,20 @@
 """CMMC Tracker — FastAPI application."""
 
+import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from cmmc import config
 
+logger = logging.getLogger(__name__)
+
 # ── Ensure models are registered with Base.metadata ─────────────────────────
-import cmmc.models  # noqa: F401
+import cmmc.models  # noqa: F401, E402
 
 
 # ── Lifespan ─────────────────────────────────────────────────────────────────
@@ -91,6 +96,38 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ── Exception handlers ──────────────────────────────────────────────────────
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
+    """Return 422 with consistent error format for validation errors."""
+    errors = exc.errors()
+    first = errors[0] if errors else {}
+    field = " -> ".join(str(loc) for loc in first.get("loc", []))
+    msg = first.get("msg", "Validation error")
+    detail = f"{field}: {msg}" if field else msg
+    return JSONResponse(
+        status_code=422,
+        content={"detail": detail, "error_code": "VALIDATION_ERROR", "errors": errors},
+    )
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(
+    request: Request, exc: Exception
+) -> JSONResponse:
+    """Catch-all for unhandled exceptions — return 500 with safe message."""
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "An internal server error occurred.",
+            "error_code": "INTERNAL_ERROR",
+        },
+    )
 
 
 # ── Health ───────────────────────────────────────────────────────────────────
