@@ -11,6 +11,7 @@ import DataPactSettingsPage from '@/modules/datapact/DataPactSettingsPage'
 import EvidenceListPage from '@/modules/evidence/EvidenceListPage'
 import FindingsPage from '@/modules/findings/FindingsPage'
 import POAMListPage from '@/modules/poam/POAMListPage'
+import AdminPage from '@/modules/admin/AdminPage'
 import ReportsPage from '@/modules/reports/ReportsPage'
 import DashboardPage from '@/modules/dashboard/DashboardPage'
 import LoginPage from '@/modules/auth/LoginPage'
@@ -37,6 +38,7 @@ function App() {
               <Route path="/datapact" element={<DataPactSettingsPage />} />
               <Route path="/datapact/mappings" element={<DataPactMappingsPage />} />
               <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/admin" element={<AdminPage />} />
             </Route>
           </Route>
         </Routes>
