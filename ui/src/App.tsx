@@ -12,6 +12,7 @@ import EvidenceListPage from '@/modules/evidence/EvidenceListPage'
 import FindingsPage from '@/modules/findings/FindingsPage'
 import POAMListPage from '@/modules/poam/POAMListPage'
 import POAMKanbanPage from '@/modules/poam/POAMKanbanPage'
+import POAMDetailPage from '@/modules/poam/POAMDetailPage'
 import AdminPage from '@/modules/admin/AdminPage'
 import ReportsPage from '@/modules/reports/ReportsPage'
 import DashboardPage from '@/modules/dashboard/DashboardPage'
@@ -37,6 +38,7 @@ function App() {
               <Route path="/findings" element={<FindingsPage />} />
               <Route path="/poams" element={<POAMListPage />} />
               <Route path="/poams/:id" element={<POAMKanbanPage />} />
+              <Route path="/poams/:id/detail" element={<POAMDetailPage />} />
               <Route path="/datapact" element={<DataPactSettingsPage />} />
               <Route path="/datapact/mappings" element={<DataPactMappingsPage />} />
               <Route path="/reports" element={<ReportsPage />} />

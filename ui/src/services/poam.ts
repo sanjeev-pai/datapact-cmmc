@@ -45,6 +45,27 @@ export async function completePoam(id: string): Promise<POAM> {
   return api.post<POAM>(`/poams/${id}/complete`, {})
 }
 
+export async function addPoamItem(
+  poamId: string,
+  data: {
+    finding_id?: string
+    practice_id?: string
+    milestone?: string
+    scheduled_completion?: string
+    resources_required?: string
+    risk_accepted?: boolean
+  },
+): Promise<POAMItem> {
+  return api.post<POAMItem>(`/poams/${poamId}/items`, data)
+}
+
+export async function removePoamItem(
+  poamId: string,
+  itemId: string,
+): Promise<void> {
+  return api.del<void>(`/poams/${poamId}/items/${itemId}`)
+}
+
 export async function updatePoamItem(
   poamId: string,
   itemId: string,
