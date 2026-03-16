@@ -29,6 +29,7 @@ class OrganizationResponse(BaseModel):
     target_level: int | None = None
     datapact_api_url: str | None = None
     datapact_api_key: str | None = None
+    datapact_tenant_id: str | None = None
     created_at: datetime
     updated_at: datetime
 

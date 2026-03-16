@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 from cmmc.errors import NotFoundError
 from cmmc.models.assessment import Assessment, AssessmentPractice
 from cmmc.models.cmmc_ref import CMMCDomain, CMMCPractice
+from cmmc.models.datapact import DataPactPracticeMapping
 from cmmc.models.finding import Finding
 
 
@@ -106,11 +107,24 @@ def _gather_data(db: Session, assessment: Assessment) -> dict:
             if p["status"] == "met":
                 by_domain[d]["met"] += 1
 
+    # Contract mappings
+    contract_mappings: dict[str, list[str]] = {}
+    mappings = (
+        db.query(DataPactPracticeMapping)
+        .filter_by(org_id=assessment.org_id)
+        .all()
+    )
+    for m in mappings:
+        contract_mappings.setdefault(m.practice_id, []).append(
+            m.datapact_contract_name or m.datapact_contract_id
+        )
+
     return {
         "assessment": assessment,
         "practices": practices,
         "findings": findings,
         "domain_summary": by_domain,
+        "contract_mappings": contract_mappings,
     }
 
 
@@ -147,14 +161,17 @@ def _render_csv(data: dict) -> bytes:
 
     # Practice details
     writer.writerow(["Practice Details"])
-    writer.writerow(["Practice ID", "Domain", "Level", "Title", "Status", "Notes"])
+    writer.writerow(["Practice ID", "Domain", "Level", "Title", "Status", "Mapped Contracts", "Notes"])
+    contract_mappings = data.get("contract_mappings", {})
     for p in data["practices"]:
+        contracts = "; ".join(contract_mappings.get(p["practice_id"], []))
         writer.writerow([
             p["practice_id"],
             p["domain"],
             p["level"],
             p["title"],
             p["status"],
+            contracts,
             p["notes"],
         ])
     writer.writerow([])

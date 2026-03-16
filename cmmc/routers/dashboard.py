@@ -10,6 +10,7 @@ from cmmc.models.user import User
 from cmmc.services.dashboard_service import (
     get_assessment_timeline,
     get_compliance_summary,
+    get_datapact_compliance,
     get_domain_compliance,
     get_findings_summary,
     get_sprs_summary,
@@ -105,3 +106,18 @@ def findings_summary(
 ):
     """Findings counts by severity and status for an assessment."""
     return get_findings_summary(db, assessment_id)
+
+
+# ---------------------------------------------------------------------------
+# GET /datapact-compliance/{org_id}
+# ---------------------------------------------------------------------------
+
+@router.get("/datapact-compliance/{org_id}")
+async def datapact_compliance(
+    org_id: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """DataPact org-level compliance score. Returns null if unavailable."""
+    _check_org_access(user, org_id)
+    return await get_datapact_compliance(db, org_id)
