@@ -127,8 +127,9 @@ describe('ReportsPage', () => {
     await waitFor(() => {
       expect(screen.getByText('All Assessments')).toBeDefined()
     })
-    expect(screen.getByText('Level 2 Self Assessment')).toBeDefined()
-    expect(screen.getByText('Level 1 Quick Check')).toBeDefined()
+    // Title appears in both the selector summary and the table row
+    expect(screen.getAllByText('Level 2 Self Assessment').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Level 1 Quick Check').length).toBeGreaterThanOrEqual(1)
   })
 
   it('shows selected assessment details', async () => {
