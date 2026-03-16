@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from cmmc.models.assessment import Assessment, AssessmentPractice
 from cmmc.models.cmmc_ref import CMMCDomain, CMMCPractice
 from cmmc.models.finding import Finding
+from cmmc.models.organization import Organization
+from cmmc.services.datapact_client import DataPactClient, DataPactError
 
 
 def get_compliance_summary(db: Session, org_id: str | None) -> dict:
@@ -166,3 +168,25 @@ def get_findings_summary(db: Session, assessment_id: str) -> dict:
         "by_severity": by_severity,
         "by_status": by_status,
     }
+
+
+async def get_datapact_compliance(db: Session, org_id: str) -> dict | None:
+    """Fetch org-level compliance score from DataPact.
+
+    Returns the DataPact org compliance data, or ``None`` if unavailable.
+    """
+    org = db.query(Organization).filter_by(id=org_id).first()
+    if not org:
+        return None
+
+    kwargs: dict = {}
+    if org.datapact_api_url:
+        kwargs["base_url"] = org.datapact_api_url
+    if org.datapact_api_key:
+        kwargs["api_key"] = org.datapact_api_key
+
+    client = DataPactClient(**kwargs)
+    try:
+        return await client.get_org_compliance_score()
+    except DataPactError:
+        return None

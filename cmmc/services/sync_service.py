@@ -17,6 +17,14 @@ logger = logging.getLogger(__name__)
 
 SyncResult = dict[str, Any]
 
+# Mapping of DataPact certification tiers to CMMC levels
+_TIER_TO_CMMC_LEVEL: dict[str, int] = {
+    "bronze": 1,
+    "silver": 2,
+    "gold": 3,
+    "platinum": 3,
+}
+
 
 async def sync_practice(
     db: Session,
@@ -27,8 +35,8 @@ async def sync_practice(
 ) -> SyncResult:
     """Sync a single assessment practice with DataPact.
 
-    Finds the practice's contract mapping, calls DataPact for compliance data,
-    updates the assessment practice sync status, and logs the operation.
+    Finds the practice's contract mapping, calls DataPact for compliance data
+    and scoring, updates the assessment practice sync status, and logs the operation.
 
     Returns a result dict: ``{practice_id, status, message, ...}``.
     """
@@ -73,11 +81,35 @@ async def sync_practice(
     }
 
     try:
-        response = await client.get_contract_compliance(contract_id)
+        # Get contract compliance data
+        compliance = await client.get_contract_compliance(contract_id)
+
+        # Also try to get compliance scoring data for richer insights
+        score_data: dict[str, Any] | None = None
+        try:
+            result = await client.get_compliance_score(contract_id)
+            if isinstance(result, dict):
+                score_data = result
+        except (DataPactError, Exception):
+            pass  # Scoring endpoint may not be available
 
         # Update assessment practice
         ap.datapact_sync_status = "synced"
         ap.datapact_sync_at = datetime.now(UTC)
+
+        # Store compliance score details in notes if scoring data available
+        if score_data and isinstance(score_data.get("score"), (int, float)):
+            score_note = f"[DataPact Score: {score_data['score']}]"
+            if ap.assessor_notes:
+                # Don't duplicate score notes
+                if "[DataPact Score:" not in ap.assessor_notes:
+                    ap.assessor_notes = f"{ap.assessor_notes}\n{score_note}"
+            else:
+                ap.assessor_notes = score_note
+
+        response_payload: dict[str, Any] = {"compliance": compliance}
+        if score_data:
+            response_payload["score"] = score_data
 
         # Log success
         _create_log(
@@ -86,7 +118,7 @@ async def sync_practice(
             assessment_id=assessment_id,
             practice_id=practice_id,
             request_payload=request_payload,
-            response_payload=response,
+            response_payload=response_payload,
             status="success",
         )
 
@@ -97,7 +129,8 @@ async def sync_practice(
             "practice_id": practice_id,
             "status": "success",
             "message": "Synced successfully",
-            "compliance": response,
+            "compliance": compliance,
+            "score": score_data,
         }
 
     except DataPactError as exc:
@@ -158,6 +191,11 @@ async def sync_assessment(
         results.append(result)
 
     return results
+
+
+def map_tier_to_cmmc_level(tier: str) -> int | None:
+    """Map a DataPact certification tier to a CMMC level."""
+    return _TIER_TO_CMMC_LEVEL.get(tier.lower())
 
 
 # ── Internal helpers ─────────────────────────────────────────────────────────

@@ -77,6 +77,20 @@ async def test_get_contracts_success(client):
 
 @respx.mock
 @pytest.mark.asyncio
+async def test_get_contracts_normalizes_results_key(client):
+    """DataPact returns 'results' — client should normalize to 'items'."""
+    datapact_response = {"results": SAMPLE_CONTRACTS["items"], "total": 2}
+    respx.get(f"{BASE_URL}/api/contracts").mock(
+        return_value=httpx.Response(200, json=datapact_response)
+    )
+    result = await client.get_contracts()
+    assert "items" in result
+    assert "results" not in result
+    assert len(result["items"]) == 2
+
+
+@respx.mock
+@pytest.mark.asyncio
 async def test_get_contracts_sends_auth_header(client):
     route = respx.get(f"{BASE_URL}/api/contracts").mock(
         return_value=httpx.Response(200, json=SAMPLE_CONTRACTS)
@@ -148,6 +162,229 @@ async def test_get_contract_compliance_not_found(client):
         await client.get_contract_compliance("bad")
 
 
+# ── Tenant methods ───────────────────────────────────────────────────────────
+
+
+SAMPLE_TENANT = {
+    "id": "t1",
+    "name": "Acme Defense Corp",
+    "slug": "acme-defense",
+    "plan": "pro",
+    "status": "active",
+    "owner_email": "admin@acme.com",
+}
+
+SAMPLE_TENANTS = {"results": [SAMPLE_TENANT], "total": 1}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_tenants_success(client):
+    respx.get(f"{BASE_URL}/api/tenants").mock(
+        return_value=httpx.Response(200, json=SAMPLE_TENANTS)
+    )
+    result = await client.get_tenants()
+    assert "items" in result
+    assert len(result["items"]) == 1
+    assert result["items"][0]["name"] == "Acme Defense Corp"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_tenant_success(client):
+    respx.get(f"{BASE_URL}/api/tenants/t1").mock(
+        return_value=httpx.Response(200, json=SAMPLE_TENANT)
+    )
+    result = await client.get_tenant("t1")
+    assert result["id"] == "t1"
+    assert result["name"] == "Acme Defense Corp"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_tenant_not_found(client):
+    respx.get(f"{BASE_URL}/api/tenants/missing").mock(
+        return_value=httpx.Response(404, json={"detail": "Not found"})
+    )
+    with pytest.raises(DataPactNotFoundError):
+        await client.get_tenant("missing")
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_create_tenant_success(client):
+    new_tenant = {"name": "New Corp", "slug": "new-corp", "owner_email": "a@b.com"}
+    created = {**new_tenant, "id": "t2", "plan": "free", "status": "active"}
+    route = respx.post(f"{BASE_URL}/api/tenants").mock(
+        return_value=httpx.Response(201, json=created)
+    )
+    result = await client.create_tenant(new_tenant)
+    assert result["id"] == "t2"
+    assert route.called
+    # Verify POST body
+    request = route.calls[0].request
+    assert request.headers["authorization"] == f"Bearer {API_KEY}"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_update_tenant_success(client):
+    updated = {**SAMPLE_TENANT, "name": "Acme Updated"}
+    route = respx.put(f"{BASE_URL}/api/tenants/t1").mock(
+        return_value=httpx.Response(200, json=updated)
+    )
+    result = await client.update_tenant("t1", {"name": "Acme Updated"})
+    assert result["name"] == "Acme Updated"
+    assert route.called
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_delete_tenant_success(client):
+    route = respx.delete(f"{BASE_URL}/api/tenants/t1").mock(
+        return_value=httpx.Response(204)
+    )
+    await client.delete_tenant("t1")
+    assert route.called
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_delete_tenant_not_found(client):
+    respx.delete(f"{BASE_URL}/api/tenants/missing").mock(
+        return_value=httpx.Response(404, json={"detail": "Not found"})
+    )
+    with pytest.raises(DataPactNotFoundError):
+        await client.delete_tenant("missing")
+
+
+# ── Compliance Scoring methods ───────────────────────────────────────────────
+
+SAMPLE_SCORES = {
+    "results": [
+        {"contract_id": "c1", "score": 85.0, "status": "compliant"},
+        {"contract_id": "c2", "score": 60.0, "status": "partially_compliant"},
+    ],
+    "total": 2,
+}
+
+SAMPLE_ORG_SCORE = {
+    "overall_score": 72.5,
+    "total_contracts": 5,
+    "compliant": 3,
+    "non_compliant": 2,
+}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_compliance_scores_success(client):
+    respx.get(f"{BASE_URL}/api/compliance/scores").mock(
+        return_value=httpx.Response(200, json=SAMPLE_SCORES)
+    )
+    result = await client.get_compliance_scores()
+    assert "items" in result
+    assert len(result["items"]) == 2
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_compliance_score_success(client):
+    score = {"contract_id": "c1", "score": 85.0, "status": "compliant"}
+    respx.get(f"{BASE_URL}/api/compliance/scores/c1").mock(
+        return_value=httpx.Response(200, json=score)
+    )
+    result = await client.get_compliance_score("c1")
+    assert result["score"] == 85.0
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_org_compliance_score_success(client):
+    respx.get(f"{BASE_URL}/api/compliance/scores/org").mock(
+        return_value=httpx.Response(200, json=SAMPLE_ORG_SCORE)
+    )
+    result = await client.get_org_compliance_score()
+    assert result["overall_score"] == 72.5
+    assert result["total_contracts"] == 5
+
+
+# ── Certification methods ────────────────────────────────────────────────────
+
+SAMPLE_CERTIFICATIONS = {
+    "results": [
+        {"contract_id": "c1", "tier": "gold", "status": "certified"},
+    ],
+    "total": 1,
+}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_certifications_success(client):
+    respx.get(f"{BASE_URL}/api/certifications").mock(
+        return_value=httpx.Response(200, json=SAMPLE_CERTIFICATIONS)
+    )
+    result = await client.get_certifications()
+    assert "items" in result
+    assert result["items"][0]["tier"] == "gold"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_certification_success(client):
+    cert = {"contract_id": "c1", "tier": "gold", "status": "certified"}
+    respx.get(f"{BASE_URL}/api/certifications/c1").mock(
+        return_value=httpx.Response(200, json=cert)
+    )
+    result = await client.get_certification("c1")
+    assert result["tier"] == "gold"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_evaluate_certifications_success(client):
+    eval_result = {"evaluated": 5, "certified": 3, "failed": 2}
+    route = respx.post(f"{BASE_URL}/api/certifications/evaluate").mock(
+        return_value=httpx.Response(200, json=eval_result)
+    )
+    result = await client.evaluate_certifications()
+    assert result["evaluated"] == 5
+    assert route.called
+
+
+# ── Audit methods ────────────────────────────────────────────────────────────
+
+SAMPLE_AUDIT_LOGS = {
+    "results": [
+        {"id": "a1", "action": "create", "resource_type": "contract"},
+        {"id": "a2", "action": "update", "resource_type": "tenant"},
+    ],
+    "total": 2,
+}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_audit_logs_success(client):
+    respx.get(f"{BASE_URL}/api/audit").mock(
+        return_value=httpx.Response(200, json=SAMPLE_AUDIT_LOGS)
+    )
+    result = await client.get_audit_logs()
+    assert "items" in result
+    assert len(result["items"]) == 2
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_audit_logs_not_found(client):
+    respx.get(f"{BASE_URL}/api/audit").mock(
+        return_value=httpx.Response(404, json={"detail": "Not found"})
+    )
+    with pytest.raises(DataPactNotFoundError):
+        await client.get_audit_logs()
+
+
 # ── Error handling ───────────────────────────────────────────────────────────
 
 
@@ -209,6 +446,39 @@ async def test_connect_error(client):
     )
     with pytest.raises(DataPactConnectionError, match="connect"):
         await client.get_contracts()
+
+
+# ── POST/PUT/DELETE error handling ───────────────────────────────────────────
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_post_auth_error(client):
+    respx.post(f"{BASE_URL}/api/tenants").mock(
+        return_value=httpx.Response(401, json={"detail": "Invalid token"})
+    )
+    with pytest.raises(DataPactAuthError):
+        await client.create_tenant({"name": "Test"})
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_put_timeout_error(client):
+    respx.put(f"{BASE_URL}/api/tenants/t1").mock(
+        side_effect=httpx.TimeoutException("timed out")
+    )
+    with pytest.raises(DataPactConnectionError):
+        await client.update_tenant("t1", {"name": "Updated"})
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_delete_connect_error(client):
+    respx.delete(f"{BASE_URL}/api/tenants/t1").mock(
+        side_effect=httpx.ConnectError("refused")
+    )
+    with pytest.raises(DataPactConnectionError):
+        await client.delete_tenant("t1")
 
 
 # ── Client defaults ──────────────────────────────────────────────────────────

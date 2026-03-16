@@ -17,6 +17,7 @@ class Organization(BaseModel):
     target_level: Mapped[int | None] = mapped_column(Integer, nullable=True)
     datapact_api_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     datapact_api_key: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    datapact_tenant_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
 
     users: Mapped[list["User"]] = relationship(back_populates="organization")  # noqa: F821
     assessments: Mapped[list["Assessment"]] = relationship(back_populates="organization")  # noqa: F821
