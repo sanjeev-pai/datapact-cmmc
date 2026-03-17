@@ -133,7 +133,7 @@ describe('DataPactSettingsPage', () => {
     fireEvent.click(screen.getByText('Save Settings'))
 
     await waitFor(() => {
-      expect(screen.getByText('Settings saved')).toBeDefined()
+      expect(screen.getByText(/settings saved/i)).toBeDefined()
     })
   })
 
@@ -150,7 +150,7 @@ describe('DataPactSettingsPage', () => {
     fireEvent.click(screen.getByText('Test Connection'))
 
     await waitFor(() => {
-      expect(screen.getByText(/connected/i)).toBeDefined()
+      expect(screen.getByText(/contract\(s\) found/i)).toBeDefined()
     })
     // Contract preview table
     expect(screen.getByText('Alpha Contract')).toBeDefined()
@@ -205,5 +205,78 @@ describe('DataPactSettingsPage', () => {
       expect(screen.getByLabelText('DataPact API URL')).toBeDefined()
     })
     expect(screen.getByLabelText('API Key')).toBeDefined()
+  })
+
+  it('validates connection after saving settings', async () => {
+    render(
+      <MemoryRouter>
+        <DataPactSettingsPage />
+      </MemoryRouter>,
+    )
+    await waitFor(() => {
+      expect((screen.getByLabelText('DataPact API URL') as HTMLInputElement).value).toBe(
+        'http://datapact.test:8180',
+      )
+    })
+
+    fireEvent.click(screen.getByText('Save Settings'))
+
+    await waitFor(() => {
+      expect(screen.getByText(/settings saved — connection verified/i)).toBeDefined()
+    })
+    // Connection status badge should appear
+    expect(screen.getByTestId('connection-status')).toBeDefined()
+    expect(screen.getByText('Connected')).toBeDefined()
+    // Contract preview should also load from auto-validate
+    expect(screen.getByText('Alpha Contract')).toBeDefined()
+  })
+
+  it('shows connection error after save if DataPact is unreachable', async () => {
+    global.fetch = vi.fn((url: string | URL | Request, init?: RequestInit) => {
+      const urlStr = typeof url === 'string' ? url : url.toString()
+      const method = init?.method || 'GET'
+
+      if (urlStr.includes('/organizations/') && method === 'GET') {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve(mockOrg),
+        } as Response)
+      }
+      if (urlStr.includes('/organizations/') && method === 'PATCH') {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve(mockOrg),
+        } as Response)
+      }
+      if (urlStr.includes('/datapact/contracts')) {
+        return Promise.resolve({
+          ok: false,
+          status: 500,
+          statusText: 'Server Error',
+          text: () => Promise.resolve('{"detail":"Connection refused"}'),
+        } as Response)
+      }
+      return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) } as Response)
+    }) as typeof fetch
+
+    render(
+      <MemoryRouter>
+        <DataPactSettingsPage />
+      </MemoryRouter>,
+    )
+    await waitFor(() => {
+      expect((screen.getByLabelText('DataPact API URL') as HTMLInputElement).value).toBe(
+        'http://datapact.test:8180',
+      )
+    })
+
+    fireEvent.click(screen.getByText('Save Settings'))
+
+    await waitFor(() => {
+      expect(screen.getByText(/settings saved — connection failed/i)).toBeDefined()
+    })
+    expect(screen.getByText('Disconnected')).toBeDefined()
   })
 })

@@ -15,12 +15,14 @@ import { useAuth } from '@/hooks/useAuth'
 import { useOrg } from '@/hooks/useOrg'
 import {
   getComplianceSummary,
+  getDataPactCompliance,
   getDomainCompliance,
   getSprsHistory,
   getTimeline,
 } from '@/services/dashboard'
 import type {
   ComplianceSummary,
+  DataPactCompliance,
   DomainCompliance,
   SprsSummary,
   TimelineEntry,
@@ -91,6 +93,36 @@ function ComplianceLevelCard({
             style={{ width: `${pct}%`, backgroundColor: color }}
           />
         </div>
+      </div>
+    </div>
+  )
+}
+
+function DataPactComplianceCard({ data }: { data: DataPactCompliance | null }) {
+  if (!data) return null
+  const score = data.score
+  const color =
+    score == null ? '#d1d5db' : complianceColor(score)
+
+  return (
+    <div className="card bg-base-100 shadow-sm border border-base-200">
+      <div className="card-body p-4">
+        <h3 className="text-xs font-medium text-base-content/60 uppercase tracking-wide">
+          DataPact Score
+        </h3>
+        <div className="flex items-end gap-2 mt-1">
+          <span className="text-3xl font-bold tabular-nums" style={{ color }}>
+            {score != null ? `${Math.round(score)}%` : '—'}
+          </span>
+        </div>
+        {data.status && (
+          <span className="text-xs text-base-content/50 capitalize">
+            {data.status}
+          </span>
+        )}
+        <Link to="/datapact/settings" className="text-xs link link-primary mt-1">
+          DataPact Settings
+        </Link>
       </div>
     </div>
   )
@@ -271,6 +303,7 @@ export default function DashboardPage() {
 
   const [compliance, setCompliance] = useState<ComplianceSummary | null>(null)
   const [sprsSummary, setSprsSummary] = useState<SprsSummary | null>(null)
+  const [dataPactCompliance, setDataPactCompliance] = useState<DataPactCompliance | null>(null)
   const [domains, setDomains] = useState<DomainCompliance[]>([])
   const [timeline, setTimeline] = useState<TimelineEntry[]>([])
   const [loading, setLoading] = useState(true)
@@ -294,11 +327,18 @@ export default function DashboardPage() {
           effectiveOrgId ? getSprsHistory(effectiveOrgId) : Promise.resolve(null),
           effectiveOrgId ? getTimeline(effectiveOrgId) : Promise.resolve([]),
         ]
+        // Fetch DataPact compliance separately so failures don't break the dashboard
+        const dpPromise = effectiveOrgId
+          ? getDataPactCompliance(effectiveOrgId).catch(() => null)
+          : Promise.resolve(null)
+
         const [comp, sprs, tl] = await Promise.all(promises)
+        const dpResult = await dpPromise
         if (cancelled) return
         setCompliance(comp)
         setSprsSummary(sprs)
         setTimeline(tl)
+        setDataPactCompliance(dpResult)
 
         // Auto-select most recent completed assessment for domain view
         const completed = tl.find((a) => a.status === 'completed')
@@ -376,7 +416,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Compliance summary cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${dataPactCompliance ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
         <ComplianceLevelCard
           level="Level 1"
           percentage={compliance?.level_1 ?? null}
@@ -390,6 +430,7 @@ export default function DashboardPage() {
           percentage={compliance?.level_3 ?? null}
         />
         <SprsCard summary={sprsSummary} />
+        <DataPactComplianceCard data={dataPactCompliance} />
       </div>
 
       {/* Charts row */}

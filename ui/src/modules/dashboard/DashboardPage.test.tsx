@@ -67,8 +67,9 @@ const mockDomains = [
   { domain_id: 'AT', domain_name: 'Awareness & Training', met: 3, total: 3, percentage: 100.0 },
 ]
 
-beforeEach(() => {
-  vi.restoreAllMocks()
+const mockDataPactCompliance = { score: 78, status: 'compliant' }
+
+function setupDashboardFetch(dpCompliance: unknown = mockDataPactCompliance) {
   global.fetch = vi.fn((url: string | URL | Request) => {
     const urlStr = typeof url === 'string' ? url : url.toString()
     if (urlStr.includes('/dashboard/summary')) {
@@ -83,8 +84,19 @@ beforeEach(() => {
     if (urlStr.includes('/dashboard/domain-compliance')) {
       return Promise.resolve({ ok: true, json: () => Promise.resolve(mockDomains) } as Response)
     }
+    if (urlStr.includes('/dashboard/datapact-compliance')) {
+      if (dpCompliance === null) {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve(null) } as Response)
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(dpCompliance) } as Response)
+    }
     return Promise.resolve({ ok: true, json: () => Promise.resolve({}) } as Response)
   }) as typeof fetch
+}
+
+beforeEach(() => {
+  vi.restoreAllMocks()
+  setupDashboardFetch()
 })
 
 // Mock ResizeObserver for Recharts
@@ -219,5 +231,36 @@ describe('DashboardPage', () => {
     await waitFor(() => {
       expect(screen.getAllByText('completed').length).toBeGreaterThanOrEqual(1)
     })
+  })
+
+  it('renders DataPact compliance card when data is available', async () => {
+    render(
+      <MemoryRouter>
+        <DashboardPage />
+      </MemoryRouter>,
+    )
+    await waitFor(() => {
+      expect(screen.getByText('DataPact Score')).toBeDefined()
+    })
+    expect(screen.getAllByText('78%').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('compliant')).toBeDefined()
+    expect(screen.getByText('DataPact Settings')).toBeDefined()
+  })
+
+  it('hides DataPact card when compliance returns null', async () => {
+    setupDashboardFetch(null)
+    render(
+      <MemoryRouter>
+        <DashboardPage />
+      </MemoryRouter>,
+    )
+    await waitFor(() => {
+      expect(screen.getByText('Dashboard')).toBeDefined()
+    })
+    // Wait for data to load
+    await waitFor(() => {
+      expect(screen.getByText('Level 1')).toBeDefined()
+    })
+    expect(screen.queryByText('DataPact Score')).toBeNull()
   })
 })

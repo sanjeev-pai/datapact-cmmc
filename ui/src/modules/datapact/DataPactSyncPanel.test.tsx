@@ -170,6 +170,63 @@ describe('DataPactSyncPanel', () => {
     ).toBe(true)
   })
 
+  it('displays compliance data after successful sync', async () => {
+    setupFetch({
+      syncResult: {
+        practice_id: 'AC.L1-3.1.1',
+        status: 'success',
+        message: 'Synced successfully',
+        compliance: { score: 85, status: 'compliant', tier: 'Gold', level: 3 },
+      },
+    })
+    render(
+      <DataPactSyncPanel
+        assessmentId="a1"
+        practiceId="AC.L1-3.1.1"
+        syncStatus={null}
+        syncAt={null}
+        onSyncComplete={vi.fn()}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /sync this practice/i }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('compliance-data')).toBeDefined()
+    })
+    expect(screen.getByText('85%')).toBeDefined()
+    expect(screen.getByText('compliant')).toBeDefined()
+    expect(screen.getByText('Gold')).toBeDefined()
+  })
+
+  it('handles null compliance gracefully', async () => {
+    setupFetch({
+      syncResult: {
+        practice_id: 'AC.L1-3.1.1',
+        status: 'success',
+        message: 'Synced successfully',
+        compliance: null,
+      },
+    })
+    render(
+      <DataPactSyncPanel
+        assessmentId="a1"
+        practiceId="AC.L1-3.1.1"
+        syncStatus={null}
+        syncAt={null}
+        onSyncComplete={vi.fn()}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /sync this practice/i }))
+
+    await waitFor(() => {
+      expect(screen.getByText(/synced successfully/i)).toBeDefined()
+    })
+    // No compliance section should appear
+    expect(screen.queryByTestId('compliance-data')).toBeNull()
+  })
+
   it('loads and displays sync logs', async () => {
     setupFetch({
       syncLogs: {

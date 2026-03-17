@@ -41,3 +41,9 @@ export interface FindingsSummary {
   by_severity: Record<string, number>
   by_status: Record<string, number>
 }
+
+export interface DataPactCompliance {
+  score: number | null
+  status: string | null
+  [key: string]: unknown
+}

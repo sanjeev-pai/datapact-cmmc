@@ -51,6 +51,7 @@ dev-restart: dev-stop dev-all  ## Restart backend + frontend dev servers
 test: test-backend test-frontend  ## Run all tests
 
 test-backend:  ## Run backend tests
+	uv sync --all-extras --all-groups --quiet
 	uv run pytest tests/ -v --tb=short
 
 test-frontend:  ## Run frontend tests

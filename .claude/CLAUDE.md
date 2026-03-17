@@ -60,9 +60,18 @@ Vite + React 19 + TypeScript + TailwindCSS + DaisyUI
 - `src/hooks/` — custom hooks
 - `src/types/` — shared TypeScript types
 
-### Integration
+### DataPact Integration (Deep Delegation)
+- DataPact is the source of truth for tenants (organizations), contracts, and compliance scoring
+- CMMC stores only CMMC-specific data locally (practices, assessments, evidence, findings)
+- `datapact_client.py` — full HTTP client: GET/POST/PUT/DELETE for contracts, tenants, compliance, certifications, audit
+- `org_sync_service.py` — bidirectional org↔tenant sync (create, update, link)
+- `sync_service.py` — syncs assessment practices with DataPact compliance + scoring APIs
+- Organization model has `datapact_tenant_id` linking to DataPact tenant
+- Response normalization: DataPact `results` → CMMC `items`
+- Per-org DataPact credentials: `datapact_api_url`, `datapact_api_key` on Organization
+
+### Frontend Integration
 - Frontend proxies `/api/*` to backend via Vite dev server config
-- DataPact integration via httpx client (config: DATAPACT_API_URL, DATAPACT_TIMEOUT)
 
 ## Conventions
 
@@ -93,7 +102,7 @@ Key config in `cmmc/config.py`:
 - `DATABASE_SCHEMA` — default: `datapact-cmmc`
 - `CMMC_PORT` — default: 8081
 - `CMMC_AUTO_SEED` — default: true
-- `DATAPACT_API_URL` — default: `http://localhost:8000`
+- `DATAPACT_API_URL` — default: `http://localhost:8180`
 - `JWT_SECRET` — must change in production
 
 ## Database

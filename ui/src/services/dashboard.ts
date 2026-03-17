@@ -1,5 +1,6 @@
 import type {
   ComplianceSummary,
+  DataPactCompliance,
   DomainCompliance,
   FindingsSummary,
   SprsSummary,
@@ -26,4 +27,8 @@ export async function getTimeline(orgId: string, limit = 10): Promise<TimelineEn
 
 export async function getFindingsSummary(assessmentId: string): Promise<FindingsSummary> {
   return api.get<FindingsSummary>(`/dashboard/findings-summary/${assessmentId}`)
+}
+
+export async function getDataPactCompliance(orgId: string): Promise<DataPactCompliance | null> {
+  return api.get<DataPactCompliance | null>(`/dashboard/datapact-compliance/${orgId}`)
 }
