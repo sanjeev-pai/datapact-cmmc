@@ -7,7 +7,8 @@ from cmmc.database import get_db
 from cmmc.dependencies.auth import require_role
 from cmmc.models.audit import AuditLog
 from cmmc.models.user import User
-from cmmc.schemas.audit import AuditLogListResponse, AuditLogResponse
+from cmmc.schemas.audit import AuditLogListResponse, AuditLogResponse, UnifiedAuditResponse
+from cmmc.services.unified_audit_service import get_unified_audit_log
 
 router = APIRouter(prefix="/api/audit-log", tags=["audit"])
 
@@ -42,6 +43,28 @@ def list_audit_logs(
         .all()
     )
     return AuditLogListResponse(items=items, total=total)
+
+
+@router.get("/unified", response_model=UnifiedAuditResponse)
+async def list_unified_audit_logs(
+    org_id: str = Query(..., description="Organization ID"),
+    action: str | None = Query(None, description="Filter by action"),
+    resource_type: str | None = Query(None, description="Filter by resource type"),
+    source: str | None = Query(None, description="Filter by source (cmmc or datapact)"),
+    limit: int = Query(50, ge=1, le=200),
+    offset: int = Query(0, ge=0),
+    user: User = Depends(require_role(*_ADMIN_ROLES)),
+    db: Session = Depends(get_db),
+):
+    """Unified audit log merging CMMC and DataPact entries. Admin only."""
+    return await get_unified_audit_log(
+        db, org_id,
+        action=action,
+        resource_type=resource_type,
+        source=source,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.get("/{log_id}", response_model=AuditLogResponse)
