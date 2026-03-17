@@ -126,6 +126,41 @@ export default function DataPactSyncPanel({
         </div>
       )}
 
+      {/* Compliance data from DataPact */}
+      {result?.compliance && Object.keys(result.compliance).length > 0 && (
+        <div className="mt-2 p-3 bg-base-200 rounded text-sm" data-testid="compliance-data">
+          <h4 className="font-medium text-xs uppercase tracking-wide text-base-content/60 mb-2">
+            DataPact Compliance
+          </h4>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+            {result.compliance.score != null && (
+              <div className="flex justify-between">
+                <span className="text-base-content/60">Score</span>
+                <span className="font-semibold">{String(result.compliance.score)}%</span>
+              </div>
+            )}
+            {result.compliance.status != null && (
+              <div className="flex justify-between">
+                <span className="text-base-content/60">Status</span>
+                <span className="font-semibold capitalize">{String(result.compliance.status)}</span>
+              </div>
+            )}
+            {result.compliance.tier != null && (
+              <div className="flex justify-between">
+                <span className="text-base-content/60">Tier</span>
+                <span className="font-semibold">{String(result.compliance.tier)}</span>
+              </div>
+            )}
+            {result.compliance.level != null && (
+              <div className="flex justify-between">
+                <span className="text-base-content/60">Level</span>
+                <span className="font-semibold">{String(result.compliance.level)}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Sync history toggle */}
       <button
         className="btn btn-ghost btn-xs mt-2"

@@ -29,6 +29,7 @@ export default function DataPactSettingsPage() {
   const [saveMsg, setSaveMsg] = useState<string | null>(null)
   const [testing, setTesting] = useState(false)
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null)
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'error' | null>(null)
   const [contracts, setContracts] = useState<Contract[]>([])
 
   // For admins without org, load org list
@@ -63,16 +64,42 @@ export default function DataPactSettingsPage() {
       .finally(() => setLoading(false))
   }, [effectiveOrgId])
 
+  async function validateConnection(): Promise<boolean> {
+    try {
+      const data = await getContracts()
+      setContracts(data.items || [])
+      setConnectionStatus('connected')
+      setTestResult({
+        ok: true,
+        message: `Connected — ${data.total ?? data.items?.length ?? 0} contract(s) found`,
+      })
+      return true
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Connection failed'
+      setConnectionStatus('error')
+      setTestResult({ ok: false, message: msg })
+      return false
+    }
+  }
+
   async function handleSave() {
     if (!effectiveOrgId) return
     setSaving(true)
     setSaveMsg(null)
+    setTestResult(null)
+    setConnectionStatus(null)
     try {
       await api.patch(`/organizations/${effectiveOrgId}`, {
         datapact_api_url: apiUrl || null,
         datapact_api_key: apiKey || null,
       })
-      setSaveMsg('Settings saved')
+      // Auto-validate connection after successful save
+      if (apiUrl) {
+        const connected = await validateConnection()
+        setSaveMsg(connected ? 'Settings saved — connection verified' : 'Settings saved — connection failed')
+      } else {
+        setSaveMsg('Settings saved')
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Save failed'
       setSaveMsg(msg)
@@ -85,16 +112,9 @@ export default function DataPactSettingsPage() {
     setTesting(true)
     setTestResult(null)
     setContracts([])
+    setConnectionStatus(null)
     try {
-      const data = await getContracts()
-      setContracts(data.items || [])
-      setTestResult({
-        ok: true,
-        message: `Connected — ${data.total ?? data.items?.length ?? 0} contract(s) found`,
-      })
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Connection failed'
-      setTestResult({ ok: false, message: msg })
+      await validateConnection()
     } finally {
       setTesting(false)
     }
@@ -122,7 +142,17 @@ export default function DataPactSettingsPage() {
   return (
     <div className="p-6 max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">DataPact Integration</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold">DataPact Integration</h1>
+          {connectionStatus && (
+            <span
+              className={`badge badge-sm ${connectionStatus === 'connected' ? 'badge-success' : 'badge-error'}`}
+              data-testid="connection-status"
+            >
+              {connectionStatus === 'connected' ? 'Connected' : 'Disconnected'}
+            </span>
+          )}
+        </div>
         <p className="text-base-content/60 text-sm mt-1">
           Configure your organization's DataPact integration
         </p>
@@ -209,7 +239,7 @@ export default function DataPactSettingsPage() {
             </div>
 
             {saveMsg && (
-              <div className={`alert mt-3 ${saveMsg === 'Settings saved' ? 'alert-success' : 'alert-error'}`}>
+              <div className={`alert mt-3 ${saveMsg.startsWith('Settings saved') ? 'alert-success' : 'alert-error'}`}>
                 <span>{saveMsg}</span>
               </div>
             )}
