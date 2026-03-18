@@ -44,9 +44,12 @@ FastAPI + SQLAlchemy + Alembic + PostgreSQL (psycopg3)
 - `database.py` — engine, SessionLocal factory, `get_db()` dependency
 - `errors.py` — custom exceptions: NotFoundError(404), ConflictError(409), ForbiddenError(403), UnauthorizedError(401)
 - `models/base.py` — BaseModel with mixins (TimestampMixin, CreatorMixin, VersionMixin)
+- `models/` — assessment, audit, cmmc_ref, datapact, evidence, finding, organization, poam, user (all extend BaseModel)
 - `routers/` — API route handlers, prefix `/api/`
 - `schemas/` — Pydantic request/response models
 - `services/` — business logic, seed_service
+  - Key services beyond CRUD: `scoring_service` (SPRS scoring), `practice_eval_service` (practice evaluation), `mapping_service` (DataPact practice mapping), `unified_audit_service` (combined CMMC + DataPact audit trail)
+- `middleware/audit.py` — audit logging middleware (auto-logs API requests)
 - `dependencies/` — reusable FastAPI Depends functions
 
 ### Frontend (`ui/`)
@@ -103,7 +106,12 @@ Key config in `cmmc/config.py`:
 - `CMMC_PORT` — default: 8081
 - `CMMC_AUTO_SEED` — default: true
 - `DATAPACT_API_URL` — default: `http://localhost:8180`
+- `CMMC_SEED_DEMO` — default: true (seeds demo assessment data)
+- `CMMC_UPLOAD_DIR` — default: `uploads` (evidence file storage)
+- `CMMC_MAX_UPLOAD_SIZE` — default: 50MB
 - `JWT_SECRET` — must change in production
+- `JWT_REFRESH_EXPIRY_DAYS` — default: 7
+- `DATAPACT_TIMEOUT` — default: 30 (seconds)
 
 ## Database
 - Local PostgreSQL 14 on port 5432 (Homebrew)
@@ -115,8 +123,8 @@ Key config in `cmmc/config.py`:
 - Templates in `docs/templates/` — use for new PRDs, plans, work items
 
 ## Git Workflow
-- Direct pushes to `main` do not need a PR
-- Feature branches and PRs are optional — use when collaboration or review is needed
+- When checking in to main, always use a PR
+- Feature branches for isolation when collaboration or review is needed
 - Check if user has admin rights and use admin to merge PRs when used
 
 ## TODOs
